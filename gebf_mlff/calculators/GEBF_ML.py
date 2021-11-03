@@ -132,7 +132,9 @@ class GEBF_ML(Calculator):
         gjf_file="/tmp/" + dir_name + ".gjf"
         sh_file="/tmp/" + dir_name + ".sh"
         write(pdb_file, atoms)
-        os.system("/bin/bash; module use /work2/01114/jfonner/frontera/modulefiles;  module load gaussian ;newzmat " + " -ipdb -ocom " + pdb_file + " " + com_file)
+        os.write(sh_file, "#!/bin/bash\nmodule use /work2/01114/jfonner/frontera/modulefiles;  module load gaussian ;newzmat " + " -ipdb -ocom " + pdb_file + " " + com_file)
+        os.system("chmod +x" + sh_file)
+        os.system(sh_file)
         prepend = "%chk=" + dir_name + "\n" + "%nproc=56\n%njobs=6\n%Gver=g16\n%mem=5gb\n# pm6 \ngebf{dis=3, maxsubfrag=11, frag=protein}\n"
         content = os.read(com_file)
         append = "\n"
