@@ -20,23 +20,32 @@ from ase.md.langevin import Langevin
 from ase.calculators.gaussian import Gaussian
 from ase.calculators.mopac import MOPAC
 
-from quippy.quippy.potential import Potential
-from quippy.quippy.descriptors import Descriptor
+from quippy.potential import Potential
+from quippy.descriptors import Descriptor
 
-import GEBF_ML
+from gebf_mlff.calculators.GEBF_ML import GEBF_ML
 
 
 # @ref https://libatoms.github.io/GAP/gap_fitting_tutorial.html#train-our-GAP_3b-model-from-the-command-line
 class GEBF_GAP(GEBF_ML):
 
+    _deprecated=object()
+
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
                  label=None, atoms=None, directory='.',
                  **kwargs):
-       super().__init__(restart, ignore_bad_restart_file, label, atoms, directory, pdb_id=pdb_id, ext_type="gap")
-       
+
+        super().__init__(restart=restart, 
+                ignore_bad_restart_file=ignore_bad_restart_file, 
+                label=label, 
+                atoms=atoms, 
+                directory=directory, 
+                pdb_id=kwargs.get("pdb_id"),
+                ext_type="gap")
+        
 
 
-    def train_model(self, model_file: str, atypes: list[str], traj: list[Atoms]):
+    def train_model(self, model_file: str, atypes: list, traj: list):
 
         dataset_dir = self.data_dir + "/gap_dataset"
         os.mkdir(dataset_dir)

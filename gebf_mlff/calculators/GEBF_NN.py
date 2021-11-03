@@ -20,15 +20,15 @@ from ase.md.langevin import Langevin
 from ase.calculators.gaussian import Gaussian
 from ase.calculators.mopac import MOPAC
 
-from quippy.quippy.potential import Potential
-from quippy.quippy.descriptors import Descriptor
+from quippy.potential import Potential
+from quippy.descriptors import Descriptor
 
 from deepmd.calculator import DP
 
 import json
 
-import GEBF_ML
-from src.helper import get_avaliable_gpu
+from gebf_mlff.calculators.GEBF_ML import GEBF_ML
+from gebf_mlff.helper import get_avaliable_gpu
 
 
 # @ref https://docs.deepmodeling.org/projects/deepmd/en/master/train/training.html

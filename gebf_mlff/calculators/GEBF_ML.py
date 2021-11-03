@@ -20,31 +20,32 @@ from ase.md.langevin import Langevin
 from ase.calculators.gaussian import Gaussian
 from ase.calculators.mopac import MOPAC
 
-from quippy.quippy.potential import Potential
-from quippy.quippy.descriptors import Descriptor
+from quippy.potential import Potential
+from quippy.descriptors import Descriptor
 
-class GEBF_ML(abc.ABC, Calculator):
+class GEBF_ML(Calculator):
 
     implemented_properties = ['energy', 'energies', 'forces', 'stresses']
+
+    _deprecated=object()
 
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
                  label=None, atoms=None, directory='.',
                  **kwargs):
 
-
         self.pdb_id = kwargs.get("pdb_id")
         self.ext_type = kwargs.get("ext_type")
         
-        self.data_dir=os.getcwd() + "/data/" + pdb_id
-        self.subfrag_dir=data_dir + "/" + pdb_id + "_subsys"
-        self.dft_model_file=data_dir + "/dft_model.{self.ext_type}.xml"
-        self.pm6_model_file=data_dir + "/pm6_model.{self.ext_type}.xml"
+        self.data_dir=os.getcwd() + "/data/" + self.pdb_id
+        self.subfrag_dir=self.data_dir + "/" + self.pdb_id + "_subsys"
+        self.dft_model_file=self.data_dir + "/dft_model.{self.ext_type}.xml"
+        self.pm6_model_file=self.data_dir + "/pm6_model.{self.ext_type}.xml"
 
         
         # Verifies if the models has been created
-        if (not os.exists(self.data_dir) \
+        if (not os.path.exists(self.data_dir) \
             or \
-            (not self.dft_model_file) and (not self.pm6_model_file)):
+            (not os.path.exists(self.dft_model_file)) and (not os.path.exists(self.pm6_model_file))):
             self.train(atoms)
         
         Calculator.__init__(self, restart, ignore_bad_restart_file, label, atoms, kwargs)
@@ -130,7 +131,7 @@ class GEBF_ML(abc.ABC, Calculator):
         com_file="/tmp/" + dir_name + ".com"
         gjf_file="/tmp/" + dir_name + ".gjf"
         sh_file="/tmp/" + dir_name + ".sh"
-        write(pdb_file, atoms, "pdb")
+        write(pdb_file, atoms)
         os.system("load_gaussian; newzmat " + " -ipdb -ocom " + pdb_file + " " + com_file)
         prepend = "%chk=" + dir_name + "\n" + "%nproc=56\n%njobs=6\n%Gver=g16\n%mem=5gb\n# pm6 \ngebf{dis=3, maxsubfrag=11, frag=protein}\n"
         content = os.read(com_file)
@@ -172,7 +173,8 @@ class GEBF_ML(abc.ABC, Calculator):
             end = subfrag.split("-")[1] - 1
             _range = start - end
             for index in _range:
-                atom = Atom(symbol=atoms_symbol[index + start], position=atoms_pos[index + start])
+                atom = Atom(symbol=atoms_symbol[i
+    @abc.abstractmethodndex + start], position=atoms_pos[index + start])
                 atoms.append(atom)
                 
         mol = Atoms(atoms)
@@ -196,7 +198,6 @@ class GEBF_ML(abc.ABC, Calculator):
         
         return traj_db
 
-    @abc.abstract_method
-    def train_model(self, model_file: str, atypes: list[str], traj: list[Atoms]):
-        pass
+    def train_model(self, model_file: str, atypes: list, traj: list):
+        raise NotImplementedError("train_model has not been implemented.")
         

@@ -2,8 +2,7 @@ import os
 
 import ase
 
-from src.calculators.GEBF_GAP import GEBF_GAP
-from src.calculators.GEBF_NN import GEBF_NN
+from gebf_mlff.calculators.GEBF_GAP import GEBF_GAP
 
 # Complete 
 
