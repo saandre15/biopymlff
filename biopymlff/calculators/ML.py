@@ -1,5 +1,6 @@
 import os
 
+from ase.atoms import Atoms
 from ase.calculators.calculator import Calculator
 
 class ML(Calculator):
