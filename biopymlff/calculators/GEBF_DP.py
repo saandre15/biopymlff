@@ -27,21 +27,21 @@ from deepmd.calculator import DP
 
 import json
 
-from gebf_mlff.calculators.GEBF_ML import GEBF_ML
-from gebf_mlff.helper import get_avaliable_gpu
+from biopymlff.calculators.GEBF_ML import GEBF_ML
+from biopymlff.helper import get_avaliable_gpu
 
 
 # @ref https://docs.deepmodeling.org/projects/deepmd/en/master/train/training.html
-class GEBF_NN(DP, GEBF_ML):
+class GEBF_DP(DP, GEBF_ML):
 
     datasplit = 0.5
 
     def __init__():
-        super().__init__(restart, ignore_bad_restart_file, label, atoms, directory, pdb_id=pdb_id, ext_type="nn")
+        super().__init__(restart, ignore_bad_restart_file, label, atoms, directory, pdb_id=pdb_id, ext_type="deep_pot")
 
-    def train_model(self, model_file: str, atypes: list[str], traj: list[Atoms]):
+    def train_model(self, model_file: str, atypes: list, traj: list, type="default"):
 
-        dataset_dir = self.data_dir + "/nn_dataset"
+        dataset_dir = self.data_dir + "/deep_pot_dataset"
         train_dir = dataset_dir + "/train"
         validate_dir = dataset_dir + "/validate"
         os.mkdir(dataset_dir)

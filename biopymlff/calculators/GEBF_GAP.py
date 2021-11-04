@@ -23,7 +23,7 @@ from ase.calculators.mopac import MOPAC
 from quippy.potential import Potential
 from quippy.descriptors import Descriptor
 
-from gebf_mlff.calculators.GEBF_ML import GEBF_ML
+from biopymlff.calculators.GEBF_ML import GEBF_ML
 
 
 # @ref https://libatoms.github.io/GAP/gap_fitting_tutorial.html#train-our-GAP_3b-model-from-the-command-line
@@ -45,7 +45,7 @@ class GEBF_GAP(GEBF_ML):
         
 
 
-    def train_model(self, model_file: str, atypes: list, traj: list):
+    def train_model(self, model_file: str, atypes: list, traj: list, type="default"):
 
         dataset_dir = self.data_dir + "/gap_dataset"
         os.mkdir(dataset_dir)
@@ -57,7 +57,7 @@ class GEBF_GAP(GEBF_ML):
         os.system("""
         gap_fit atoms_filename= # input data in extended XYZ format
             gap={                              # start of descriptor and kernel spec
-                soap                              # second descriptor is a SOAP
+                soap                              # first descriptor is a SOAP
                     l_max=6 n_max=12                  # number of angular and radial basis functions for SOAP
                     atom_sigma=0.5                    # Gaussian smearing width of atom density for SOAP, in Angstrom
                     cutoff=5.0                        # distance cutoff in the kernel, in Angstrom

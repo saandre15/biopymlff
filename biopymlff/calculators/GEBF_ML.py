@@ -21,9 +21,11 @@ from ase.calculators.gaussian import Gaussian
 from ase.calculators.mopac import MOPAC
 
 from quippy.potential import Potential
-from quippy.descriptors import Descriptor
 
-class GEBF_ML(Calculator):
+from biopymlff.calculators.ML import ML
+
+
+class GEBF_ML(ML):
 
     implemented_properties = ['energy', 'energies', 'forces', 'stresses']
 
@@ -36,13 +38,13 @@ class GEBF_ML(Calculator):
         self.pdb_id = kwargs.get("pdb_id")
         self.ext_type = kwargs.get("ext_type")
         
-        self.data_dir=os.getcwd() + "/data/" + self.pdb_id
         self.subfrag_dir=self.data_dir + "/" + self.pdb_id + "_subsys"
-        # Model Files
+
         self.dft_model_file=self.data_dir + "/dft_model.{self.ext_type}.xml"
         self.pm6_model_file=self.data_dir + "/pm6_model.{self.ext_type}.xml"
+        self.add_model(self.dft_model_file)
+        self.add_model(self.pm6_model_file)
 
-        
         # Verifies if the models has been created
         if (not os.path.exists(self.data_dir) \
             or \
@@ -81,7 +83,7 @@ class GEBF_ML(Calculator):
     def train(self, atoms: Atoms):
         temp = 300
         friction = 1
-        # Runs some kind of structal optimization [MOPAC]
+        # Runs some kind of structal optimization if neccesiary [MOPAC]
         subfrag_dir = self.subfrag(atoms)
         filename_woext=""
         numfiles = len([f for f in os.listdir(dir_name) if os.path.isfile(os.path.join(dir_name, f)) and f[0] != '.'])
@@ -92,7 +94,7 @@ class GEBF_ML(Calculator):
         all_pm6_traj = []
         atom_types = []
 
-        for index in range(1, frag_count):
+        for index in range(0, frag_count):
             atoms: Atoms = read_xyz(subfrag_dir + filename_woext + "_" + index + ".xyz")
             
             dft_traj = self \
@@ -152,7 +154,7 @@ class GEBF_ML(Calculator):
         os.system("chmod +x" + script)
         os.system(script)
         # Converts a gaussian input file to a lsqc input file
-        script = open(mk_lsqc_input)
+        script = open(mk_lsqc_input, "w")
         script.write(   f"""
                         %chk={dir_name}.chk
                         %nproc={cpu_count}
@@ -169,8 +171,8 @@ class GEBF_ML(Calculator):
         )
         os.system("chmod +x " + script)
         script.close()
-        # Moves the input file to the project directory
-        script = open(run_lsqc)
+        # Moves the input file and runs it to have the dataset within the project directory
+        script = open(run_lsqc, "w")
         script.write(f"""
                                 #!/bin/bash
                                 module use /work2/01114/jfonner/frontera/modulefiles
@@ -223,24 +225,6 @@ class GEBF_ML(Calculator):
         mol = Atoms(atoms)
         return mol
 
-    def generate_subsets(self, atoms: Atoms, potential: Potential):      
-        temp = 500
-        friction = 0.1
-
-        traj_db=self.run_md(atoms, desc_vector, temp, friction)
-        
-        return traj_db
-        
-    def run_md(self):
-        traj_db = []
-        
-        dynamics = Langevin(atoms, timestep)
-        collect_data = lambda: traj_db.append(atoms.copy())
-        dynamics.attach(collect_data, interval=10)
-        dynamics.run(steps=500)
-        
-        return traj_db
-
-    def train_model(self, model_file: str, atypes: list, traj: list):
+    def train_model(self, model_file: str, atypes: list, traj: list, type="default"):
         raise NotImplementedError("train_model has not been implemented.")
         
