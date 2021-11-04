@@ -88,8 +88,6 @@ class HDNN4G(ML):
             'stresses': self.calculate_numerical_stress(atoms)
         }
 
-    def get_electronegativity(atoms):
-        pass
     
     def get_interatomic_elec_energy(self, 
         cur_coord: float, 

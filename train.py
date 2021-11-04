@@ -2,7 +2,7 @@ import os
 
 import ase
 
-from gebf_mlff.calculators.GEBF_GAP import GEBF_GAP
+from biopymlff.calculators.GEBF_GAP import GEBF_GAP
 
 # Complete 
 
