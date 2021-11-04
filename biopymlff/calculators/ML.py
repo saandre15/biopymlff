@@ -5,8 +5,11 @@ from ase.calculators.calculator import Calculator
 
 class ML(Calculator):
 
-
-    def __init__(self):
+    _deprecated = object()
+    
+    def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
+                 label=None, atoms=None, directory='.',
+                 **kwargs):
 
         self.models = []
         self.data_dir=os.getcwd() + "/data/" + self.pdb_id
