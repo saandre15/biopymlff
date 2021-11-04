@@ -38,6 +38,7 @@ class GEBF_ML(Calculator):
         
         self.data_dir=os.getcwd() + "/data/" + self.pdb_id
         self.subfrag_dir=self.data_dir + "/" + self.pdb_id + "_subsys"
+        # Model Files
         self.dft_model_file=self.data_dir + "/dft_model.{self.ext_type}.xml"
         self.pm6_model_file=self.data_dir + "/pm6_model.{self.ext_type}.xml"
 
@@ -130,21 +131,62 @@ class GEBF_ML(Calculator):
         pdb_file="/tmp/" + dir_name + ".pdb"
         com_file="/tmp/" + dir_name + ".com"
         gjf_file="/tmp/" + dir_name + ".gjf"
-        sh_file="/tmp/" + dir_name + ".sh"
+        xyz_file="/tmp/" + dir_name + ".xyz"
+        mk_gassuian_input="/tmp/" + dir_name + ".gaussian.sh"
+        mk_lsqc_input="/tmp/" + dir_name + ".lsqc.sh"
+        run_lsqc="/tmp/" + dir_name + ".run.sh"
+        cpu_count=os.cpu_count()
+        # Write the atom to a pdb
         write(pdb_file, atoms)
-        os.write(sh_file, "#!/bin/bash\nmodule use /work2/01114/jfonner/frontera/modulefiles;  module load gaussian ;newzmat " + " -ipdb -ocom " + pdb_file + " " + com_file)
-        os.system("chmod +x" + sh_file)
-        os.system(sh_file)
-        prepend = "%chk=" + dir_name + "\n" + "%nproc=56\n%njobs=6\n%Gver=g16\n%mem=5gb\n# pm6 \ngebf{dis=3, maxsubfrag=11, frag=protein}\n"
-        content = os.read(com_file)
-        append = "\n"
-        os.write(gjf_file, prepend + content + append)
+        # Converts the pdb to a gaussian input file
+        script = open(mk_com_file, "w")
+        script.write(
+            f"""
+            "#!/bin/bash
+            module use /work2/01114/jfonner/frontera/modulefiles
+            module load gaussian
+            newzmat " + " -ipdb -ocom " + {pdb_file} + " " + {com_file}
+            """
+        )
+        script.close()
+        os.system("chmod +x" + script)
+        os.system(script)
+        # Converts a gaussian input file to a lsqc input file
+        script = open(mk_lsqc_input)
+        script.write(   f"""
+                        %chk={dir_name}.chk
+                        %nproc={cpu_count}
+                        %njobs=6
+                        %Gver=g16
+                        %mem=10gb
+                        # pm7
+
+                        # gebf{{dis=3, maxsubfrag=11, frag=protein}}
+
+                        {os.read(com_file)}
+
+                        """
+        )
+        os.system("chmod +x " + script)
+        script.close()
+        # Moves the input file to the project directory
+        script = open(run_lsqc)
+        script.write(f"""
+                                #!/bin/bash
+                                module use /work2/01114/jfonner/frontera/modulefiles
+                                module load gaussian
+                                export OMP_NUM_THREADS={cpu_count}
+                                cd {project_dir}
+                                mkdir {dir_name}
+                                cp {xyz_file} {dir_name}
+                                cp {gjf_file} {project_dir}
+                                lsqc {os.path.basename(gjf_file)}
+                                """)
+
+        os.system("chmod +x " + script)
+        os.system(script)
         
-        os.system("lsqc " + gjf_file)
-        os.write(sh_file, content)
-        os.system("chmod +x " + sh_file)
-        os.system(sh_file)
-        
+        # Creates the subsystems
         with open(project_dir + "/" + dir_name + ".frg", "r") as file:
             index = 0
             for line in file:
@@ -175,8 +217,7 @@ class GEBF_ML(Calculator):
             end = subfrag.split("-")[1] - 1
             _range = start - end
             for index in _range:
-                atom = Atom(symbol=atoms_symbol[i
-    @abc.abstractmethodndex + start], position=atoms_pos[index + start])
+                atom = Atom(symbol=atoms_symbol[index + start], position=atoms_pos[index + start])
                 atoms.append(atom)
                 
         mol = Atoms(atoms)
