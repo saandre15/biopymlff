@@ -120,7 +120,6 @@ class GEBF_ML(ML):
         self.pm6_model_file = self.train_model(atom_types, all_pm6_traj)
     
     def subfrag(self, atoms: Atoms):
-        print(dir(self))
         dir_name=self.pdb_id
         project_dir=self.data_dir
         frag_dir=self.get_subfrag_dir()
@@ -154,7 +153,7 @@ newzmat -ixyz -ocom {xyz_file} {com_file}"""
         com_file_handler=open(com_file, "rt")
         com_file_content = com_file_handler.read()
         com_file_handler.close()
-        script = open(mk_lsqc_input, "w")
+        script = open(gjf_file, "w")
         script.write(f"""%chk={dir_name}.chk
 %nproc={cpu_count}
 %njobs=6
@@ -168,8 +167,7 @@ newzmat -ixyz -ocom {xyz_file} {com_file}"""
 
 """)
         script.close()
-        os.system("chmod +x " + mk_lsqc_input)
-        os.system(mk_lsqc_input)
+        os.system("lsqc " + gjf_file)
 
         # Moves the input file and runs it to have the dataset within the project directory
         # xyz_file="/tmp/" + dir_name + ".xyz"
