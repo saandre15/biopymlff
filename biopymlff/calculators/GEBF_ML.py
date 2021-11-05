@@ -176,10 +176,10 @@ gebf{{dis=3 maxsubfrag=11 frag=protein}}
 module use /work2/01114/jfonner/frontera/modulefiles
 module load gaussian
 export OMP_NUM_THREADS={cpu_count}
-cd {project_dir}
+cd {self.data_dir}
 mkdir {dir_name}
 cp {xyz_file} {dir_name}
-cp {gjf_file} {project_dir}
+cp {gjf_file} {data_dir}
 lsqc {os.path.basename(gjf_file)}""")
         script.close()
 
