@@ -8,10 +8,11 @@ class ML(Calculator):
     _deprecated = object()
     
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
-                 label=None, atoms=None, directory='.',
+                 label=None, atoms=None, directory='.', pdb_id=None,
                  **kwargs):
         
         self.models = []
+        self.pdb_id = pdb_id
         self.data_dir=os.getcwd() + "/data/" + self.pdb_id
         
         # Checks if training is required

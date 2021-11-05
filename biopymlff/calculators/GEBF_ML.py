@@ -32,12 +32,11 @@ class GEBF_ML(ML):
     _deprecated=object()
 
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
-                 label=None, atoms=None, directory='.', pdb_id=None, ext_type="default",
+                 label=None, atoms=None, directory='.', pdb_id=None, ext_type=None,
                  **kwargs):
 
-        ML.__init__(self, restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory)
+        ML.__init__(self, restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
 
-        self.pdb_id = pdb_id
         self.ext_type = ext_type
         
         self.subfrag_dir=self.data_dir + "/" + self.pdb_id + "_subsys"
