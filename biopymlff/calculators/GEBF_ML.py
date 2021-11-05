@@ -181,6 +181,7 @@ cp {xyz_file} {dir_name}
 cp {gjf_file} .
 mkdir -p {self.get_subfrag_dir()}
 lsqc {os.path.basename(gjf_file)}
+echo "test"
 """)
         script.close()
 
