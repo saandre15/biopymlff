@@ -32,7 +32,7 @@ class GEBF_ML(ML):
     _deprecated=object()
 
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
-                 label=None, atoms=None, directory='.',
+                 label=None, atoms=None, directory='.', pdb_id="", ext_type="default"
                  **kwargs):
 
         super().__init__(self, restart, ignore_bad_restart_file, label, atoms, directory, kwargs)

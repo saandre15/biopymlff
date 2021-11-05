@@ -32,18 +32,18 @@ class GEBF_GAP(GEBF_ML):
     _deprecated=object()
 
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
-                 label=None, atoms=None, directory='.',
+                 label=None, atoms=None, directory='.', pdb_id=None
                  **kwargs):
 
         GEBF_ML.__init__(
-                self,
-                restart=restart, 
-                ignore_bad_restart_file=ignore_bad_restart_file, 
-                label=label, 
-                atoms=atoms, 
-                directory=directory, 
-                pdb_id=kwargs.get("pdb_id"),
-                ext_type="gap")
+            self,
+            restart=restart, 
+            ignore_bad_restart_file=ignore_bad_restart_file, 
+            label=label, 
+            atoms=atoms, 
+            directory=directory, 
+            pdb_id=pdb_id,
+            ext_type="gap")
         
 
 
