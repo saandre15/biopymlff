@@ -52,7 +52,6 @@ class GEBF_GAP(GEBF_ML):
         write(dataset_dir + '/train.xyz', traj[0::2])
         write(dataset_dir + '/validate.xyz', traj[1::2])
 
-        
         os.system("""
         gap_fit atoms_filename= # input data in extended XYZ format
             gap={                              # start of descriptor and kernel spec

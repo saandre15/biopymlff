@@ -22,6 +22,7 @@ from ase.calculators.mopac import MOPAC
 
 from quippy.potential import Potential
 
+
 from biopymlff.calculators.ML import ML
 
 
@@ -123,22 +124,28 @@ class GEBF_ML(ML):
         dir_name=self.pdb_id
         project_dir=self.data_dir
         frag_dir=self.get_subfrag_dir()
-        pdb_file="/tmp/" + dir_name + ".pdb"
+        xyz_file="/tmp/" + dir_name + ".xyz"
         com_file="/tmp/" + dir_name + ".com"
         gjf_file="/tmp/" + dir_name + ".gjf"
-        xyz_file="/tmp/" + dir_name + ".xyz"
+        
         mk_gassuian_input="/tmp/" + dir_name + ".gaussian.sh"
         mk_lsqc_input="/tmp/" + dir_name + ".lsqc.sh"
         run_lsqc="/tmp/" + dir_name + ".run.sh"
         cpu_count=os.cpu_count()
         # Write the atom to a pdb
-        write(com_file, atoms)
+        write(xyz_file, atoms)
+        
+        with open(xyz_file, 'r') as fin:
+            data = fin.read().splitlines(True)
+        with open(xyz_file, 'w') as fout:
+            fout.writelines(data[2:])
+        
         # Converts the pdb to a gaussian input file
         script = open(mk_gassuian_input, "w")
         script.write(f"""#!/bin/bash
 module use /work2/01114/jfonner/frontera/modulefiles
 module load gaussian
-newzmat -icom -ocom {com_file} {"/tmp/test.com"}"""
+newzmat -icom -ocom {xyz_file} {com_file}"""
         )
         script.close()
         os.system("chmod +x " + mk_gassuian_input)
@@ -163,7 +170,9 @@ newzmat -icom -ocom {com_file} {"/tmp/test.com"}"""
         script.close()
         os.system("chmod +x " + mk_lsqc_input)
         os.system(mk_lsqc_input)
+
         # Moves the input file and runs it to have the dataset within the project directory
+        # xyz_file="/tmp/" + dir_name + ".xyz"
         script = open(run_lsqc, "w")
         script.write(f"""#!/bin/bash
 module use /work2/01114/jfonner/frontera/modulefiles
