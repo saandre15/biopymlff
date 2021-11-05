@@ -35,8 +35,7 @@ class GEBF_GAP(GEBF_ML):
                  label=None, atoms=None, directory='.', pdb_id=None,
                  **kwargs):
 
-        GEBF_ML.__init__(
-            self,
+        super().__init__(
             restart=restart, 
             ignore_bad_restart_file=ignore_bad_restart_file, 
             label=label, 

@@ -37,6 +37,7 @@ class GEBF_DP(DP, GEBF_ML):
     datasplit = 0.5
 
     def __init__():
+        
         super().__init__(restart, ignore_bad_restart_file, label, atoms, directory, pdb_id=pdb_id, ext_type="deep_pot")
 
     def train_model(self, model_file: str, atypes: list, traj: list, type="default"):

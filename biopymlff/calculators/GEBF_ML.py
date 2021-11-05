@@ -34,18 +34,16 @@ class GEBF_ML(ML):
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
                  label=None, atoms=None, directory='.', pdb_id=None, ext_type=None,
                  **kwargs):
-
-        ML.__init__(self, restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
+        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
 
         self.ext_type = ext_type
-        
-        self.subfrag_dir=self.data_dir + "/" + self.pdb_id + "_subsys"
 
         self.dft_model_file=self.data_dir + "/dft_model.{self.ext_type}.xml"
         self.pm6_model_file=self.data_dir + "/pm6_model.{self.ext_type}.xml"
         self.add_model(self.dft_model_file)
         self.add_model(self.pm6_model_file)
 
+    def get_subfrag_dir(self): return self.data_dir + "/" + self.pdb_id + "_subsys"
 
     def calculate(self, atoms: Atoms):
         gap_dft_pot=Potential(param_filename=self.dft_model_file)
@@ -89,7 +87,7 @@ class GEBF_ML(ML):
         atom_types = []
 
         for index in range(0, frag_count):
-            atoms: Atoms = read_xyz(self.subfrag_dir + filename_woext + "_" + index + ".xyz")
+            atoms: Atoms = read_xyz(self.get_subfrag_dir() + filename_woext + "_" + index + ".xyz")
             
             dft_traj = self \
                 .generate_subsets(atoms, Potential(
@@ -121,9 +119,10 @@ class GEBF_ML(ML):
         self.pm6_model_file = self.train_model(atom_types, all_pm6_traj)
     
     def subfrag(self, atoms: Atoms):
+        print(dir(self))
         dir_name=self.pdb_id
         project_dir=self.data_dir
-        frag_dir=self.subfrag_dir
+        frag_dir=self.get_subfrag_dir()
         pdb_file="/tmp/" + dir_name + ".pdb"
         com_file="/tmp/" + dir_name + ".com"
         gjf_file="/tmp/" + dir_name + ".gjf"
@@ -135,7 +134,7 @@ class GEBF_ML(ML):
         # Write the atom to a pdb
         write(pdb_file, atoms)
         # Converts the pdb to a gaussian input file
-        script = open(mk_com_file, "w")
+        script = open(mk_gassuian_input, "w")
         script.write(
             f"""
             "#!/bin/bash
@@ -145,9 +144,12 @@ class GEBF_ML(ML):
             """
         )
         script.close()
-        os.system("chmod +x" + script)
-        os.system(script)
+        os.system("chmod +x" + mk_gassuian_input)
+        os.system(mk_gassuian_input)
         # Converts a gaussian input file to a lsqc input file
+        com_file_handler=open(com_file, "rt")
+        com_file_content = com_file_handler.read()
+        com_file_handler.close()
         script = open(mk_lsqc_input, "w")
         script.write(   f"""
                         %chk={dir_name}.chk
@@ -159,12 +161,13 @@ class GEBF_ML(ML):
 
                         # gebf{{dis=3, maxsubfrag=11, frag=protein}}
 
-                        {os.read(com_file)}
+                        {com_file_content}
 
                         """
         )
-        os.system("chmod +x " + script)
         script.close()
+        os.system("chmod +x " + mk_lsqc_input)
+        os.system(ml_lsqc_input)
         # Moves the input file and runs it to have the dataset within the project directory
         script = open(run_lsqc, "w")
         script.write(f"""
@@ -178,9 +181,10 @@ class GEBF_ML(ML):
                                 cp {gjf_file} {project_dir}
                                 lsqc {os.path.basename(gjf_file)}
                                 """)
+        script.close()
 
-        os.system("chmod +x " + script)
-        os.system(script)
+        os.system("chmod +x " + run_lsqc)
+        os.system(run_lsqc)
         
         # Creates the subsystems
         with open(project_dir + "/" + dir_name + ".frg", "r") as file:

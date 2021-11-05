@@ -11,6 +11,8 @@ class ML(Calculator):
                  label=None, atoms=None, directory='.', pdb_id=None,
                  **kwargs):
 
+        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, kwargs=kwargs)
+
         self.models = []
         self.pdb_id = pdb_id
         self.data_dir=os.getcwd() + "/data/" + self.pdb_id
@@ -19,7 +21,6 @@ class ML(Calculator):
         if (not os.path.exists(self.data_dir)):
             self.train(atoms)
 
-        Calculator.__init__(self, restart, ignore_bad_restart_file, label, atoms, kwargs)
 
     # Validates if the models have bee
     def add_model(self, model: str):
