@@ -46,13 +46,6 @@ class GEBF_ML(ML):
         self.add_model(self.dft_model_file)
         self.add_model(self.pm6_model_file)
 
-        # Verifies if the models has been created
-        if (not os.path.exists(self.data_dir) \
-            or \
-            (not os.path.exists(self.dft_model_file)) and (not os.path.exists(self.pm6_model_file))):
-            self.train(atoms)
-        
-        Calculator.__init__(self, restart, ignore_bad_restart_file, label, atoms, kwargs)
 
     def calculate(self, atoms: Atoms):
         gap_dft_pot=Potential(param_filename=self.dft_model_file)

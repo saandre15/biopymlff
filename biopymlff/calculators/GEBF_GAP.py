@@ -44,8 +44,6 @@ class GEBF_GAP(GEBF_ML):
             directory=directory, 
             pdb_id=pdb_id,
             ext_type="gap")
-        
-
 
     def train_model(self, model_file: str, atypes: list, traj: list, type="default"):
 

@@ -11,11 +11,15 @@ class ML(Calculator):
                  label=None, atoms=None, directory='.', pdb_id=None,
                  **kwargs):
         
+        Calculator.__init__(self, restart, ignore_bad_restart_file, label, atoms, kwargs)
+
         self.models = []
         self.pdb_id = pdb_id
         self.data_dir=os.getcwd() + "/data/" + self.pdb_id
-        
-        # Checks if training is required
+
+        # Verifies if the models has been created
+        if (not os.path.exists(self.data_dir)):
+            self.train(atoms)
 
     # Validates if the models have bee
     def add_model(self, model: str):
