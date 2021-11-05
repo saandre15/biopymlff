@@ -136,12 +136,10 @@ class GEBF_ML(ML):
         # Converts the pdb to a gaussian input file
         script = open(mk_gassuian_input, "w")
         script.write(
-            f"""
-            #!/bin/bash
-            module use /work2/01114/jfonner/frontera/modulefiles
-            module load gaussian
-            newzmat -ipdb -ocom {pdb_file} {com_file}
-            """
+        f"""#!/bin/bash
+module use /work2/01114/jfonner/frontera/modulefiles
+module load gaussian
+newzmat -ipdb -ocom {pdb_file} {com_file}"""
         )
         script.close()
         os.system("chmod +x " + mk_gassuian_input)
@@ -151,36 +149,32 @@ class GEBF_ML(ML):
         com_file_content = com_file_handler.read()
         com_file_handler.close()
         script = open(mk_lsqc_input, "w")
-        script.write(   f"""
-                        %chk={dir_name}.chk
-                        %nproc={cpu_count}
-                        %njobs=6
-                        %Gver=g16
-                        %mem=10gb
-                        # pm7
+        script.write(f"""%chk={dir_name}.chk
+%nproc={cpu_count}
+%njobs=6
+%Gver=g16
+%mem=10gb
+# pm7
 
-                        # gebf{{dis=3, maxsubfrag=11, frag=protein}}
+# gebf{{dis=3, maxsubfrag=11, frag=protein}}
 
-                        {com_file_content}
+{com_file_content}
 
-                        """
-        )
+""")
         script.close()
         os.system("chmod +x " + mk_lsqc_input)
         os.system(ml_lsqc_input)
         # Moves the input file and runs it to have the dataset within the project directory
         script = open(run_lsqc, "w")
-        script.write(f"""
-                                #!/bin/bash
-                                module use /work2/01114/jfonner/frontera/modulefiles
-                                module load gaussian
-                                export OMP_NUM_THREADS={cpu_count}
-                                cd {project_dir}
-                                mkdir {dir_name}
-                                cp {xyz_file} {dir_name}
-                                cp {gjf_file} {project_dir}
-                                lsqc {os.path.basename(gjf_file)}
-                                """)
+        script.write(f"""#!/bin/bash
+module use /work2/01114/jfonner/frontera/modulefiles
+module load gaussian
+export OMP_NUM_THREADS={cpu_count}
+cd {project_dir}
+mkdir {dir_name}
+cp {xyz_file} {dir_name}
+cp {gjf_file} {project_dir}
+lsqc {os.path.basename(gjf_file)}""")
         script.close()
 
         os.system("chmod +x " + run_lsqc)
