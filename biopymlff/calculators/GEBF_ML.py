@@ -144,7 +144,7 @@ class GEBF_ML(ML):
             """
         )
         script.close()
-        os.system("chmod +x" + mk_gassuian_input)
+        os.system("chmod +x " + mk_gassuian_input)
         os.system(mk_gassuian_input)
         # Converts a gaussian input file to a lsqc input file
         com_file_handler=open(com_file, "rt")
