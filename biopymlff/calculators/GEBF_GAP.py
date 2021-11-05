@@ -32,7 +32,7 @@ class GEBF_GAP(GEBF_ML):
     _deprecated=object()
 
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
-                 label=None, atoms=None, directory='.', pdb_id=None
+                 label=None, atoms=None, directory='.', pdb_id=None,
                  **kwargs):
 
         GEBF_ML.__init__(
