@@ -182,7 +182,6 @@ mkdir {dir_name}
 cp {xyz_file} {dir_name}
 cp {gjf_file} .
 lsqc {os.path.basename(gjf_file)}""")
-        print(script.read())
         script.close()
 
         os.system("chmod +x " + run_lsqc)
