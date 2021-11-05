@@ -181,7 +181,8 @@ mkdir {dir_name}
 cp {xyz_file} {dir_name}
 cp {gjf_file} .
 mkdir {self.get_subfrag_dir()}
-lsqc {os.path.basename(gjf_file)}""")
+lsqc {os.path.basename(gjf_file)}
+""")
         script.close()
 
         os.system("chmod +x " + run_lsqc)
