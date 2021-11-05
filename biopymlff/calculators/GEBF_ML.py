@@ -167,7 +167,6 @@ gebf{{dis=3 maxsubfrag=11 frag=protein}}
 
 """)
         script.close()
-        os.system("lsqc " + gjf_file)
 
         # Moves the input file and runs it to have the dataset within the project directory
         # xyz_file="/tmp/" + dir_name + ".xyz"
@@ -180,7 +179,7 @@ cd {os.path.dirname(self.data_dir)}
 mkdir {dir_name}
 cp {xyz_file} {dir_name}
 cp {gjf_file} .
-mkdir {self.get_subfrag_dir()}
+mkdir -p {self.get_subfrag_dir()}
 lsqc {os.path.basename(gjf_file)}
 """)
         script.close()
