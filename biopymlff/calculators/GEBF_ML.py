@@ -140,7 +140,7 @@ class GEBF_ML(ML):
             "#!/bin/bash
             module use /work2/01114/jfonner/frontera/modulefiles
             module load gaussian
-            newzmat " + " -ipdb -ocom " + {pdb_file} + " " + {com_file}
+            newzmat -ipdb -ocom {pdb_file} {com_file}
             """
         )
         script.close()
