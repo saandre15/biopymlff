@@ -10,8 +10,6 @@ class ML(Calculator):
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
                  label=None, atoms=None, directory='.', pdb_id=None,
                  **kwargs):
-        
-        Calculator.__init__(self, restart, ignore_bad_restart_file, label, atoms, kwargs)
 
         self.models = []
         self.pdb_id = pdb_id
@@ -20,6 +18,8 @@ class ML(Calculator):
         # Verifies if the models has been created
         if (not os.path.exists(self.data_dir)):
             self.train(atoms)
+
+        Calculator.__init__(self, restart, ignore_bad_restart_file, label, atoms, kwargs)
 
     # Validates if the models have bee
     def add_model(self, model: str):
