@@ -163,7 +163,7 @@ newzmat -ipdb -ocom {pdb_file} {com_file}"""
 """)
         script.close()
         os.system("chmod +x " + mk_lsqc_input)
-        os.system(ml_lsqc_input)
+        os.system(mk_lsqc_input)
         # Moves the input file and runs it to have the dataset within the project directory
         script = open(run_lsqc, "w")
         script.write(f"""#!/bin/bash
