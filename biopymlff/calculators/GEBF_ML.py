@@ -137,7 +137,7 @@ class GEBF_ML(ML):
         script = open(mk_gassuian_input, "w")
         script.write(
             f"""
-            "#!/bin/bash
+            #!/bin/bash
             module use /work2/01114/jfonner/frontera/modulefiles
             module load gaussian
             newzmat -ipdb -ocom {pdb_file} {com_file}
