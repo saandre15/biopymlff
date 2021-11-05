@@ -12,7 +12,7 @@ from mendeleev import element
 from biopymlff.calculators.ML import ML
 
 
-class HDNN4G(ML):
+class GEBF_HDNN4G(ML):
 
     implemented_properties = ['energy', 'energies', 'force', 'stresses']
 
