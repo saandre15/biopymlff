@@ -35,7 +35,7 @@ class GEBF_ML(ML):
                  label=None, atoms=None, directory='.', pdb_id=None, ext_type="default",
                  **kwargs):
 
-        ML.__init__(self, restart, ignore_bad_restart_file, label, atoms, directory, kwargs)
+        ML.__init__(self, restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory)
 
         self.pdb_id = pdb_id
         self.ext_type = ext_type
