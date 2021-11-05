@@ -161,7 +161,7 @@ newzmat -ixyz -ocom {xyz_file} {com_file}"""
 %mem=10gb
 # pm7
 
-# gebf{{dis=3, maxsubfrag=11, frag=protein}}
+gebf{{dis=3 maxsubfrag=11 frag=protein}}
 
 {com_file_content}
 
