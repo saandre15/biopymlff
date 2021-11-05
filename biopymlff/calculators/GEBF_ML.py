@@ -145,7 +145,7 @@ class GEBF_ML(ML):
         script.write(f"""#!/bin/bash
 module use /work2/01114/jfonner/frontera/modulefiles
 module load gaussian
-newzmat -icom -ocom {xyz_file} {com_file}"""
+newzmat -ixyz -ocom {xyz_file} {com_file}"""
         )
         script.close()
         os.system("chmod +x " + mk_gassuian_input)
