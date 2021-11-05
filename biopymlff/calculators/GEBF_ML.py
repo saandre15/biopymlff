@@ -124,7 +124,6 @@ class GEBF_ML(ML):
         project_dir=self.data_dir
         frag_dir=self.get_subfrag_dir()
         pdb_file="/tmp/" + dir_name + ".pdb"
-        xyz_file="/tmp/" + dir_name + ".xyz"
         com_file="/tmp/" + dir_name + ".com"
         gjf_file="/tmp/" + dir_name + ".gjf"
         xyz_file="/tmp/" + dir_name + ".xyz"
@@ -133,13 +132,13 @@ class GEBF_ML(ML):
         run_lsqc="/tmp/" + dir_name + ".run.sh"
         cpu_count=os.cpu_count()
         # Write the atom to a pdb
-        write(xyz_file, atoms)
+        write(com_file, atoms)
         # Converts the pdb to a gaussian input file
         script = open(mk_gassuian_input, "w")
         script.write(f"""#!/bin/bash
 module use /work2/01114/jfonner/frontera/modulefiles
 module load gaussian
-newzmat -ixyz -ocom {xyz_file} {com_file}"""
+newzmat -icom -ocom {com_file} {com_file}"""
         )
         script.close()
         os.system("chmod +x " + mk_gassuian_input)
