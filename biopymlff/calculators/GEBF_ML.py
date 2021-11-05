@@ -180,6 +180,7 @@ cd {os.path.dirname(self.data_dir)}
 mkdir {dir_name}
 cp {xyz_file} {dir_name}
 cp {gjf_file} .
+mkdir {self.get_subfrag_dir()}
 lsqc {os.path.basename(gjf_file)}""")
         script.close()
 
