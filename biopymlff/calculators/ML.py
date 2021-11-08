@@ -50,7 +50,7 @@ class ML(Calculator):
         
     def run_md(self, atoms: Atoms, timestep: float, temp: float, friction: float):
         traj_db = []
-        dynamics = Langevin(atoms=atoms, timestep=timestep, temperature=temp, friction=friction)
+        dynamics = Langevin(atoms=atoms, timestep=timestep, temperature_K=temp, friction=friction)
         collect_data = lambda: traj_db.append(atoms.copy())
         dynamics.attach(collect_data, interval=10)
         dynamics.run(steps=100)

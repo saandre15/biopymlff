@@ -74,8 +74,6 @@ class GEBF_ML(ML):
         }
 
     def train(self, atoms: Atoms):
-        temp = 300
-        friction = 1
         # Runs some kind of structal optimization if neccesiary [MOPAC]
         subsystems=self.subfrag(atoms)
             
@@ -90,14 +88,19 @@ class GEBF_ML(ML):
         for subsys in subsystems:
             atoms = subsys
 
+            # dft_traj = self \
+            #     .generate_subsets(atoms, Gaussian(
+            #         mem=g_config["memory"],
+            #         chk=g_config["checkpoint_file"],
+            #         save=None,
+            #         method=g_config["method"],
+            #         basis=g_config["basis"],
+            #         scf="qc"
+            #     ))
+
             dft_traj = self \
-                .generate_subsets(atoms, Gaussian(
-                    mem=g_config["memory"],
-                    chk=g_config["checkpoint_file"],
-                    save=None,
-                    method=g_config["method"],
-                    basis=g_config["basis"],
-                    scf="qc"
+                .generate_subsets(atoms, MOPAC(
+                    method="PM6"
                 ))
             all_dft_traj.append(dft_traj)
 
