@@ -198,7 +198,7 @@ mkdir -p {self.get_subfrag_dir()}
 
         return frag_dir
 
-    def parse_fragment(self, line: str, system: Atoms, frag_dir: str) -> Atoms:
+    def parse_fragment(self, line: str, system: Atoms) -> Atoms:
         fields = line.split()
         index = fields[0]
         unknown_a = fields[1]
