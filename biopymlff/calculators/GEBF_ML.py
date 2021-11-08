@@ -117,8 +117,8 @@ class GEBF_ML(ML):
             
         # Figure out some sort of way to merge
         
-        self.dft_model_file = self.train_model(atom_types, all_dft_traj)
-        self.pm6_model_file = self.train_model(atom_types, all_pm6_traj)
+        self.train_model(self.dft_model_file, atom_types, all_dft_traj)
+        self.train_model(self.pm6_model_file, atom_types, all_pm6_traj)
     
     def subfrag(self, atoms: Atoms):
         dir_name=self.pdb_id
