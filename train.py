@@ -12,9 +12,6 @@ atoms = ase.io.read(pdb_file)
 
 calc = GEBF_GAP(atoms=atoms, pdb_id=pdb_id)
 
-calc.train()
-
-
-
+calc.train(atoms)
 
 
