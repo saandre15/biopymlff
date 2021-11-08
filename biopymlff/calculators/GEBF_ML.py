@@ -2,6 +2,7 @@ import os
 import sys
 import uuid
 import random
+import toml
 
 import numpy as np
 
@@ -21,7 +22,6 @@ from ase.calculators.gaussian import Gaussian
 from ase.calculators.mopac import MOPAC
 
 from quippy.potential import Potential
-
 
 from biopymlff.calculators.ML import ML
 
@@ -77,27 +77,30 @@ class GEBF_ML(ML):
         temp = 300
         friction = 1
         # Runs some kind of structal optimization if neccesiary [MOPAC]
-        dir_name=self.subfrag(atoms)
+        subsystems=self.subfrag(atoms)
             
         all_dft_traj = []
         all_pm6_traj = []
         atom_types = []
 
-        for filename in os.listdir(dir_name):
-            atoms: Atoms = read_xyz(filename, 0)
-            print(atoms.get_chemical_symbols())
-            
+        config=toml.load(os.getcwd() + "/env.toml")
+
+        g_config=config["gaussian"]
+
+        for subsys in subsystems:
+            atoms = subsys
+
             dft_traj = self \
                 .generate_subsets(atoms, Potential(
                     calculator=Gaussian(
-                        mem=SUBSYSTEM_MEM,
-                        chk=CHECKPOINT_FILE,
+                        mem=g_config["memory"],
+                        chk=g_config["checkpoint_file"],
                         save=None,
-                        method=METHOD,
-                        basis=BASIS,
+                        method=g_config["method"],
+                        basis=g_config["basis"],
                         scf="qc"
                     )))
-            all_dft_traj+=dft_traj
+            all_dft_traj.append(dft_traj)
 
             pm6_traj = self \
                 .generate_subsets(atoms, Potential(
@@ -105,7 +108,7 @@ class GEBF_ML(ML):
                         method="PM6"
                     )))
 
-            all_pm6_traj+=pm6_traj
+            all_pm6_traj.append(pm6_traj)
 
             atom_types+=atoms.get_chemical_symbols()
 
@@ -185,6 +188,8 @@ mkdir -p {self.get_subfrag_dir()}
         
         os.system("cd " + os.path.dirname(project_dir) + "; echo $PWD ;lsqc " + os.path.basename(gjf_file))
 
+        subsystems = []
+
         # Creates the subsystems
         with open(project_dir + "/" + dir_name + ".frg", "r") as file:
             index = 0
@@ -193,9 +198,10 @@ mkdir -p {self.get_subfrag_dir()}
                 subsys = self.parse_fragment(line, atoms)
                 print(subsys.get_chemical_symbols())
                 write(frag_dir + "/" +  uuid.uuid1().hex + "_" + str(index) + ".xyz", subsys)
+                subsystems.append(subsys)
                 index+=1
 
-        return frag_dir
+        return subsystems
 
     def parse_fragment(self, line: str, system: Atoms) -> Atoms:
         fields = line.split()
