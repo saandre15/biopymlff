@@ -48,13 +48,16 @@ class GEBF_GAP(GEBF_ML):
 
         dataset_dir = self.data_dir + "/gap_dataset"
         os.mkdir(dataset_dir)
+        
+        training_set=dataset_dir + "/train.xyz"
+        validate_set=dataset_dir + "/validate.xyz"
 
-        write(dataset_dir + '/train.xyz', traj[0::2])
-        write(dataset_dir + '/validate.xyz', traj[1::2])
+        write(training_set, traj[0::2])
+        write(validate_set, traj[1::2])
 
-        os.system("""
-        gap_fit atoms_filename= # input data in extended XYZ format
-            gap={                              # start of descriptor and kernel spec
+        os.system(f"""
+        gap_fit atoms_filename={training_set} # input data in extended XYZ format
+            gap={{                              # start of descriptor and kernel spec
                 soap                              # first descriptor is a SOAP
                     l_max=3 n_max=12                  # number of angular and radial basis functions for SOAP
                     atom_sigma=2.5                    # Gaussian smearing width of atom density for SOAP, in Angstrom
@@ -67,9 +70,9 @@ class GEBF_GAP(GEBF_ML):
                     covariance_type=dot_product       # form of kernel
                     zeta=4                            # power kernel is raised to - together with dot_product gives a polynomial kernel
                     sparse_method=cur_points          # choice of representative points, here CUR decomposition of descriptor matrix
-            }                                 # end of descriptor and kernel spec
-            default_sigma={0.002 0.2 0.2 0.0}  # default regularisation corresponding to energy, force, virial, hessian
-            config_type_sigma={                # start of per configuration-group regularisation spec, using groups defined in the input data file
+            }}                                 # end of descriptor and kernel spec
+            default_sigma={{0.002 0.2 0.2 0.0}}  # default regularisation corresponding to energy, force, virial, hessian
+            config_type_sigma={{                # start of per configuration-group regularisation spec, using groups defined in the input data file
                 isolated_atom:0.0001:0.01:1.0:0.0:
                 rss_rnd:0.03:0.4:0.5:0.0:
                 rss_005:0.02:0.3:0.4:0.0:
@@ -81,7 +84,7 @@ class GEBF_GAP(GEBF_ML):
                 liq_network:0.003:0.3:0.5:0.0:
                 2D:0.001:0.03:0.05:0.0:
                 ribbons:0.01:0.5:0.2:0.0
-            }                                 # end of per configuration-group regularisation spec
+            }}                                 # end of per configuration-group regularisation spec
             energy_parameter_name=energy       # name of the key in the input data file corresponding to the total energy
             force_parameter_name=forces        # name of the key in the input data file corresponding to the forces
             virial_parameter_name=virial       # name of the key in the input data file corresponding to the virial stress
@@ -90,7 +93,7 @@ class GEBF_GAP(GEBF_ML):
             do_copy_at_file=F                  # copy input data into potential XML file?
             sparse_separate_file=T             # write representative point data into a separate file not in the main potential XML
             core_param_file=P_r6_innercut.xml  # name of XML file containing the baseline potential (QUIP format)
-            core_ip_args={IP Glue}             # initialisation string to call baseline potential
+            core_ip_args={{IP Glue}}             # initialisation string to call baseline potential
         """)     
         
         
