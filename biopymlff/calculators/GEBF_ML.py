@@ -35,7 +35,6 @@ class GEBF_ML(ML):
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
                  label=None, atoms=None, directory='.', pdb_id=None, ext_type=None,
                  **kwargs):
-        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
 
         self.ext_type = ext_type
 
@@ -43,6 +42,9 @@ class GEBF_ML(ML):
         self.pm6_model_file=self.data_dir + "/pm6_model.{self.ext_type}.xml"
         self.add_model(self.dft_model_file)
         self.add_model(self.pm6_model_file)
+        
+        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
+
 
     def get_subfrag_dir(self): return self.data_dir + "/" + self.pdb_id + "_subsys"
 

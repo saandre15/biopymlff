@@ -73,17 +73,17 @@ class GEBF_GAP(GEBF_ML):
             }}                                 # end of descriptor and kernel spec
             default_sigma={{0.002 0.2 0.2 0.0}}  # default regularisation corresponding to energy, force, virial, hessian
             config_type_sigma={{                # start of per configuration-group regularisation spec, using groups defined in the input data file
-                isolated_atom:0.0001:0.01:1.0:0.0:
-                rss_rnd:0.03:0.4:0.5:0.0:
-                rss_005:0.02:0.3:0.4:0.0:
-                rss_200:0.01:0.2:0.2:0.0:
-                rss_3c:0.005:0.1:0.1:0.00:
-                cryst_dist:0.0003:0.03:0.05:0.00:
-                cryst_dist_hp:0.005:0.1:0.1:0.0:
-                liq_P4:0.003:0.3:0.5:0.0:
-                liq_network:0.003:0.3:0.5:0.0:
-                2D:0.001:0.03:0.05:0.0:
-                ribbons:0.01:0.5:0.2:0.0
+                # isolated_atom:0.0001:0.01:1.0:0.0:
+                # rss_rnd:0.03:0.4:0.5:0.0:
+                # rss_005:0.02:0.3:0.4:0.0:
+                # rss_200:0.01:0.2:0.2:0.0:
+                # rss_3c:0.005:0.1:0.1:0.00:
+                # cryst_dist:0.0003:0.03:0.05:0.00:
+                # cryst_dist_hp:0.005:0.1:0.1:0.0:
+                # liq_P4:0.003:0.3:0.5:0.0:
+                # liq_network:0.003:0.3:0.5:0.0:
+                # 2D:0.001:0.03:0.05:0.0:
+                # ribbons:0.01:0.5:0.2:0.0
             }}                                 # end of per configuration-group regularisation spec
             energy_parameter_name=energy       # name of the key in the input data file corresponding to the total energy
             force_parameter_name=forces        # name of the key in the input data file corresponding to the forces
