@@ -91,22 +91,20 @@ class GEBF_ML(ML):
             atoms = subsys
 
             dft_traj = self \
-                .generate_subsets(atoms, Potential(
-                    calculator=Gaussian(
-                        mem=g_config["memory"],
-                        chk=g_config["checkpoint_file"],
-                        save=None,
-                        method=g_config["method"],
-                        basis=g_config["basis"],
-                        scf="qc"
-                    )))
+                .generate_subsets(atoms, Gaussian(
+                    mem=g_config["memory"],
+                    chk=g_config["checkpoint_file"],
+                    save=None,
+                    method=g_config["method"],
+                    basis=g_config["basis"],
+                    scf="qc"
+                ))
             all_dft_traj.append(dft_traj)
 
             pm6_traj = self \
-                .generate_subsets(atoms, Potential(
-                    calculator=MOPAC(
-                        method="PM6"
-                    )))
+                .generate_subsets(atoms, MOPAC(
+                    method="PM6"
+                ))
 
             all_pm6_traj.append(pm6_traj)
 

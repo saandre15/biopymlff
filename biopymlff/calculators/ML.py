@@ -2,6 +2,7 @@ import os
 
 from ase.atoms import Atoms
 from ase.calculators.calculator import Calculator
+from ase.md.langevin import Langevin
 
 class ML(Calculator):
 
@@ -40,17 +41,18 @@ class ML(Calculator):
     def generate_subsets(self, atoms: Atoms, calc: Calculator):      
         temp = 500
         friction = 0.1
+        
+        atoms.calc = calc
 
-        traj_db=self.run_md(atoms, desc_vector, temp, friction)
+        traj_db=self.run_md(atoms, 0.05, temp, friction)
         
         return traj_db
         
-    def run_md(self):
+    def run_md(self, atoms: Atoms, timestep: float, temp: float, friction: float):
         traj_db = []
-        
-        dynamics = Langevin(atoms, timestep)
+        dynamics = Langevin(atoms=atoms, timestep=timestep, temperature=temp, friction=friction)
         collect_data = lambda: traj_db.append(atoms.copy())
         dynamics.attach(collect_data, interval=10)
-        dynamics.run(steps=500)
+        dynamics.run(steps=100)
         
         return traj_db
