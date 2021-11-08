@@ -207,6 +207,10 @@ mkdir -p {self.get_subfrag_dir()}
 
         return subsystems
 
+    # See FIG S7
+    def descriminate(self, atoms: Atoms) -> bool:
+        pass
+
     def parse_fragment(self, line: str, system: Atoms) -> Atoms:
         fields = line.split()
         index = fields[0]
