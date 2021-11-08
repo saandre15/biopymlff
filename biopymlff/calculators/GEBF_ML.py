@@ -84,7 +84,8 @@ class GEBF_ML(ML):
         atom_types = []
 
         for filename in os.listdir(dir_name):
-            atoms: Atoms = read_xyz(filename)
+            atoms: Atoms = read_xyz(filename, 0)
+            print(atoms.get_chemical_symbols())
             
             dft_traj = self \
                 .generate_subsets(atoms, Potential(
