@@ -18,12 +18,12 @@ from ase.atoms import Atoms
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.langevin import Langevin
 
-from ase.calculators.gaussian import Gaussian
 from ase.calculators.mopac import MOPAC
 
 from quippy.potential import Potential
 
 from biopymlff.calculators.ML import ML
+from biopymlff.calculators.guassian import Gaussian
 
 
 class GEBF_ML(ML):
