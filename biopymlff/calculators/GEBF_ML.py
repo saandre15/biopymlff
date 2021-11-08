@@ -216,15 +216,18 @@ mkdir -p {self.get_subfrag_dir()}
         atoms = []
 
         for subfrag in subfrags_as_array:
-            start = int(subfrag.split("-")[0]) - 1
-            end = int(subfrag.split("-")[1]) if len(subfrag.split("-")) > 1 else start + 1
-            _range = end - start
-            print("start " + str(start))
-            print("end " + str(end))
-            print("range " + str(_range))
-            for index in range(_range):
-                atom = Atom(symbol=atoms_symbol[index + start], position=atoms_pos[index + start])
-                atoms.append(atom)
+            try:
+                start = int(subfrag.split("-")[0]) - 1
+                end = int(subfrag.split("-")[1]) if len(subfrag.split("-")) > 1 else start + 1
+                _range = end - start
+                print("start " + str(start))
+                print("end " + str(end))
+                print("range " + str(_range))
+                for index in range(_range):
+                    atom = Atom(symbol=atoms_symbol[index + start], position=atoms_pos[index + start])
+                    atoms.append(atom)
+            except IndexError:
+                pass
                 
         mol = Atoms(atoms)
         return mol
