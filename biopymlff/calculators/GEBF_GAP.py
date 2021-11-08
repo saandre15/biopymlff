@@ -56,9 +56,9 @@ class GEBF_GAP(GEBF_ML):
         gap_fit atoms_filename= # input data in extended XYZ format
             gap={                              # start of descriptor and kernel spec
                 soap                              # first descriptor is a SOAP
-                    l_max=6 n_max=12                  # number of angular and radial basis functions for SOAP
-                    atom_sigma=0.5                    # Gaussian smearing width of atom density for SOAP, in Angstrom
-                    cutoff=5.0                        # distance cutoff in the kernel, in Angstrom
+                    l_max=3 n_max=12                  # number of angular and radial basis functions for SOAP
+                    atom_sigma=2.5                    # Gaussian smearing width of atom density for SOAP, in Angstrom
+                    cutoff=3                        # distance cutoff in the kernel, in Angstrom
                     radial_scaling=-0.5               # exponent of atom density scaling, power of distance
                     cutoff_transition_width=1.0       # distance across which kernel is smoothly taken to zero, in Angstrom
                     central_weight=1.0                # relative weight of central atom in atom density for SOAP

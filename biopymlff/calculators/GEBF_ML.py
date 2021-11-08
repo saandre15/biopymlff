@@ -180,14 +180,15 @@ mkdir {dir_name}
 cp {xyz_file} {dir_name}
 cp {gjf_file} .
 mkdir -p {self.get_subfrag_dir()}
+echo $PWD
 lsqc {os.path.basename(gjf_file)}
-echo "test"
 """)
         script.close()
 
         os.system("chmod +x " + run_lsqc)
         os.system(run_lsqc)
         
+
         # Creates the subsystems
         with open(project_dir + "/" + dir_name + ".frg", "r") as file:
             index = 0
