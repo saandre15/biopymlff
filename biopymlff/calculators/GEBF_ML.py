@@ -192,7 +192,7 @@ mkdir -p {self.get_subfrag_dir()}
         with open(project_dir + "/" + dir_name + ".frg", "r") as file:
             index = 0
             for line in file:
-                print(line)
+                if line == "\n" or line == "": break
                 subsys = self.parse_fragment(line, atoms)
                 print(subsys.get_chemical_symbols())
                 write(frag_dir + "/" +  uuid.uuid1().hex + "_" + str(index) + ".xyz", subsys)
