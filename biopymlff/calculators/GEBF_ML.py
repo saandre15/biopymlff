@@ -105,14 +105,14 @@ class GEBF_ML(ML):
                 .generate_subsets(atoms, MOPAC(
                     method="PM6"
                 ))
-            all_dft_traj.append(dft_traj)
+            all_dft_traj+=(dft_traj)
 
             pm6_traj = self \
                 .generate_subsets(atoms, MOPAC(
                     method="PM6"
                 ))
 
-            all_pm6_traj.append(pm6_traj)
+            all_pm6_traj+=(pm6_traj)
 
             atom_types+=atoms.get_chemical_symbols()
 
