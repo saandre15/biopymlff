@@ -184,12 +184,13 @@ echo $PWD
 ls -al
 chmod 777 {os.path.basename(gjf_file)}
 lsqc {os.path.basename(gjf_file)}
-""")
+""")    
         script.close()
 
         os.system("chmod +x " + run_lsqc)
         os.system(run_lsqc)
         
+        os.system("cd " + self.data_dir + "; lsqc " + os.path.basename(gjf_file))
 
         # Creates the subsystems
         with open(project_dir + "/" + dir_name + ".frg", "r") as file:
