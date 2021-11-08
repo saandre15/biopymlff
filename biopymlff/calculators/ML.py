@@ -19,8 +19,8 @@ class ML(Calculator):
         self.data_dir=os.getcwd() + "/data/" + self.pdb_id
 
         # Verifies if the models has been created
-        if (not os.path.exists(self.data_dir)):
-            self.train(atoms)
+        # if (not os.path.exists(self.data_dir)):
+        #     self.train(atoms)
 
 
     # Validates if the models have bee
@@ -32,7 +32,7 @@ class ML(Calculator):
             if not os.path.exists(model): raise IOError("Model not found.")
     
     def train(self, atoms: Atoms):
-        raise NotImplementedError("train_model has not been implemented.")
+        raise NotImplementedError("train has not been implemented.")
 
     def train_model(self, model_file: str, atypes: list, traj: list, type="default"):
         raise NotImplementedError("train_model has not been implemented.")

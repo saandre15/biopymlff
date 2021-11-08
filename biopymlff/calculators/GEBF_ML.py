@@ -36,14 +36,15 @@ class GEBF_ML(ML):
                  label=None, atoms=None, directory='.', pdb_id=None, ext_type=None,
                  **kwargs):
 
+        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
+
         self.ext_type = ext_type
 
         self.dft_model_file=self.data_dir + "/dft_model.{self.ext_type}.xml"
         self.pm6_model_file=self.data_dir + "/pm6_model.{self.ext_type}.xml"
         self.add_model(self.dft_model_file)
         self.add_model(self.pm6_model_file)
-        
-        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
+
 
 
     def get_subfrag_dir(self): return self.data_dir + "/" + self.pdb_id + "_subsys"
@@ -239,6 +240,4 @@ mkdir -p {self.get_subfrag_dir()}
         mol = Atoms(atoms)
         return mol
 
-    def train_model(self, model_file: str, atypes: list, traj: list, type="default"):
-        raise NotImplementedError("train_model has not been implemented.")
         
