@@ -77,7 +77,7 @@ class GEBF_ML(ML):
         temp = 300
         friction = 1
         # Runs some kind of structal optimization if neccesiary [MOPAC]
-        self.subfrag(atoms)
+        dir_name=self.subfrag(atoms)
         filename_woext=""
         numfiles = len([f for f in os.listdir(dir_name) if os.path.isfile(os.path.join(dir_name, f)) and f[0] != '.'])
         
