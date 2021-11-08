@@ -197,7 +197,7 @@ mkdir -p {self.get_subfrag_dir()}
             for line in file:
                 if line == "\n" or line == "": break
                 subsys = self.parse_fragment(line, atoms)
-                print(subsys.get_chemical_symbols())
+                # print(subsys.get_chemical_symbols())
                 write(frag_dir + "/" +  uuid.uuid1().hex + "_" + str(index) + ".xyz", subsys)
                 subsystems.append(subsys)
                 index+=1
@@ -225,9 +225,9 @@ mkdir -p {self.get_subfrag_dir()}
                 start = int(subfrag.split("-")[0]) - 1
                 end = int(subfrag.split("-")[1]) if len(subfrag.split("-")) > 1 else start + 1
                 _range = end - start
-                print("start " + str(start))
-                print("end " + str(end))
-                print("range " + str(_range))
+                # print("start " + str(start))
+                # print("end " + str(end))
+                # print("range " + str(_range))
                 for index in range(_range):
                     atom = Atom(symbol=atoms_symbol[index + start], position=atoms_pos[index + start])
                     atoms.append(atom)

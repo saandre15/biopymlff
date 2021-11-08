@@ -49,6 +49,7 @@ class ML(Calculator):
         return traj_db
         
     def run_md(self, atoms: Atoms, timestep: float, temp: float, friction: float):
+        print("Running MD Simulation")
         traj_db = []
         dynamics = Langevin(atoms=atoms, timestep=timestep, temperature_K=temp, friction=friction)
         collect_data = lambda: traj_db.append(atoms.copy())
