@@ -78,17 +78,13 @@ class GEBF_ML(ML):
         friction = 1
         # Runs some kind of structal optimization if neccesiary [MOPAC]
         dir_name=self.subfrag(atoms)
-        filename_woext=""
-        numfiles = len([f for f in os.listdir(dir_name) if os.path.isfile(os.path.join(dir_name, f)) and f[0] != '.'])
-        
-        frag_count = numfiles
-
+            
         all_dft_traj = []
         all_pm6_traj = []
         atom_types = []
 
-        for index in range(0, frag_count):
-            atoms: Atoms = read_xyz(self.get_subfrag_dir() + filename_woext + "_" + index + ".xyz")
+        for filename in os.listdir(dir_name):
+            atoms: Atoms = read_xyz(filename)
             
             dft_traj = self \
                 .generate_subsets(atoms, Potential(
