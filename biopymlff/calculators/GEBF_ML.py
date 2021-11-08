@@ -182,6 +182,7 @@ cp {gjf_file} .
 mkdir -p {self.get_subfrag_dir()}
 echo $PWD
 ls -al
+chmod 777 {os.path.basename(gjf_file)}
 lsqc {os.path.basename(gjf_file)}
 """)
         script.close()
