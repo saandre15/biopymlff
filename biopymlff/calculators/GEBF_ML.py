@@ -193,7 +193,7 @@ mkdir -p {self.get_subfrag_dir()}
             index = 0
             for line in file:
                 subsys = self.parse_fragment(line, atoms)
-                write(frag_dir + "/" +  uuid.uuid1().hex + "_" + index + ".xyz", subsys)
+                write(frag_dir + "/" +  uuid.uuid1().hex + "_" + str(index) + ".xyz", subsys)
                 index+=1
 
         return frag_dir
