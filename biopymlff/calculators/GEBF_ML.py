@@ -210,7 +210,7 @@ mkdir -p {self.get_subfrag_dir()}
             .replace("(", "") \
             .split(",") \
         
-        atoms_symbol = system.get_chemical_symbol()
+        atoms_symbol = system.get_chemical_symbols()
         atoms_pos = system.get_positions()
         atoms = []
 
