@@ -215,8 +215,8 @@ mkdir -p {self.get_subfrag_dir()}
         atoms = []
 
         for subfrag in subfrags_as_array:
-            start = subfrag.split("-")[0] - 1
-            end = subfrag.split("-")[1] - 1
+            start = int(subfrag.split("-")[0]) - 1
+            end = int(subfrag.split("-")[1]) - 1
             _range = start - end
             for index in _range:
                 atom = Atom(symbol=atoms_symbol[index + start], position=atoms_pos[index + start])
