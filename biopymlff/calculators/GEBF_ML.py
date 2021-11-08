@@ -186,7 +186,7 @@ mkdir -p {self.get_subfrag_dir()}
         os.system("chmod +x " + run_lsqc)
         os.system(run_lsqc)
         
-        os.system("cd " + project_dir + "; echo $PWD ;lsqc " + os.path.basename(gjf_file))
+        os.system("cd " + os.path.dirname(project_dir) + "; echo $PWD ;lsqc " + os.path.basename(gjf_file))
 
         # Creates the subsystems
         with open(project_dir + "/" + dir_name + ".frg", "r") as file:
