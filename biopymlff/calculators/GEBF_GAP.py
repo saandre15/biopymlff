@@ -50,10 +50,10 @@ class GEBF_GAP(GEBF_ML):
         os.mkdir(dataset_dir)
         
         training_set=dataset_dir + "/train.xyz"
-        validate_set=dataset_dir + "/validate.xyz"
+        # validate_set=dataset_dir + "/validate.xyz"
 
-        write(training_set, traj[0::2])
-        write(validate_set, traj[1::2])
+        write(training_set, traj)
+        # write(validate_set, traj[1::2])
 
         os.system(f"""
         gap_fit atoms_filename={training_set} # input data in extended XYZ format
