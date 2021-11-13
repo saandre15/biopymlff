@@ -24,8 +24,11 @@ class ML(Calculator):
 
 
     # Validates if the models have bee
-    def add_model(self, model: str):
+    def add_model(self, type: str, model_path: str):
         self.models.append(model)
+    
+    def get_model(type: str):
+        pass
 
     def calculate(self, atoms: Atoms):
         for model in self.models:

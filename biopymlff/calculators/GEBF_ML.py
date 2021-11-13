@@ -23,14 +23,15 @@ from ase.calculators.mopac import MOPAC
 from quippy.potential import Potential
 
 from biopymlff.calculators.ML import ML
+from biopymlff.calculators.GEBF import GEBF
 from biopymlff.calculators.guassian import Gaussian
 
 
-class GEBF_ML(ML):
+class GEBF_ML(GEBF, ML):
 
     implemented_properties = ['energy', 'energies', 'forces', 'stresses']
 
-    _deprecated=object()
+    _deprecated=Calculator._deprecated
 
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
                  label=None, atoms=None, directory='.', pdb_id=None, ext_type=None,
@@ -40,26 +41,20 @@ class GEBF_ML(ML):
 
         self.ext_type = ext_type
 
-        self.dft_model_file=self.data_dir + "/dft_model.{self.ext_type}.xml"
-        self.pm6_model_file=self.data_dir + "/pm6_model.{self.ext_type}.xml"
-        self.add_model(self.dft_model_file)
-        self.add_model(self.pm6_model_file)
+        self.add_model("dft", self.dft_model_file)
+        self.add_model("pm6", self.pm6_model_file)
 
 
 
     def get_subfrag_dir(self): return self.data_dir + "/" + self.pdb_id + "_subsys"
 
     def calculate(self, atoms: Atoms):
-        gap_dft_pot=Potential(param_filename=self.dft_model_file)
-        gap_pm6_pot=Potential(param_filename=self.pm6_model_file)
+        gap_dft_pot=Potential(param_filename=self.get_model("dft"))
+        gap_pm6_pot=Potential(param_filename=self.get_model("pm6"))
         
-        mopac_pot = Potential(
-            calculator=MOPAC(
-                method="PM6"
-            )
-        )
+        gebf_pm6_pot = GEBF()
 
-        atoms.calc = mopac_pot
+        atoms.calc = gebf_pm6_pot
         
         pm6_base_energy = atoms.get_potential_energy()
         
@@ -91,20 +86,16 @@ class GEBF_ML(ML):
         for subsys in subsystems:
             atoms = subsys
 
-            # dft_traj = self \
-            #     .generate_subsets(atoms, Gaussian(
-            #         mem=g_config["memory"],
-            #         chk=g_config["checkpoint_file"],
-            #         save=None,
-            #         method=g_config["method"],
-            #         basis=g_config["basis"],
-            #         scf="qc"
-            #     ))
-
             dft_traj = self \
-                .generate_subsets(atoms, MOPAC(
-                    method="PM6"
+                .generate_subsets(atoms, Gaussian(
+                    mem=g_config["memory"],
+                    chk=g_config["checkpoint_file"],
+                    save=None,
+                    method=g_config["method"],
+                    basis=g_config["basis"],
+                    scf="qc"
                 ))
+
             all_dft_traj+=(dft_traj)
 
             pm6_traj = self \
@@ -122,90 +113,9 @@ class GEBF_ML(ML):
         
         self.train_model(self.dft_model_file, atom_types, all_dft_traj)
         self.train_model(self.pm6_model_file, atom_types, all_pm6_traj)
-    
-    def subfrag(self, atoms: Atoms):
-        dir_name=self.pdb_id
-        project_dir=self.data_dir
-        frag_dir=self.get_subfrag_dir()
-        xyz_file="/tmp/" + dir_name + ".xyz"
-        com_file="/tmp/" + dir_name + ".com"
-        gjf_file="/tmp/" + dir_name + ".gjf"
-        
-        mk_gassuian_input="/tmp/" + dir_name + ".gaussian.sh"
-        mk_lsqc_input="/tmp/" + dir_name + ".lsqc.sh"
-        run_lsqc="/tmp/" + dir_name + ".run.sh"
-        cpu_count=os.cpu_count()
-        # Write the atom to a pdb
-        write(xyz_file, atoms)
-        
-        with open(xyz_file, 'r') as fin:
-            data = fin.read().splitlines(True)
-        with open(xyz_file, 'w') as fout:
-            fout.writelines(data[2:])
-        
-        # Converts the pdb to a gaussian input file
-        script = open(mk_gassuian_input, "w")
-        script.write(f"""#!/bin/bash
-module use /work2/01114/jfonner/frontera/modulefiles
-module load gaussian
-newzmat -ixyz -ocom {xyz_file} {com_file}"""
-        )
-        script.close()
-        os.system("chmod +x " + mk_gassuian_input)
-        os.system(mk_gassuian_input)
-        # Converts a gaussian input file to a lsqc input file
-        com_file_handler=open(com_file, "rt")
-        com_file_content = com_file_handler.read()
-        com_file_handler.close()
-        script = open(gjf_file, "w")
-        script.write(f"""%chk={dir_name}.chk
-%nproc={cpu_count}
-%njobs=6
-%Gver=g16
-%mem=10gb
-# pm7
 
-gebf{{dis=3 maxsubfrag=11 frag=protein}}
-
-{com_file_content}
-
-""")
-        script.close()
-
-        # Moves the input file and runs it to have the dataset within the project directory
-        # xyz_file="/tmp/" + dir_name + ".xyz"
-        script = open(run_lsqc, "w")
-        script.write(f"""#!/bin/bash
-module use /work2/01114/jfonner/frontera/modulefiles
-module load gaussian
-export OMP_NUM_THREADS={cpu_count}
-cd {os.path.dirname(project_dir)}
-mkdir {dir_name}
-cp {xyz_file} {dir_name}
-cp {gjf_file} .
-mkdir -p {self.get_subfrag_dir()}
-""")    
-        script.close()
-
-        os.system("chmod +x " + run_lsqc)
-        os.system(run_lsqc)
-        
-        os.system("cd " + os.path.dirname(project_dir) + "; echo $PWD ;lsqc " + os.path.basename(gjf_file))
-
-        subsystems = []
-
-        # Creates the subsystems
-        with open(project_dir + "/" + dir_name + ".frg", "r") as file:
-            index = 0
-            for line in file:
-                if line == "\n" or line == "": break
-                subsys = self.parse_fragment(line, atoms)
-                # print(subsys.get_chemical_symbols())
-                write(frag_dir + "/" +  uuid.uuid1().hex + "_" + str(index) + ".xyz", subsys)
-                subsystems.append(subsys)
-                index+=1
-
-        return subsystems
+    def fragment(self, atoms: Atoms):
+        pass
 
     # See FIG S7
     def descriminate(self, atoms: Atoms) -> bool:

@@ -1,5 +1,5 @@
 # BIOPYMLFF
-Machine Learning Force Fields for large biochemical systems
+A framework for developing Machine Learning Force Fields for large biochemical systems
 
 # Installation
 ```bash
