@@ -10,3 +10,4 @@ pip install mendeleev
 pip install toml
 pip install networkx
 pip install tk
+pip install networkx
