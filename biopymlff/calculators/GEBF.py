@@ -155,6 +155,7 @@ class GEBF(FileIOCalculator):
         if 'LSQC' in self.command:
             for program in lsqc:
                 if which(program):
+                    print("test")
                     self.command = self.command.replace('LSQC', program)
                     break
             else: 
