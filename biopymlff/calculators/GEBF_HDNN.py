@@ -17,7 +17,6 @@ class GEBF_HDNN4G(ML):
     implemented_properties = ['energy', 'energies', 'force', 'stresses']
 
     def __init__(self):
-
         self.atomic_electronegativity_model_file=self.data_dir + "/electronegativity.hdnn4g.h5"
         self.atomic_shortrange_energy_model_file=self.data_dir + "/short_range_energy.hdnn4g.h5"
         self.add_model(self.atomic_electronegativity_model_file)

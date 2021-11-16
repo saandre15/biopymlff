@@ -1,13 +1,16 @@
+from ase.atom import Atom
+
 class AtomGraphNode():
 
     def __init__(self, atom: Atom):
         self.visited = False
         self.atom = atom
 
-    def visited(self):
+    def isVisited(self):
         return self.visited
 
     def setVisited(self, state: bool):
-        pass
+        self.visited = state
 
-    def getAtom(): return self.atom
+    def getAtom(self): return self.atom
+

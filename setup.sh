@@ -9,3 +9,4 @@ pip install quippy-ase
 pip install mendeleev
 pip install toml
 pip install networkx
+pip install tk

@@ -23,7 +23,7 @@ from ase.calculators.mopac import MOPAC
 from quippy.potential import Potential
 
 from biopymlff.calculators.ML import ML
-from biopymlff.calculators.GEBF import GEBF
+from biopymlff.calculators.GEBF_PM6 import GEBF_PM6
 from biopymlff.calculators.guassian import Gaussian
 
 
@@ -40,11 +40,8 @@ class GEBF_ML(GEBF, ML):
         super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
 
         self.ext_type = ext_type
-
         self.add_model("dft", self.dft_model_file)
         self.add_model("pm6", self.pm6_model_file)
-
-
 
     def get_subfrag_dir(self): return self.data_dir + "/" + self.pdb_id + "_subsys"
 
@@ -52,7 +49,7 @@ class GEBF_ML(GEBF, ML):
         gap_dft_pot=Potential(param_filename=self.get_model("dft"))
         gap_pm6_pot=Potential(param_filename=self.get_model("pm6"))
         
-        gebf_pm6_pot = GEBF()
+        gebf_pm6_pot = GEBF_PM6()
 
         atoms.calc = gebf_pm6_pot
         
@@ -114,8 +111,6 @@ class GEBF_ML(GEBF, ML):
         self.train_model(self.dft_model_file, atom_types, all_dft_traj)
         self.train_model(self.pm6_model_file, atom_types, all_pm6_traj)
 
-    def fragment(self, atoms: Atoms):
-        pass
 
     # See FIG S7
     def descriminate(self, atoms: Atoms) -> bool:

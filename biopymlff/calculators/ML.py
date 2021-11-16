@@ -14,21 +14,17 @@ class ML(Calculator):
 
         super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, kwargs=kwargs)
 
-        self.models = []
+        self.models = {}
         self.pdb_id = pdb_id
         self.data_dir=os.getcwd() + "/data/" + self.pdb_id
-
-        # Verifies if the models has been created
-        # if (not os.path.exists(self.data_dir)):
-        #     self.train(atoms)
 
 
     # Validates if the models have bee
     def add_model(self, type: str, model_path: str):
-        self.models.append(model)
+        self.models[type] = model_path
     
     def get_model(type: str):
-        pass
+        return self.models[type]
 
     def calculate(self, atoms: Atoms):
         for model in self.models:
@@ -39,7 +35,6 @@ class ML(Calculator):
 
     def train_model(self, model_file: str, atypes: list, traj: list, type="default"):
         raise NotImplementedError("train_model has not been implemented.")
-
 
     def generate_subsets(self, atoms: Atoms, calc: Calculator):      
         temp = 500
