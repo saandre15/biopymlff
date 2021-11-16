@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
 
-matplotlib.use('TkAgg')
+# matplotlib.use('TkAgg')
 
 import numpy as np
 

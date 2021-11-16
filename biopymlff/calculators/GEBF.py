@@ -18,6 +18,9 @@ from shutil import which
 
 from biopymlff.data.AtomGraph import AtomGraph
 
+"""
+Generalized Energy Based Fragmentation
+"""
 class GEBF(FileIOCalculator):
     
     implemented_properties = ['energy', 'forces']
@@ -167,7 +170,7 @@ class GEBF(FileIOCalculator):
         subsystems = []
         for index in len(1, size + 1):
             name = self.label + "_" + index
-            gaus = Gaussian(label=name, directory=self.directory + "/" + self.label + "_subsys")
+            # gaus = Gaussian(label=name, directory=self.directory + "/" + self.label + "_subsys")
             mol: Atoms = read_xyz(name + ".sxyz", 0)
             subsystems.append(mol)
         return subsystems
