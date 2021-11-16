@@ -1,6 +1,7 @@
 import os
 import uuid
 import math
+import shutil
 
 from ase.atoms import Atoms
 from ase.atom import Atom
@@ -29,7 +30,7 @@ class GEBF(FileIOCalculator):
         self.directory = os.getcwd() + "/data/" + label
         if not os.path.exists(self.directory): os.mkdir(self.directory)
         self.frg_file = self.get_fragment_file(atoms)
-        os.rename(self.frg_file, self.directory + "/" + label + ".frg")
+        shutil.rename(self.frg_file, self.directory + "/" + label + ".frg")
 
     def read_energy(self, lso_filepath='lso', gebf_filepath='[a]gebf', subsystems_dir="_subsys"):
         try:
