@@ -25,23 +25,23 @@ from biopymlff.data.AtomGraphNode import AtomGraphNode
 
 class AtomGraph():
 
-    organic_unpaired_electrons = {
-        'H': 0,
-        'C': 0,
-        'N': 2,
-        'O': 4,
-        'F': 6,
-        'Cl': 6,
-        'Br': 6,
-        'I': 6,
-        'Si': 0,
-        'P': 2,
-        'S': 4
-    }
-
+    
     counter = 1
 
     def __init__(self, atoms: Atoms):
+        self.organic_unpaired_electrons = {
+            'H': 0,
+            'C': 0,
+            'N': 2,
+            'O': 4,
+            'F': 6,
+            'Cl': 6,
+            'Br': 6,
+            'I': 6,
+            'Si': 0,
+            'P': 2,
+            'S': 4
+        }
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
 
