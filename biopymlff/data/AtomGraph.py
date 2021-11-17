@@ -218,15 +218,16 @@ class AtomGraph():
 
     def get_unpaired_electron_count(self):
         self.reset()
-        total_unpaired_electron = 0
+        total_unpaired_electron = []
         graph_list = [node for node in self.graph.nodes]
 
         def traversal_fn(a: AtomGraphNode, b: AtomGraphNode):
             unpaired_electron = self.organic_unpaired_electrons[a.getAtom().symbol]
-            print(total_unpaired_electron)
-            total_unpaired_electron += unpaired_electron
+            total_unpaired_electron.append(unpaired_electron)
 
         self.traverse(graph_list[0], traversal_fn)
+
+        print(total_unpaired_electron)
 
         return total_unpaired_electron
     
