@@ -223,6 +223,7 @@ class AtomGraph():
 
         def traversal_fn(a: AtomGraphNode, b: AtomGraphNode):
             unpaired_electron = self.organic_unpaired_electrons[a.getAtom().symbol]
+            print(total_unpaired_electron)
             total_unpaired_electron += unpaired_electron
 
         self.traverse(graph_list[0], traversal_fn)
