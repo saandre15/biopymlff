@@ -231,7 +231,7 @@ class AtomGraph():
 
         print(total_unpaired_electron)
 
-        return total_unpaired_electron
+        return sum(total_unpaired_electron)
     
     def size(self):
         return self.graph.number_of_nodes()
