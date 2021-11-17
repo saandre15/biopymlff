@@ -187,7 +187,7 @@ class GEBF(FileIOCalculator):
         return fragments
     
     def get_spin_multiplcity(self, atoms: Atoms):
-        return AtomGraph(atoms).get_spin_multiplcity()
+        return AtomGraph(atoms).get_spin_multiplicity()
         
     def get_fragment_file(self, atoms: Atoms) -> str:
         filename = "/tmp/" + uuid.uuid1().hex + ".frg"

@@ -24,23 +24,35 @@ from biopymlff.data.AtomGraphNode import AtomGraphNode
 
 
 class AtomGraph():
-
     
     counter = 1
 
     def __init__(self, atoms: Atoms):
-        self.organic_unpaired_electrons = {
-            'H': 0,
-            'C': 0,
-            'N': 2,
-            'O': 4,
-            'F': 6,
-            'Cl': 6,
-            'Br': 6,
-            'I': 6,
-            'Si': 0,
-            'P': 2,
-            'S': 4
+        # self.organic_unpaired_electrons = {
+        #     'H': 0,
+        #     'C': 0,
+        #     'N': 2,
+        #     'O': 4,
+        #     'F': 6,
+        #     'Cl': 6,
+        #     'Br': 6,
+        #     'I': 6,
+        #     'Si': 0,
+        #     'P': 2,
+        #     'S': 4
+        # }
+        self.electrons = {
+            'H': 1,
+            'C': 6,
+            'N': 7,
+            'O': 8,
+            # 'F': 10,
+            # 'Cl': 17,
+            # 'Br': 1,
+            # 'I': 1,
+            # 'Si': 0,
+            # 'P': 2,
+            # 'S': 1
         }
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
@@ -150,6 +162,7 @@ class AtomGraph():
                     # If the node in the graph list matches the node in the current fragment then add it to the explored atom
                     if graph_list[index].getAtom() == node.getAtom():
                         print("atom append to fragment")
+                        
                         fragment.append(index)
                         has_appended = True
                         break
@@ -210,28 +223,40 @@ class AtomGraph():
             if should_continue: 
                 self.traverse(_next, fn)
 
-    def get_spin_multiplcity(self):
-        unpaired_electron_count = self.get_unpaired_electron_count()
-        s = unpaired_electron_count / 2
-        m = (2 * s) + 1
-        return m
+    def get_spin_multiplicity(self):
+        # unpaired_electron_count = self.get_unpaired_electron_count()
+        # return unpaired_electron_count + 1
+        return 2 if self.get_electron_count() % 2 == 1 else 1
 
-    def get_unpaired_electron_count(self):
+    # def get_unpaired_electron_count(self):
+    #     self.reset()
+    #     total_unpaired_electron = []
+    #     graph_list = [node for node in self.graph.nodes]
+
+    #     def traversal_fn(a: AtomGraphNode, b: AtomGraphNode):
+    #         unpaired_electron = self.organic_unpaired_electrons[a.getAtom().symbol]
+    #         print("ELECTRON " + str(unpaired_electron))
+    #         total_unpaired_electron.append(unpaired_electron)
+    #         return True
+
+    #     self.traverse(graph_list[0], traversal_fn)
+
+    #     return sum(total_unpaired_electron)
+
+    def get_electron_count(self):
         self.reset()
-        total_unpaired_electron = []
+        total_electron = []
         graph_list = [node for node in self.graph.nodes]
 
         def traversal_fn(a: AtomGraphNode, b: AtomGraphNode):
-            unpaired_electron = self.organic_unpaired_electrons[a.getAtom().symbol]
+            unpaired_electron = self.electrons[a.getAtom().symbol]
             print("ELECTRON " + str(unpaired_electron))
-            total_unpaired_electron.append(unpaired_electron)
+            total_electron.append(unpaired_electron)
             return True
 
         self.traverse(graph_list[0], traversal_fn)
 
-        print(total_unpaired_electron)
-
-        return sum(total_unpaired_electron)
+        return sum(total_electron)
     
     def size(self):
         return self.graph.number_of_nodes()
