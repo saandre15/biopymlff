@@ -25,6 +25,20 @@ from biopymlff.data.AtomGraphNode import AtomGraphNode
 
 class AtomGraph():
 
+    organic_unpaired_electrons = {
+        'H': 0,
+        'C': 0,
+        'N': 2,
+        'O': 4,
+        'F': 6,
+        'Cl': 6,
+        'Br': 6,
+        'I': 6,
+        'Si': 0,
+        'P': 2,
+        'S': 4
+    }
+
     counter = 1
 
     def __init__(self, atoms: Atoms):
@@ -197,10 +211,23 @@ class AtomGraph():
                 self.traverse(_next, fn)
 
     def get_spin_multiplcity(self):
-        return 1 if self.get_electron_count() % 2 == 1 else 2
+        unpaired_electron_count = self.get_unpaired_electron_count()
+        s = unpaired_electron_count / 2
+        m = (2 * s) + 1
+        return m
 
-    def get_electron_count(self):
-        return 1
+    def get_unpaired_electron_count(self):
+        self.reset()
+        total_unpaired_electron = 0
+        graph_list = [node for node in self.graph.nodes]
+
+        def traversal_fn(a: AtomGraphNode, b: AtomGraphNode):
+            unpaired_electron = self.organic_unpaired_electrons[a.getAtom().symbol]
+            total_unpaired_electron += unpaired_electron
+
+        self.traverse(graph_list[0], traversal_fn)
+
+        return total_unpaired_electron
     
     def size(self):
         return self.graph.number_of_nodes()

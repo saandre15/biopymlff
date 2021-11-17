@@ -12,7 +12,7 @@ from biopymlff.data.AtomGraph import AtomGraph
 symbolA = 'C'
 symbolB = 'C'
 
-mol = read_proteindatabank(os.getcwd() + "/data/systems/4znn.not_wat.pdb")
+mol = read_proteindatabank(os.getcwd() + "/data/systems/4znn+h.pdb")
 graph = AtomGraph(mol)
 print("SIZE " + str(graph.size()))
 graph.show()
