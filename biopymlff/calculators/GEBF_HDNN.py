@@ -160,7 +160,8 @@ class GEBF_HDNN4G(ML):
             raise ValueError("Make sure the model")
         elif type == "electronegativity":
             pass
-        elif type == ""
+        elif type == "":
+            pass
 
         
 

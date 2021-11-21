@@ -1,3 +1,5 @@
 venv
 data/*
 !data/systems
+__pycache__/
+.vscode

@@ -1,0 +1,27 @@
+pages:
+- Getting Started
+  - 'Getting Started': getting-started/index.md
+    - '1. Quick Install': getting-started/ 
+    - 2. Formatting Data
+    - 3. Training a model
+    - 4. Freezing a model
+    - 5. Testing a model
+    - 6. Running MD Simulation using ASE
+
+- Detailed Guide
+  - 1. Installation
+  - 2. Data Preperation
+  - 3. Model
+  - 4. Freeze and Compress Model
+  - 5. Interface
+  - 6. Integrate with 3rd Party
+
+- Developer Guide
+  - Coding Conventions
+  - Create a model
+  - Python API
+  - Fortran API
+  
+- Project Details
+  - License
+  - Authors and Credits

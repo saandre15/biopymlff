@@ -31,8 +31,10 @@ from biopymlff.calculators.GEBF_ML import GEBF_ML
 from biopymlff.helper import get_avaliable_gpu
 
 
-# @ref https://docs.deepmodeling.org/projects/deepmd/en/master/train/training.html
 class GEBF_DP(DP, GEBF_ML):
+    """
+    Generalized Energy Based Fragmentation utilitizing Deep Potential Machine Learning Technique
+    """
 
     datasplit = 0.5
 

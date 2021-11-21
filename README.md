@@ -1,5 +1,5 @@
-# BIOPYMLFF
-A framework for developing near constant scaling quantum mechanical quality Machine Learning Force Fields for large biochemical systems.
+# BIOPYMLFF(WIP)
+A library for developing near constant scaling quantum mechanical quality Machine Learning Force Fields for large biochemical systems.
 
 ## Dependencies
 **External**
@@ -56,6 +56,9 @@ New biomolecule structures are downloaded from the PDB databank. Then the struct
 
 ## Contact
 * Torabifard Group(UT Dallas)
+
+## Citation
+See CITATION.cff
 
 ## References
 * [1] Cheng, Zheng, et al. “Building Quantum Mechanics Quality Force Fields of Proteins with the Generalized Energy-Based Fragmentation Approach and Machine Learning.” Physical Chemistry Chemical Physics, 2021, https://doi.org/10.1039/d1cp03934b. 
