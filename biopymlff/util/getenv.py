@@ -1,0 +1,2 @@
+def getenv():
+    pass

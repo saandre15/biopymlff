@@ -1,10 +1,18 @@
 # BIOPYMLFF
-A framework for developing constant scaling Machine Learning Force Fields for large biochemical systems
+A framework for developing near constant scaling Machine Learning Force Fields for large biochemical systems
 
 # Installation
 ```bash
 git clone https://github.com/saandre15/biopymlff
 ```
+
+# Model Downloads
+
+## Proteins
+
+## Lipids
+
+## DNA/RNA
 
 ## Contact
 * Torabifard Group(UT Dallas)

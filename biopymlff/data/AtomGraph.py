@@ -2,6 +2,8 @@ import os
 import random
 import math
 
+from multipledispatch import dispatch
+
 from ase.atoms import Atoms
 from ase.atom import Atom
 
@@ -15,7 +17,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-
 # matplotlib.use('TkAgg')
 
 import numpy as np
@@ -27,35 +28,60 @@ class AtomGraph():
     
     counter = 1
 
+    # @dispatch(Atoms)
     def __init__(self, atoms: Atoms):
-        # self.organic_unpaired_electrons = {
-        #     'H': 0,
-        #     'C': 0,
-        #     'N': 2,
-        #     'O': 4,
-        #     'F': 6,
-        #     'Cl': 6,
-        #     'Br': 6,
-        #     'I': 6,
-        #     'Si': 0,
-        #     'P': 2,
-        #     'S': 4
-        # }
-        self.electrons = {
-            'H': 1,
-            'C': 6,
-            'N': 7,
-            'O': 8,
-            # 'F': 10,
-            # 'Cl': 17,
-            # 'Br': 1,
-            # 'I': 1,
-            # 'Si': 0,
-            # 'P': 2,
-            # 'S': 1
-        }
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
+
+    # @dispatch(str)
+    # def __init__(self, file: str):
+    #     atom: Atoms = None
+    #     bond_list = None
+    #     if ".mol" in file or ".mol2" in file:
+    #         try:
+    #             with open(file) as file:
+    #                 lines = file.readlines()
+    #                 atom_mode = False
+    #                 bonding_mode = False
+                    
+    #                 atom_list = []
+    #                 bond_list = []
+
+    #                 for line in lines:
+    #                     if "@<TRIPOS>ATOM" in line: atom_mode = True; bonding_mode = False ; continue
+    #                     if "@<TRIPOS>BOND" in line: bonding_mode =  True; atom_mode = False ; continue
+    #                     if atom_mode:
+    #                         vals = line.split()
+    #                         symbol = vals[5].split(".")[0]
+    #                         print(symbol)
+    #                         x = float(vals[2])
+    #                         y = float(vals[3])
+    #                         z = float(vals[4])
+    #                         charge = float(vals[8])
+    #                         atom  = Atom(symbol=symbol, position=(x, y, z), charge=charge)
+    #                         atom_list.append(atom)
+    #                     if bonding_mode:
+    #                         vals = line.split()
+    #                         idx = int(vals[1]) - 1
+    #                         idy = int(vals[2]) - 1
+    #                         bond_type = vals[3]
+    #                         if bond_type == "am": bond_type = 4
+    #                         if bond_type == "ar": bond_type = 5
+    #                         if bond_type == "du": bond_type = 6
+    #                         if bond_type == "un": bond_type = 7
+    #                         if bond_type == "nc": bond_type = 8
+    #                         bond_type = int(bond_type)
+    #                         bond_list.append((idx, idy, bond_type))
+                    
+    #                 atom = Atoms(atom_list)
+
+    #         except IOError: print("Failed to read " + file)
+    #     else: raise IOError("Make sure the extension type is parsable ")
+
+    #     print(atom)
+    #     print(bond_list)
+
+    #     self.__init__(atom, bond_list)
 
     def reset(self):
 
@@ -180,6 +206,7 @@ class AtomGraph():
         return fragments
 
     def to_graph(self, atoms: Atoms) -> nx.Graph:
+        """bonds = list of (idx, idy, type: AtomGraphEdgeType)"""
         analysis = Analysis(atoms)
         graph_list = [AtomGraphNode(atom) for atom in atoms]
         bond_list = []
@@ -194,10 +221,14 @@ class AtomGraph():
         
         if len(atoms.get_positions()) == 1:
             G.add_node(graph_list[0])
-
+        
         for bond in bond_list:
             start = bond[0]
             end = bond[1]
+            bond_type = -1
+            try:
+                bond_type = bond[2]
+            except IndexError: bond_type = 7
             a = graph_list[start]
             b = graph_list[end]
             if not G.__contains__(a):
@@ -206,7 +237,7 @@ class AtomGraph():
             if not G.__contains__(b):
                 self.counter+=1
                 G.add_node(b)
-            G.add_edge(a, b, weight=1)
+            G.add_edge(a, b, weight=1, bond_type=bond_type)
         return G
 
     # fn: given our current and next atom should we continue?

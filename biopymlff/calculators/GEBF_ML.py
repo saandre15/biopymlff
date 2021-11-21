@@ -24,10 +24,11 @@ from quippy.potential import Potential
 
 from biopymlff.calculators.ML import ML
 from biopymlff.calculators.GEBF_PM6 import GEBF_PM6
+from biopymlff.calculators.GEBF_DFT import GEBF_DFT
 from biopymlff.calculators.guassian import Gaussian
 
 
-class GEBF_ML(GEBF, ML):
+class GEBF_ML(GEBF_PM6, ML):
 
     implemented_properties = ['energy', 'energies', 'forces', 'stresses']
 
@@ -42,6 +43,9 @@ class GEBF_ML(GEBF, ML):
         self.ext_type = ext_type
         self.add_model("dft", self.dft_model_file)
         self.add_model("pm6", self.pm6_model_file)
+
+        self.sigmas = []
+        self.epsilon_bayes = 0
 
     def get_subfrag_dir(self): return self.data_dir + "/" + self.pdb_id + "_subsys"
 
@@ -70,52 +74,101 @@ class GEBF_ML(GEBF, ML):
 
     def train(self, atoms: Atoms):
         # Runs some kind of structal optimization if neccesiary [MOPAC]
-        subsystems=self.subfrag(atoms)
-            
-        all_dft_traj = []
-        all_pm6_traj = []
-        atom_types = []
+        subsystems=self.subsystems()
 
         config=toml.load(os.getcwd() + "/env.toml")
 
         g_config=config["gaussian"]
 
         for subsys in subsystems:
-            atoms = subsys
-
-            dft_traj = self \
-                .generate_subsets(atoms, Gaussian(
-                    mem=g_config["memory"],
-                    chk=g_config["checkpoint_file"],
-                    save=None,
-                    method=g_config["method"],
-                    basis=g_config["basis"],
-                    scf="qc"
-                ))
-
-            all_dft_traj+=(dft_traj)
+            atoms: Atoms = subsys
 
             pm6_traj = self \
                 .generate_subsets(atoms, MOPAC(
                     method="PM6"
                 ))
-
-            all_pm6_traj+=(pm6_traj)
-
-            atom_types+=atoms.get_chemical_symbols()
-
-        atom_types = list(set(atom_types))            
             
-        # Figure out some sort of way to merge
-        
-        self.train_model(self.dft_model_file, atom_types, all_dft_traj)
-        self.train_model(self.pm6_model_file, atom_types, all_pm6_traj)
+            for index in range(0, len(pm6_traj)):
+                pm6_snapshot = pm6_traj[index]
+                updated=False
+                sigma_i = self.calculate_sigma()
+                steps_after_qm = 0
+                m = 10
+                self.sigmas.append(sigma_i)
+                sigma_max = max(self.sigmas)
+                # Decides training
+                if sigma_max > 2 * self.epsilon_bayes:
+                    if sigma_i > self.epsilon_bayes:
+                        self.update_model(pm6_snapshot)
+                        updated = True
+                        steps_after_qm+=1
+                        m = max(10, 0.18 / self.calculate_max_force_error(pm6_snapshot))
+                    else:
+                        if self.in_lib(pm6_snapshot):
+                            updated = False
+                        else:
+                            self.update_model(pm6_snapshot)
+                            updated = True
+                            steps_after_qm+=1
+                            m = max(10, 0.18 / self.calculate_max_force_error(pm6_snapshot))
+                else:
+                    if steps_after_qm < m:
+                        if sigma_max > self.epsilon_bayes:
+                            if sigma_i > self.epsilon_bayes:
+                                self.update_model(pm6_snapshot)
+                                updated = True
+                                steps_after_qm+=1
+                                m = max(10, 0.18 / self.calculate_max_force_error(pm6_snapshot))
+                            else:
+                                if self.in_lib(pm6_snapshot):
+                                    updated = False
+                                else:
+                                    self.update_model(pm6_snapshot)
+                                    updated = True
+                                    steps_after_qm+=1
+                                    m = max(10, 0.18 / self.calculate_max_force_error(pm6_snapshot))
+                    else:               
+                        updated = False
 
+                # Decides epsilon_bayes
+                if updated:
+                    sigmas_after_qm = self.sigmas[len(self.sigmas) - 1 - steps_after_qm:len(self.sigmas) - 1]
+                    sigma_max = max(sigmas_after_qm)
+                    if(steps_after_qm > 9):
+                        if self.get_standard_deviation(sigmas_after_qm) < 0.2:
+                            self.epsilon_bayes = (1/10) * sum(sigmas_after_qm)            
+                
+    def update_model(self, atoms: Atoms):
+        symbols = list(set(atoms.get_chemical_symbols()))
+        self.train_model(self.models("dft"), symbols, [atoms], "dft")
+        self.train_model(self.models("pm6"), symbols, [atoms], "pm6")
 
-    # See FIG S7
-    def descriminate(self, atoms: Atoms) -> bool:
+    def calculate_sigma(self):
         pass
 
+    def calculate_max_force_error(self, atoms: Atoms):
+        pass
+
+    def in_lib(self, atoms: Atoms) -> list:
+        pass
+
+    def get_gaussian(self, method=None, basis=None):
+        general_params = getenv()['general']
+        gaussian_params = getenv()['gaussian']
+        return Gaussian(
+            label=self.label,
+            directory=general_params['scratch_dir'] + "/gaussian/" + self.label + "_" + uuid.uuid1().hex,
+            mem=gaussian_params['mem'] \
+                if gaussian_params['mem'] != "auto" \
+                else str((os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / (1024.**3)) - 5) + "GB",
+            chk=gaussian_params['checkpoint_file'] if gaussian_params['checkpoint_file'] else self.label + ".chk",
+            save=None,
+            method=method,
+            basis=basis,
+            scf='(noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc)',
+            int='acc2e=12'
+        )
+       
     def parse_fragment(self, line: str, system: Atoms) -> Atoms:
         fields = line.split()
         index = fields[0]

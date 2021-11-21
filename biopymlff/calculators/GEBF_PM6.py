@@ -16,5 +16,5 @@ class GEBF_PM6(GEBF):
                 long_range_energy += self.calculate_long_range_energy(a, b)
         return base + long_range_energy
     
-    def which_potential(): return "E(PM6)="
+    def which_potential(): return "E(SCF)="
         

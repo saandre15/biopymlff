@@ -5,6 +5,9 @@ import random
 
 import numpy as np
 
+import toml as toml
+import os as os
+
 from ase import Atoms, Atom
 from ase.calculators.calculator import Calculator, ReadError, Parameters
 from ase.units import kcal, mol, Debye
@@ -25,6 +28,8 @@ from quippy.descriptors import Descriptor
 
 from biopymlff.calculators.GEBF_ML import GEBF_ML
 
+from biopymlff.util.getenv import getenv
+
 
 # @ref https://libatoms.github.io/GAP/gap_fitting_tutorial.html#train-our-GAP_3b-model-from-the-command-line
 class GEBF_GAP(GEBF_ML):
@@ -44,31 +49,38 @@ class GEBF_GAP(GEBF_ML):
             pdb_id=pdb_id,
             ext_type="gap")
 
+
     def train_model(self, model_file: str, atypes: list, traj: list, type="default"):
-
-        dataset_dir = self.data_dir + "/gap_dataset"
-        os.mkdir(dataset_dir)
         
-        training_set=dataset_dir + "/train.xyz"
-        # validate_set=dataset_dir + "/validate.xyz"
+        dataset_dir = self.directory + "/"
 
-        write(training_set, traj)
-        # write(validate_set, traj[1::2])
+        xyz_file="/tmp/" + uuid.uuid1().hex + ".xyz"
+
+        for a in traj:
+            atoms: Atoms = a
+            if type == "pm6":
+                atoms.calc = self.get_gaussian(gaussian_params['pm6_method'])            
+            elif type == "dft":
+                atoms.calc = self.get_gaussian(gaussian_params['dft_method'], gaussian_params['dft_basis'])
+
+        write(xyz_file, traj)
+
+        soap_params = getenv()['gap']
 
         os.system(f"""
-        gap_fit atoms_filename={training_set} # input data in extended XYZ format
+        gap_fit atoms_filename={xyz_file} # input data in extended XYZ format
             gap={{                              # start of descriptor and kernel spec
                 soap                              # first descriptor is a SOAP
-                    l_max=3 n_max=12                  # number of angular and radial basis functions for SOAP
-                    atom_sigma=2.5                    # Gaussian smearing width of atom density for SOAP, in Angstrom
-                    cutoff=3                        # distance cutoff in the kernel, in Angstrom
+                    l_max={soap_params['soap_l_max']} n_max=12                  # number of angular and radial basis functions for SOAP
+                    atom_sigma={soap_params['soap_atom_sigma']}                    # Gaussian smearing width of atom density for SOAP, in Angstrom
+                    cutoff={soap_params['soap_r_c']}                        # distance cutoff in the kernel, in Angstrom
                     radial_scaling=-0.5               # exponent of atom density scaling, power of distance
                     cutoff_transition_width=1.0       # distance across which kernel is smoothly taken to zero, in Angstrom
                     central_weight=1.0                # relative weight of central atom in atom density for SOAP
                     n_sparse=8000                     # number of representative points, M in Sec. II
                     delta=0.2                         # scaling of kernel, per descriptor, here for SOAP it is per atom, in eV
                     covariance_type=dot_product       # form of kernel
-                    zeta=4                            # power kernel is raised to - together with dot_product gives a polynomial kernel
+                    zeta={soap_params['zeta']}                            # power kernel is raised to - together with dot_product gives a polynomial kernel
                     sparse_method=cur_points          # choice of representative points, here CUR decomposition of descriptor matrix
             }}                                 # end of descriptor and kernel spec
             default_sigma={{0.002 0.2 0.2 0.0}}  # default regularisation corresponding to energy, force, virial, hessian
@@ -86,9 +98,9 @@ class GEBF_GAP(GEBF_ML):
                 # ribbons:0.01:0.5:0.2:0.0
             }}                                 # end of per configuration-group regularisation spec
             energy_parameter_name=energy       # name of the key in the input data file corresponding to the total energy
-            force_parameter_name=forces        # name of the key in the input data file corresponding to the forces
+            force_parameter_name=force        # name of the key in the input data file corresponding to the forces
             virial_parameter_name=virial       # name of the key in the input data file corresponding to the virial stress
-            gp_file=gap.xml                    # name of output potential XML file
+            gp_file={model_file}                    # name of output potential XML file
             sparse_jitter=1.0e-8               # extra diagonal regulariser
             do_copy_at_file=F                  # copy input data into potential XML file?
             sparse_separate_file=T             # write representative point data into a separate file not in the main potential XML

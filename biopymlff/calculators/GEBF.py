@@ -18,10 +18,11 @@ from shutil import which
 
 from biopymlff.data.AtomGraph import AtomGraph
 
-"""
-Generalized Energy Based Fragmentation
-"""
+
 class GEBF(FileIOCalculator):
+    """
+    Generalized Energy Based Fragmentation
+    """
     
     implemented_properties = ['energy', 'forces']
     command = 'LSQC PREFIX.gjf'
@@ -162,7 +163,7 @@ class GEBF(FileIOCalculator):
                 raise EnvironmentError("lsqc is not installed on the system.")
         FileIOCalculator.calculate(self, args, kwargs)
     
-    def subsystems(self, atoms: Atoms):
+    def subsystems(self):
         subsys_dir = self.directory + "/" + self.label + "_subsys"
         exist = os.path.exists(subsys_dir)
         if not exist: raise IOError("Subsystem has not been created by LSQC yet.")

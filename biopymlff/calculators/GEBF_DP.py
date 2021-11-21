@@ -63,7 +63,7 @@ class GEBF_DP(DP, GEBF_ML):
             np.save(set_dir + "/box.npy", box)
             np.save(set_dir + "/coord.npy", coord)
             np.save(set_dir + "/forces.npy", forces)
-            np.save(set_dir + "/potential.py", potential)
+            np.save(set_dir + "/potential.npy", potential)
             set_index+=1
 
         data = {}
