@@ -1,5 +1,9 @@
-# BIOPYMLFF(WIP)
+# biopymlff(WIP)
+
+## About biopymlff
 A library for developing near constant scaling quantum mechanical quality Machine Learning Force Fields for large biochemical systems.
+
+For more information checkout the [documentation](localhost).
 
 ## Dependencies
 **External**
@@ -70,3 +74,4 @@ See CITATION.cff
 * [7] Ko, Tsz Wai, et al. "A fourth-generation high-dimensional neural network potential with accurate electrostatics including non-local charge transfer." Nature communications 12.1 (2021): 1-11.
 * [8] Salakhutdinov, Russ. “Lecture 2.” STA 4273H: Statistical Machine Learning. 20 Nov. 2021. 
 * [9] Rugar, Daniel, and Paul Hansma. "Atomic force microscopy." Physics today 43.10 (1990): 23-30.
+* [10] Mahoney, Michael W., and Petros Drineas. "CUR matrix decompositions for improved data analysis." Proceedings of the National Academy of Sciences 106.3 (2009): 697-702.

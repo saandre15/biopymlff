@@ -9,7 +9,7 @@ from tensorflow.keras.models import load_model, Model
 
 from mendeleev import element
 
-from biopymlff.calculators.ML import ML
+from biopymlff.calculators.ml import ml
 
 
 class GEBF_HDNN4G(ML):

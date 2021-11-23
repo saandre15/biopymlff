@@ -26,7 +26,7 @@ from ase.calculators.mopac import MOPAC
 from quippy.potential import Potential
 from quippy.descriptors import Descriptor
 
-from biopymlff.calculators.GEBF_ML import GEBF_ML
+from biopymlff.calculators.gebf_ml import GEBF_ML
 
 from biopymlff.util.getenv import getenv
 

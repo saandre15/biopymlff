@@ -151,7 +151,7 @@ class GEBF(FileIOCalculator):
     def get_lorentz_berthetot_coefficent(self, a: Atom, b: Atom):
         pass # call amber to get coefficent
 
-    def calculate(self, *args, **kwargs):
+    def calculate(self, atoms: Atoms):
         lsqc = ('lsqc')
         if 'LSQC' in self.command:
             for program in lsqc:

@@ -1,6 +1,6 @@
 from ase.atoms import Atmos
 
-from biopymlff.calculators.GEBF import GEBF
+from biopymlff.calculators.gebf import GEBF
 
 class GEBF_PM6(GEBF):
     

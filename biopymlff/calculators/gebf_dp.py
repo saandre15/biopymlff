@@ -27,13 +27,20 @@ from deepmd.calculator import DP
 
 import json
 
-from biopymlff.calculators.GEBF_ML import GEBF_ML
+from biopymlff.calculators.gebf_ml import GEBF_ML
 from biopymlff.helper import get_avaliable_gpu
 
 
 class GEBF_DP(DP, GEBF_ML):
     """
     Generalized Energy Based Fragmentation utilitizing Deep Potential Machine Learning Technique
+
+    Implemented Properties are `energy`, 'forces', and 'stress'
+
+    Parameters
+    ----------
+    
+    
     """
 
     datasplit = 0.5
