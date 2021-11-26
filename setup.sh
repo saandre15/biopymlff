@@ -11,3 +11,5 @@ pip install toml
 pip install networkx
 pip install tk
 pip install multipledispatch
+pip install pysmiles
+pip install dscribe

@@ -31,22 +31,34 @@ from biopymlff.calculators.gebf_ml import GEBF_ML
 from biopymlff.util.getenv import getenv
 
 
-# @ref https://libatoms.github.io/GAP/gap_fitting_tutorial.html#train-our-GAP_3b-model-from-the-command-line
 class GEBF_GAP(GEBF_ML):
+    """
+    Generalized Based Energy Fragmentation utilizing Gaussian Approximate Potential 
+
+    Notes
+    -----
+    dasdasasda
+
+    References
+    ----------
+    https://libatoms.github.io/GAP/gap_fitting_tutorial.html#train-our-GAP_3b-model-from-the-command-line
+
+    Bartók, Albert P., and Gábor Csányi. “Gaussian Approximation Potentials: A Brief Tutorial Introduction.” International Journal of Quantum Chemistry, vol. 115, no. 16, 2015, pp. 1051–1057., https://doi.org/10.1002/qua.24927. 
+    """
 
     _deprecated=object()
 
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
-                 label=None, atoms=None, directory='.', pdb_id=None,
+                 label=None, atoms=None, directory='.', library=None,
                  **kwargs):
 
-        super().__init__(
+        super(GEBF_ML, self).__init__(
             restart=restart, 
             ignore_bad_restart_file=ignore_bad_restart_file, 
             label=label, 
             atoms=atoms, 
-            directory=directory, 
-            pdb_id=pdb_id,
+            directory=directory,
+            library=library,
             ext_type="gap")
 
 
@@ -67,21 +79,18 @@ class GEBF_GAP(GEBF_ML):
 
         soap_params = getenv()['gap']
 
+        descriptors = ""
+
+        # Make sure this functionatily works 
+        counter = 0
+        size = len(self.descriptors)
+        for desc in self.descriptors:
+            descriptors += str(desc) + (":" if counter != size else "")
+        
         os.system(f"""
         gap_fit atoms_filename={xyz_file} # input data in extended XYZ format
             gap={{                              # start of descriptor and kernel spec
-                soap                              # first descriptor is a SOAP
-                    l_max={soap_params['soap_l_max']} n_max=12                  # number of angular and radial basis functions for SOAP
-                    atom_sigma={soap_params['soap_atom_sigma']}                    # Gaussian smearing width of atom density for SOAP, in Angstrom
-                    cutoff={soap_params['soap_r_c']}                        # distance cutoff in the kernel, in Angstrom
-                    radial_scaling=-0.5               # exponent of atom density scaling, power of distance
-                    cutoff_transition_width=1.0       # distance across which kernel is smoothly taken to zero, in Angstrom
-                    central_weight=1.0                # relative weight of central atom in atom density for SOAP
-                    n_sparse=8000                     # number of representative points, M in Sec. II
-                    delta=0.2                         # scaling of kernel, per descriptor, here for SOAP it is per atom, in eV
-                    covariance_type=dot_product       # form of kernel
-                    zeta={soap_params['zeta']}                            # power kernel is raised to - together with dot_product gives a polynomial kernel
-                    sparse_method=cur_points          # choice of representative points, here CUR decomposition of descriptor matrix
+                {descriptors}
             }}                                 # end of descriptor and kernel spec
             default_sigma={{0.002 0.2 0.2 0.0}}  # default regularisation corresponding to energy, force, virial, hessian
             config_type_sigma={{                # start of per configuration-group regularisation spec, using groups defined in the input data file

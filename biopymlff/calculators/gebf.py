@@ -16,7 +16,7 @@ from ase.io.xyz import read_xyz
 
 from shutil import which
 
-from biopymlff.data.AtomGraph import AtomGraph
+from biopymlff.data.atom_graph import AtomGraph
 
 
 class GEBF(FileIOCalculator):
@@ -27,74 +27,56 @@ class GEBF(FileIOCalculator):
     implemented_properties = ['energy', 'forces']
     command = 'LSQC PREFIX.gjf'
 
-    def __init__(self, restart=None,
+    def __init__(self, method: str, basis: str=None, restart=None,
                  ignore_bad_restart_file=Calculator._deprecated,
-                 label=None, atoms=None,**kwargs):
-        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, kawgs=kwargs)
+                 label=None, atoms=None, directory='.',**kwargs):
+        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, kawgs=kwargs)
         self.directory = os.getcwd() + "/data/" + label
         if not os.path.exists(self.directory): os.mkdir(self.directory)
         self.frg_file = self.get_fragment_file(atoms)
         shutil.move(self.frg_file, self.directory + "/" + label + ".frg")
 
-    def read_energy(self, lso_filepath='lso', gebf_filepath='[a]gebf', subsystems_dir="_subsys"):
+    def read_energy(self, labc_filepath='labc', gebf_filepaths: list=[]):
+        if len(gebf_filepaths) != len(xyz_filepaths):
+            raise ReadError("Cannot obtain potential energy where gebf file size doesn't match xyz file size.")
         try:
-            with open(lso_filepath) as file:
+            with open(labc_filepath) as file:
                 lines = file.readlines()
-                index_start = -1
-                index_end = -1
-                counter = 0
-                for line in lines:
-                    if "# GEBF-GETSUBS" in line:
-                        index_start = counter
-                    if "==========================================" in line and index_start != -1:
-                        index_end = counter
-                    counter+=1
-                
-                subsys_info=lines[index_start:index_end]
-                index_start = -1
-                index_mid = -1
-                index_end = -1
-                counter = 0
-                for line in subsys_info:
-                    if "Primitive subsystems":
-                        index_start = counter
-                    if "Derivative subsystems":
-                        index_mid = counter
-                    if "=======================================":
-                        index_end = counter
-                    counter+=1
-                primative_subsystems = subsys_info[index_start + 1 : index_mid - 1]
-                derivaitive_subsystem = subsys_info[index_mid + 1 : index_end - 1]
-                subsystems = primative_subsystems + derivaitive_subsystem
+                read_coefficient = False
                 coefficents = []
-                for line in subsystems:
-                    vals = line.split()
-                    coefficent = vals[1]
-                    coefficents.append(coefficent)
+                for line in lines:
+                    if "coef:" in line:
+                        read_coefficient = True
+                        continue
+                    if "Table: Lab for subsystems" in line:
+                        read_coefficient = False 
+                        break
+                    coefs = line.split()
+                    for coef in coefs:
+                        coefficents.append(coef)
+
                 try:
-                    with open(gebf_filepath) as file:
-                        subsys_energy = []
-                        lines: str = file.read()
-                        subsystems: list = lines.split("# GEBF Subsys")
-                        for subsys in subsystems:
-                            subsys: str = subsys
-                            subsys = subsys.split("# END")[0]
-                            for line in subsys.split("\n"):
-                                if self.which_potential() in line:
-                                    energy= line.replace(self.which_potential(), '').strip()
-                                    subsys_energy.append(energy)
-                        
-                        subsys_atoms = []
-                        try:
-                            subsys_files = os.listdir(subsystems_dir)
-                            subsys_files = filter(lambda name: name.find(".sxyz") != -1, subsys_files)
-                            for file in subsys_files:
-                                subsys_atom = read_xyz(file, 0)
-                                subsys_atoms.append(subsys_atom)
-                            self.results['energy'] = self.calculate_potential_energy(coefficents, subsys_energy, subsys_atoms, atoms)
-                        except IOError:
-                            print("Failed to find subsystem directory containing topology information.")
-                            raise ReadError()
+                    subsys_atoms = self.subsystems()    
+                    counter = 0
+                    for path in gebf_filepaths:
+                        with open(gebf_filepaths) as file:
+                            lines = file.readlines()
+                            atoms: Atoms = subsys_atoms[counter]
+                            read_charge = False
+                            charges = []
+                            for line in lines:
+                                if "NPA Charges" in line: 
+                                    read_charge = True
+                                    continue
+                                if "Cartesian Gradiant" in line:
+                                    read_charge = False
+                                    break
+                                crgs = line.split()
+                                for charge in crgs:
+                                    charges.append(charge)
+                            counter+=1
+                            atoms.set_initial_charges(charges)
+                    self.calculate_potential_energy(coefficents, subsys_atoms, atoms)
                 except IOError:
                     print("Unable to read gebf file for subsystem potential energy calculation.")
                     raise ReadError()
@@ -102,7 +84,7 @@ class GEBF(FileIOCalculator):
             print("Unable to read lso file to find subsystem coefficents.")
             raise ReadError()
     
-    def read_forces(self, force_filepath: str):
+    def read_forces(self, force_filepath: str=None):
         try:
             with open(force_filepath) as file:
                 self.results['forces'] = []
@@ -117,16 +99,13 @@ class GEBF(FileIOCalculator):
             print("Unable to read force file. Make sure the force_filepath is correct.")
             raise ReadError()
 
-    def which_potential():
-        return NotImplementedError("Define set potential to find. Example[E(SCF=)]")
-
-    def calculate_potential_energy(self, coefficents: list, subsys_energy: list, subsys_atoms: list, atoms: Atoms):
-        if len(coefficents) != len(subsys_energy) or len(subsys_energy) != len(atoms): raise IndexError("Make sure the length of each array and atom size are equal.")
+    def calculate_potential_energy(self, coefficents: list, subsys_atoms: list, atoms: Atoms):
+        if len(coefficents) != len(subsys_atoms): raise IndexError("Make sure the length of each array and atom size are equal.")
         size=len(coefficents)
         total_subsys=0
         total_long_range=0
         for index in size:
-            total_subsys+=coefficents[index]* (self.calculate_subsystem_pe(inital_subsys_energy, atoms))
+            total_subsys+=coefficents[index]* (self.calculate_subsystem_pe(0, subsys_atoms[index]))
         for a in atoms:
             for b in atoms:
                 atomA: Atom = a
@@ -134,8 +113,17 @@ class GEBF(FileIOCalculator):
                 total_long_range += self.calculate_long_range_energy(a, b)
         return total_subsys + total_long_range
             
-    def calculate_subsystem_pe(self, init_subsys_energy: float, atoms: Atoms):
-        return init_subsys_energy
+    def calculate_subsystem_pe(self, init_subsys_energy: float, subsys_atoms: Atoms):
+        gap_params = getenv()["gap"]
+        cutoff_radius = gap_params["soap_r_c"]
+        subsys_energy = init_subsys_energy
+        for a in atoms:
+            for b in atoms:
+                if a == b: continue
+                f_cutoff = 1 if cutoff_radius < radius else 0.5 * ( 1 - math.cos(math.pi * radius * (1 / cutoff_radius)) )
+                val = self.calculate_long_range_energy(a, b) * f_cutoff
+                subsys_energy+=val
+        return subsys_energy
                        
     def calculate_long_range_energy(self, a: Atom, b: Atom):
         charge_energy = 0
@@ -149,7 +137,9 @@ class GEBF(FileIOCalculator):
         return math.sqrt((a.x - b.x) ^ 2 + (a.y - b.y) ^ 2 + (a.z + b.z) ^ 2)
 
     def get_lorentz_berthetot_coefficent(self, a: Atom, b: Atom):
-        pass # call amber to get coefficent
+        # TODO figure out how to read the param file and perform coeffiecne tcalculation
+        amber_params = getenv()["amber"]
+        return
 
     def calculate(self, atoms: Atoms):
         lsqc = ('lsqc')
@@ -288,10 +278,9 @@ mkdir -p {self.get_subfrag_dir()}
                         os.system("cd " + os.path.dirname(project_dir) + "; echo $PWD ;lsqc " + os.path.basename(gjf_file))
 
     def read_results(self):
-        lso_filepath = os.getcwd() + "/" + self.label + "/" + self.label + "/" + self.label + ".lso"
-        gebf_filepath = os.getcwd() + "/" +  self.label + "/" + self.label + "/" + self.label + ".gebf"
-        subsystem_filepath = os.getcwd() + "/"  + self.label + "/" + self.label + "_subsys"
-        force_filepath = os.getcwd() + "/" + self.label + "/" + self.label + "/" + self.label + ".force"
-        self.read_energy(lso_filepath=lso_filepath, gebf_filepath=gebf_filepath, subsystems_dir=subsystem_filepath)
+        lso_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".labc"
+        gebf_filepath = os.getcwd() + "/" +  self.label + "/" + self.label + ".gebf"
+        force_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".force"
+        self.read_energy(lso_filepath=lso_filepath, gebf_filepath=gebf_filepath)
         self.read_forces(force_filepath=force_filepath)
             

@@ -24,16 +24,15 @@ from ase.calculators.gaussian import Gaussian
 from quippy.potential import Potential
 
 from biopymlff.train.ml import ML
-
+from biopymlff.train.library import Library
+from biopymlff.descriptors.soap import SOAP
 from biopymlff.calculators.gebf_pm6 import GEBF_PM6
-
 from biopymlff.math.bayesian import get_sigma
-
 from biopymlff.util.getenv import getenv
 
 class GEBF_ML(GEBF_PM6, ML):
     """ 
-
+    
     Note
     ----
     Cheng, Zheng, et al. “Building Quantum Mechanics Quality Force Fields of Proteins with the Generalized Energy-Based Fragmentation Approach and Machine Learning.” Physical Chemistry Chemical Physics, 2021, https://doi.org/10.1039/d1cp03934b. 
@@ -41,13 +40,32 @@ class GEBF_ML(GEBF_PM6, ML):
 
     implemented_properties = ['energy', 'energies', 'forces', 'stresses']
 
-    _deprecated=Calculator._deprecated
-
-    def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
-                 label=None, atoms=None, directory='.', pdb_id=None, ext_type=None,
+    def __init__(self, restart=None, ignore_bad_restart_file=Calculator._deprecated,
+                 label=None, atoms=None, directory='.', ext_type=None, library: Library=None,
                  **kwargs):
-
-        super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, pdb_id=pdb_id)
+        gap_params = getenv()["gap"]
+        super(GEBF_PM6, self).__init__(
+            restart=restart, 
+            ignore_bad_restart_file=ignore_bad_restart_file, 
+            label=label, 
+            atoms=atoms, 
+            directory=directory
+        )
+        descriptor = SOAP(
+            r_cutoff=gap_params["soap_r_c"],
+            atom_sigma=gap_params["atom_sigma"],
+            zeta=gap_params["zeta"],
+            l_max=gap_params["l_max"],
+            n_max=gap_params["N_R_l"],
+            radial_scaling=-0.5,
+            cutoff_trans_width=1.0,
+            central_weight=1.0,
+            n_sparse=8000,
+            delta=0.2,
+            covariance_type="dot_product",
+            sparse_method="cur_points"
+        )
+        super(ML, self).__init__(descriptors=[descriptor], library=library)
 
         self.ext_type = ext_type
         self.add_model("dft", self.dft_model_file)
@@ -99,7 +117,7 @@ class GEBF_ML(GEBF_PM6, ML):
                 self.sigmas.append(sigma_i)
                 sigma_max = max(self.sigmas)
                 to_train = []
-                # Decides training
+                # Decides active online training
                 if sigma_max > 2 * self.epsilon_bayes:
                     if sigma_i > self.epsilon_bayes:
                         max_force_error = self.update_data_mlff(pm6_snapshot)
@@ -191,6 +209,9 @@ class GEBF_ML(GEBF_PM6, ML):
         sigma = get_sigma(training_set, target_values)
         return sigma
 
+    def calculate_omega_i(self, n_low: int, gamma_col: np.ndarray, ):
+        pass
+
 
     # Convert to scalar
     def get_max_error(self, source: list, target: list):
@@ -198,10 +219,13 @@ class GEBF_ML(GEBF_PM6, ML):
         Calculate the max error
         """
         if len(source) != len(target): raise IndexError("Cannot calculate max error when source and target array size doesn't match")
-        return max(np.abs(np.array(target) - np.array(source)))
-
-    def in_lib(self, atoms: Atoms) -> list:
-        pass
+        vectors = np.array(target) - np.array(source)
+        scalars = np.zeros(shape=(len(vectors, 1)))
+        counter = 0
+        for vector in vectors:
+            scalars[counter] = np.ndarray.item(vector)
+            counter+=1
+        return max(scalars)
 
     def get_gaussian(self, method=None, basis=None):
         general_params = getenv()['general']

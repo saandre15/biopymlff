@@ -11,7 +11,8 @@ from ase.io.proteindatabank import read_proteindatabank
 
 import numpy as np
 
-from biopymlff.train.library import LibraryType
+from biopymlff.descriptors.descriptor import Descriptor
+from biopymlff.train.library import Library
 
 class ML():
     """
@@ -19,19 +20,12 @@ class ML():
 
     """
     
-    def __init__(self, descriptors: np.ndarray, lib_type: LibraryType, lib_path: str=None):
+    def __init__(self, descriptors: Descriptor, library: Library):
         self.descriptors = descriptors
         self.models = {}
-        if lib_predef:
-            if lib_path_or_type == "protein":
-                pass
-            elif lib_path_or_type == "dna+rna":
-                pass
-            elif lib_path_or_type == "lipids":
-                pass
-            elif lib_path_or_type == "water":
-                pass
-        self.lib_path = lib_path_or_type
+        if lib_path == None:
+            lib_path = lib_type.get_path()
+        self.lib_path = lib_path
         self.lib_cache = self.load_lib()
 
 
@@ -67,22 +61,7 @@ class ML():
         """
         return self.models[type]
 
-    def add_to_lib(self, atoms: Atoms):
-        self.lib_cache.append(atoms)
-        if not os.path.exists(self.lib_path): os.mkdir(self.lib_path)
-        
-        write(self.lib_path + "/" )
 
-    def load_lib(self) -> list:
-        files = [file for file in os.listdir(self.lib_path) if os.path.isfile(self.lib_path + "/" + file)]
-        atoms = list(np.zeros(shape=(len(files), 1)))
-        counter = 0
-        for file in files:
-            atom = read_proteindatabank(file)
-            atoms[counter] = atom
-            counter+=1
-        return atoms
-            
     def train(self, atoms: Atoms):
         """
         Trains all of the saved models using different libraries or self implemented algorithms to train.
