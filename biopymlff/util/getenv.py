@@ -1,2 +1,5 @@
+import toml
+import os
+
 def getenv():
-    pass
+    return toml.load(os.getcwd() + "/env.toml")

@@ -4,15 +4,13 @@ from ase.atoms import Atoms
 from ase.calculators.calculator import Calculator
 from ase.md.langevin import Langevin
 
-from deepmd.calculator import DP
-
 from ase.io import write
 from ase.io.proteindatabank import read_proteindatabank
 
 import numpy as np
 
-from biopymlff.descriptors.descriptor import Descriptor
-from biopymlff.train.library import Library
+from ..descriptors.descriptor import Descriptor
+from ..train.library import Library
 
 class ML():
     """

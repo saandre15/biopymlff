@@ -1,3 +1,4 @@
+
 import unittest
 import os
 import time
@@ -9,14 +10,15 @@ from ase.calculators.mopac import MOPAC
 
 import matplotlib.pyplot as plt
 
-from biopymlff.train.library import ProteinLibrary
-from biopymlff.calculators.gebf_gap import GEBF_GAP
-from biopymlff.calculators.gebf_dft import GEBF_DFT
 
-from biopymlff.train.ml import ML
+from ..train.ml import ML
+print("meme")
 
-class Calculator_Test(unittest.TestCase):
-    def __init__(self, filename: str,  source_method: str, target_method: str, source: Calculator, target: Calculator):
+class General_Test(unittest.TestCase):
+
+
+    def __init__(self, methodName: str, filename: str,  source_method: str, target_method: str, source: Calculator, target: Calculator):
+        super().__init__(methodName)
         self.mol = read_proteindatabank(filename)
         self.source_method = source_method
         self.target_method = target_method
@@ -25,6 +27,7 @@ class Calculator_Test(unittest.TestCase):
 
     def test_01_train(self):
         # Train the trainable calculators
+        
         source_time = 0
         target_time = 0
         start_time = time.time()

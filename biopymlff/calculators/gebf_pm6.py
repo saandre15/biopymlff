@@ -3,7 +3,8 @@ import math
 from ase.atoms import Atoms
 from ase.calculators.calculator import Calculator
 
-from biopymlff.calculators.gebf import GEBF
+from ..util.getenv import getenv
+from ..calculators.gebf import GEBF
 
 class GEBF_PM6(GEBF):
     
