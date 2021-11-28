@@ -139,7 +139,8 @@ class GEBF(FileIOCalculator):
     def get_lorentz_berthetot_coefficent(self, a: Atom, b: Atom):
         # TODO figure out how to read the param file and perform coeffiecne tcalculation
         amber_params = getenv()["amber"]
-        return
+        amber_home = amber_params["amber_home"]
+        return 1
 
     def calculate(self, atoms: Atoms):
         lsqc = ('lsqc')
@@ -152,18 +153,31 @@ class GEBF(FileIOCalculator):
             else: 
                 raise EnvironmentError("lsqc is not installed on the system.")
         FileIOCalculator.calculate(self, args, kwargs)
+
+    def get_gaussian(self, method=None, basis=None):
+        general_params = getenv()['general']
+        gaussian_params = getenv()['gaussian']
+        return Gaussian(
+            label=self.label,
+            directory=general_params['scratch_dir'] + "/gaussian/" + self.label + "_" + uuid.uuid1().hex,
+            mem=gaussian_params['mem'] \
+                if gaussian_params['mem'] != "auto" \
+                else str((os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / (1024.**3)) - 5) + "GB",
+            chk=gaussian_params['checkpoint_file'] if gaussian_params['checkpoint_file'] else self.label + ".chk",
+            save=None,
+            method=method,
+            basis=basis,
+            scf='(noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc)',
+            int='acc2e=12'
+        )
     
     def subsystems(self):
-        subsys_dir = self.directory + "/" + self.label + "_subsys"
-        exist = os.path.exists(subsys_dir)
-        if not exist: raise IOError("Subsystem has not been created by LSQC yet.")
+        mypath=self.directory
         files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-        size = len(files) / 4
+        files = filter(lambda file: ".xyz" in file or ".sxyz" in file, files)
         subsystems = []
-        for index in len(1, size + 1):
-            name = self.label + "_" + index
-            # gaus = Gaussian(label=name, directory=self.directory + "/" + self.label + "_subsys")
-            mol: Atoms = read_xyz(name + ".sxyz", 0)
+        for file in files:
+            mol = read_xyz(file, 0)
             subsystems.append(mol)
         return subsystems
 
@@ -176,9 +190,6 @@ class GEBF(FileIOCalculator):
         G = AtomGraph(atoms)
         fragments = G.fragment_by_bond_as_atoms_list('C', 'C')
         return fragments
-    
-    def get_spin_multiplcity(self, atoms: Atoms):
-        return AtomGraph(atoms).get_spin_multiplicity()
         
     def get_fragment_file(self, atoms: Atoms) -> str:
         filename = "/tmp/" + uuid.uuid1().hex + ".frg"
@@ -193,8 +204,8 @@ class GEBF(FileIOCalculator):
                 for index in range(0, len(fragments_as_indexes)):
                     atoms = fragments_as_atoms[index]
                     indexes = fragments_as_indexes[index]
-                    spin_multiplicity = self.get_spin_multiplcity(atoms)
-                    charge = 0
+                    spin_multiplicity = AtomGraph(atoms).get_spin_multiplicity()
+                    charge = AtomGraph(atoms).get_charges()
                     temp_indexes = []
                     for index in indexes:
                         temp_indexes.append(index + 1)
@@ -209,7 +220,6 @@ class GEBF(FileIOCalculator):
     def write_input(self, atoms: Atoms):
         dir_name=self.pdb_id
         project_dir=self.data_dir
-        frag_dir=self.get_subfrag_dir()
         xyz_file="/tmp/" + dir_name + ".xyz"
         com_file="/tmp/" + dir_name + ".com"
         gjf_file="/tmp/" + dir_name + ".gjf"

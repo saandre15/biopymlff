@@ -21,7 +21,7 @@ from matplotlib.figure import Figure
 
 import numpy as np
 
-from biopymlff.data.AtomGraphNode import AtomGraphNode
+from biopymlff.data.atom_graph_node import AtomGraphNode
 
 
 class AtomGraph():
@@ -255,9 +255,14 @@ class AtomGraph():
                 self.traverse(_next, fn)
 
     def get_spin_multiplicity(self):
+        # TODO
         # unpaired_electron_count = self.get_unpaired_electron_count()
         # return unpaired_electron_count + 1
         return 2 if self.get_electron_count() % 2 == 1 else 1
+
+    def get_charges(self):
+        # TODO
+        return 0
 
     # def get_unpaired_electron_count(self):
     #     self.reset()

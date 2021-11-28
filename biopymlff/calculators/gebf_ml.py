@@ -226,23 +226,6 @@ class GEBF_ML(GEBF_PM6, ML):
             scalars[counter] = np.ndarray.item(vector)
             counter+=1
         return max(scalars)
-
-    def get_gaussian(self, method=None, basis=None):
-        general_params = getenv()['general']
-        gaussian_params = getenv()['gaussian']
-        return Gaussian(
-            label=self.label,
-            directory=general_params['scratch_dir'] + "/gaussian/" + self.label + "_" + uuid.uuid1().hex,
-            mem=gaussian_params['mem'] \
-                if gaussian_params['mem'] != "auto" \
-                else str((os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / (1024.**3)) - 5) + "GB",
-            chk=gaussian_params['checkpoint_file'] if gaussian_params['checkpoint_file'] else self.label + ".chk",
-            save=None,
-            method=method,
-            basis=basis,
-            scf='(noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc)',
-            int='acc2e=12'
-        )
        
     def parse_fragment(self, line: str, system: Atoms) -> Atoms:
         fields = line.split()
