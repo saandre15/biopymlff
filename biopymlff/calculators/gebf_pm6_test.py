@@ -8,17 +8,7 @@ from ..calculators.gebf_dft import GEBF_DFT
 from ..calculators.gebf_pm6 import GEBF_PM6
 
 class GEBF_PM6_Test(General_Test):
-
     
-    def __init__(self, methodName: str):
-        super().__init__(
-            methodName,
-            os.getcwd() + "/data/systems/4znn.pdb",
-            "GEBF PM6",
-            "GEBF DFT",
-            GEBF_PM6(),
-            GEBF_DFT()
-        )
-
-if __name__ == '__main__':
-    unittest.main()
+    @classmethod
+    def setUpClass(cls):
+        cls.init_variables(os.getcwd() + "/data/systems/4znn.pdb", "GEBF PM6", "GEBF DFT", GEBF_PM6(), GEBF_DFT())
