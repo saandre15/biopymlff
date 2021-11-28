@@ -15,3 +15,6 @@ class GEBF_PM6_Test(Calculator_Test):
             GEBF_PM6(),
             GEBF_DFT()
         )
+
+if __name__ == '__main__':
+    unittest.main()
