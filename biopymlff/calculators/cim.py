@@ -1,0 +1,2 @@
+class CIM(FileIOCalculator):
+    pass

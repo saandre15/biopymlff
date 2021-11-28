@@ -10,7 +10,7 @@ from biopymlff.calculators.gebf_dp import GEBF_DP
 class GEBF_DP_Test(Calculator_Test):
 
     def __init__():
-        gaussian = GEBF().get_gaussian()
+        gaussian = GEBF().get_gaussian("omega")
         super(Calculator_Test, self).__init__(
             os.getcwd() + "/data/4znn.pdb",
             "GEBF DFT",
