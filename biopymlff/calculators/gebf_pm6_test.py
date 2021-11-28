@@ -13,7 +13,7 @@ class GEBF_PM6_Test(General_Test):
     def __init__(self, methodName: str):
         super().__init__(
             methodName,
-            os.getcwd() + "/data/4znn.pdb",
+            os.getcwd() + "/data/systems/4znn.pdb",
             "GEBF PM6",
             "GEBF DFT",
             GEBF_PM6(),
