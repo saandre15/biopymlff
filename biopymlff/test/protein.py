@@ -23,6 +23,7 @@ from ..util.convert import ase_atoms_to_pytraj_atoms
 class Protein_Test(Biomol_Test):
 
     def test_01_absolute_deviation(self):
+        # TODO: Figureout conformers?
         pass
 
     def test_02_dihedral_anaylsis(self):
@@ -35,9 +36,6 @@ class Protein_Test(Biomol_Test):
             '\omega': [dihedral_analysis.calc_omega(traj=source_traj, range360=True), dihedral_analysis.calc_omega(traj=target_traj, range360=True)],
             '\phi': [dihedral_analysis.calc_phi(traj=source_traj, range360=True), dihedral_analysis.calc_phi(traj=self.target_traj, range360=True)]
         }
-
-        source_analysis = [source_psi, source_omega, source_phi]
-        target_anlysis = [target_psi, target_omega, target_phi]
 
         for key in analysis:
             x_label = key
@@ -79,14 +77,14 @@ class Protein_Test(Biomol_Test):
         plt.ylabel("distance(A)")
 
 
-    def test_04_mae_force(self):
-        pass
+    # def test_04_mae_force(self):
+    #     pass
 
-    def test_05_rmsd_from_init(self):
-        pass
+    # def test_05_rmsd_from_init(self):
+    #     pass
     
     def test_06_rsme_energy_and_force(self):
-
+        pass
         # TODO: Figure out how to train mulitple iterations with different dataset seize
 
         # mol = self.mol.copy()
