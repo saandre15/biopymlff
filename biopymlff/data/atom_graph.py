@@ -28,15 +28,16 @@ class AtomGraph():
     
     counter = 1
 
-    self.electrons = {
-        'H': 1,
-        'C': 6,
-        'N': 7,
-        'O': 8
-    }
+    
 
     # @dispatch(Atoms)
     def __init__(self, atoms: Atoms):
+        self.electrons = {
+            'H': 1,
+            'C': 6,
+            'N': 7,
+            'O': 8
+        }
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
 
