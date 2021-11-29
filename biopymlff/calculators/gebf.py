@@ -218,7 +218,7 @@ class GEBF(FileIOCalculator):
                     print(indexes)
                     spin_multiplicity = AtomGraph(atoms).get_spin_multiplicity()
                     # charge = AtomGraph(atoms).get_charges()
-                    charge = 1
+                    charge = "+1"
                     temp_indexes = []
                     for index in indexes:
                         temp_indexes.append(index + 1)
