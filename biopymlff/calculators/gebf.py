@@ -138,8 +138,8 @@ class GEBF(FileIOCalculator):
 
     def get_lorentz_berthetot_coefficent(self, a: Atom, b: Atom):
         # TODO figure out how to read the param file and perform coeffiecne tcalculation
-        amber_params = getenv()["amber"]
-        amber_home = amber_params["amber_home"]
+        # amber_params = getenv()["amber"]
+        # amber_home = amber_params["amber_home"]
         return 1
 
     def calculate(self, atoms: Atoms):

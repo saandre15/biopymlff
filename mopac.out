@@ -10,7 +10,7 @@
                               PM7 CALCULATION RESULTS
 
  *******************************************************************************
- *  CALCULATION DONE:                                Mon Nov 29 10:23:49 2021  *
+ *  CALCULATION DONE:                                Mon Nov 29 10:48:32 2021  *
  *  PM7        - The PM7 Hamiltonian to be used
  *  1SCF       - DO 1 SCF AND THEN STOP 
  *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
@@ -19,7 +19,7 @@
  *              (DEFAULT SCF CRITERION = 0.00010)
  *  GRADIENTS  - ALL GRADIENTS TO BE PRINTED
  *******************************************************************************
-PM7 1SCF GRADIENTS RELSCF=0.0001
+PM7 1SCF GRADIANTS RELSCF=0.0001
  Title: ASE calculation
 
    ATOM   CHEMICAL          X               Y               Z
@@ -198,3 +198,10 @@ PM7 1SCF GRADIENTS RELSCF=0.0001
       RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 163
 
   SCF CRITERION =    0.3500E-07
+
+
+ ALL CONVERGERS ARE NOW FORCED ON
+ SHIFT=10, PULAY ON, CAMP-KING ON
+ AND ITERATION COUNTER RESET
+
+

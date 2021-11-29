@@ -14,6 +14,7 @@ from ase.md.langevin import Langevin
 import matplotlib.pyplot as plt
 
 from ..train.ml import ML
+from ..calculators.gebf_pm6 import GEBF_PM6
 
 class General_Test(unittest.TestCase):
 
@@ -62,10 +63,11 @@ class General_Test(unittest.TestCase):
         experimental_time=[]
 
         samples = []
-        mol: Atoms = self.mol
-        mol.calc = MOPAC()
-        dynamics = Langevin(atoms=self.mol, timestep=0.01, temperature_K=500, friction=0.01)
-        collect_data = lambda: samples.append(atoms.copy())
+        mol: Atoms = self.mol.copy()
+        print("Atom Size " + str(len(mol)))
+        mol.calc = GEBF_PM6()
+        dynamics = Langevin(atoms=mol, timestep=0.01, temperature_K=500, friction=1e-3)
+        collect_data = lambda: samples.append(mol.copy())
         dynamics.attach(collect_data, interval=1)
         dynamics.run(steps=100)
         
