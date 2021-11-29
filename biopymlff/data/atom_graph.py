@@ -266,26 +266,11 @@ class AtomGraph():
         # TODO
         # unpaired_electron_count = self.get_unpaired_electron_count()
         # return unpaired_electron_count + 1
-        return 2 if self.get_electron_count() % 2 == 1 else 1
+        return 1 if self.get_electron_count() % 2 == 1 else 2
 
     def get_charges(self):
         # TODO
         return 0
-
-    # def get_unpaired_electron_count(self):
-    #     self.reset()
-    #     total_unpaired_electron = []
-    #     graph_list = [node for node in self.graph.nodes]
-
-    #     def traversal_fn(a: AtomGraphNode, b: AtomGraphNode):
-    #         unpaired_electron = self.organic_unpaired_electrons[a.getAtom().symbol]
-    #         print("ELECTRON " + str(unpaired_electron))
-    #         total_unpaired_electron.append(unpaired_electron)
-    #         return True
-
-    #     self.traverse(graph_list[0], traversal_fn)
-
-    #     return sum(total_unpaired_electron)
 
     def get_electron_count(self):
         self.reset()
