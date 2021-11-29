@@ -149,13 +149,13 @@ class AtomGraph():
         print("fragments " + str(fragments))
         graph_list = [node for node in self.graph.nodes]
         atoms_list = []
-        print(fragments)
         for fragment in fragments:
             atom_list = []
             for index in fragment:
                 print(index)
                 atom: Atom = graph_list[index].getAtom()
                 atom_list.append(atom)
+                print(str(index) + " " + atom)
             atoms: Atoms = Atoms(atom_list)
             atoms_list.append(atoms)
             print(atoms.get_positions())
