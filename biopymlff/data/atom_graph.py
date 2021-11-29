@@ -143,12 +143,16 @@ class AtomGraph():
         # plt.savefig(os.getcwd() + "/test.png")
         plt.show()
 
+    def get_graph_list_sorted(self): 
+        graph_list = [node for node in self.graph.nodes]
+        graph_list.sort(key=lambda node: node.getAtom().index)
+        return graph_list
+
     def fragment_by_bond_as_atoms_list(self, symbolA: str, symbolB: str) -> list:
         self.reset()
         fragments = self.fragments_by_bond_as_indexes(symbolA, symbolB)
         print("fragments " + str(fragments))
-        graph_list = [node for node in self.graph.nodes]
-        graph_list.sort(key=lambda node: node.getAtom().index)
+        graph_list = self.get_graph_list_sorted()
 
         atoms_list = []
         for fragment in fragments:
@@ -167,7 +171,7 @@ class AtomGraph():
     def fragments_by_bond_as_indexes(self, symbolA: str, symbolB: str) -> list:
         self.reset()
         all_atoms = [atom for atom in self.atoms]
-        graph_list = [node for node in self.graph.nodes]
+        graph_list = self.get_graph_list_sorted()
         not_explored_atoms = [index for index in range(0, len(all_atoms))]
         node_fragments = []
         fragments = []
