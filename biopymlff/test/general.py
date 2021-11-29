@@ -9,6 +9,7 @@ from ase.io.proteindatabank import read_proteindatabank
 from ase.atoms import Atoms
 from ase.calculators.calculator import Calculator
 from ase.calculators.mopac import MOPAC
+from ase.md.langevin import Langevin
 
 import matplotlib.pyplot as plt
 
@@ -18,21 +19,24 @@ class General_Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        if self.mol == None or self.source_method == None or self.target_method == None or self.source == None or self.targe == None:
+        if cls.mol == None or cls.source_method == None or cls.target_method == None or cls.source == None or cls.target == None:
             raise NotImplementedError("Variables are not initalized")
 
-    def init_variables(self, atom_filename: str, source_method: str, target_method: str, source: Calculator, target: Calculator):
-        self.mol = read_proteindatabank(filename)
-        self.source_method = source_method
-        self.target_method = target_method
-        self.source = source
-        self.target = target
+    @classmethod
+    def init_variables(cls, atom_filename: str, source_method: str, target_method: str, source: Calculator, target: Calculator):
+        cls.mol = read_proteindatabank(atom_filename)
+        
+        cls.source_method = source_method
+        cls.target_method = target_method
+        cls.source = source
+        cls.target = target
 
     def test_01_train(self):
         # Train the trainable calculators
         source_time = 0
         target_time = 0
         start_time = time.time()
+        print("training")
         if isinstance(self.source, ML): self.source.train()
         end_time = time.time()
         source_time = end_time - start_time
