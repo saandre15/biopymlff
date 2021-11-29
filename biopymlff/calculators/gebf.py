@@ -226,6 +226,7 @@ class GEBF(FileIOCalculator):
                     
     def write_input(self, atoms: Atoms, properties=None, system_changes=None):
         print("input written")
+        shutil.copyfile(self.frg_file, self.label + ".frg")
         general_params = getenv()['general']
         gaussian_params = getenv()['gaussian']
         self.parameters["mem"] = gaussian_params['memory'] \
