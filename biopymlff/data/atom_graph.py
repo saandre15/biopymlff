@@ -38,6 +38,7 @@ class AtomGraph():
         }
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
+        print(self.graph.nodes)
 
     # @dispatch(str)
     # def __init__(self, file: str):
