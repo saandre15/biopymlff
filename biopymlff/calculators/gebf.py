@@ -2,21 +2,24 @@ import os
 import uuid
 import math
 import shutil
+import subprocess
 
 from ase.atoms import Atoms
 from ase.atom import Atom
 
 from ase.geometry.analysis import Analysis
 
-from ase.calculators.calculator import FileIOCalculator, CalculatorError, ReadError, CalculationFailed, Calculator
+from ase.calculators.calculator import FileIOCalculator, CalculatorError, ReadError, CalculationFailed, Calculator, all_changes
 from ase.calculators.gaussian import Gaussian
 from ase.calculators.amber import Amber
 
 from ase.io.xyz import read_xyz
+from ase.io import write
 
 from shutil import which
 
-from biopymlff.data.atom_graph import AtomGraph
+from ..data.atom_graph import AtomGraph
+from ..util.getenv import getenv
 
 
 class GEBF(FileIOCalculator):
@@ -27,14 +30,18 @@ class GEBF(FileIOCalculator):
     implemented_properties = ['energy', 'forces']
     command = 'LSQC PREFIX.gjf'
 
-    def __init__(self, method: str, basis: str=None, restart=None,
+    def __init__(self, restart=None,
                  ignore_bad_restart_file=Calculator._deprecated,
                  label=None, atoms=None, directory='.',**kwargs):
+        """ 
+        Takes ASE Gaussian Parameters As Well
+        """
         super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, kawgs=kwargs)
         self.directory = os.getcwd() + "/data/" + label
         if not os.path.exists(self.directory): os.mkdir(self.directory)
         self.frg_file = self.get_fragment_file(atoms)
         shutil.move(self.frg_file, self.directory + "/" + label + ".frg")
+
 
     def read_energy(self, labc_filepath='labc', gebf_filepaths: list=[]):
         if len(gebf_filepaths) != len(xyz_filepaths):
@@ -142,18 +149,19 @@ class GEBF(FileIOCalculator):
         # amber_home = amber_params["amber_home"]
         return 1
 
-    def calculate(self, atoms: Atoms):
-        lsqc = ('lsqc')
+    def calculate(self, *args, **kwargs):
+        lsqc = ['lsqc']
         if 'LSQC' in self.command:
             for program in lsqc:
+                print(program)
                 if which(program):
                     self.command = self.command.replace('LSQC', program)
                     break
             else: 
                 raise EnvironmentError("lsqc is not installed on the system.")
-        FileIOCalculator.calculate(self, args, kwargs)
+        FileIOCalculator.calculate(self, *args, **kwargs)
 
-    def get_gaussian(self, method=None, basis=None):
+    def get_gaussian(self, xc=None, basis=None):
         general_params = getenv()['general']
         gaussian_params = getenv()['gaussian']
         return Gaussian(
@@ -164,7 +172,7 @@ class GEBF(FileIOCalculator):
                 else str((os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / (1024.**3)) - 5) + "GB",
             chk=gaussian_params['checkpoint_file'] if gaussian_params['checkpoint_file'] else self.label + ".chk",
             save=None,
-            method=method,
+            xc=method,
             basis=basis,
             scf='(noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc)',
             int='acc2e=12'
@@ -216,75 +224,95 @@ class GEBF(FileIOCalculator):
                 return filename
         except IOError: print("Unable to create a fragment file in GEBF.")
                     
-    def write_input(self, atoms: Atoms):
-        dir_name=self.pdb_id
-        project_dir=self.data_dir
-        xyz_file="/tmp/" + dir_name + ".xyz"
-        com_file="/tmp/" + dir_name + ".com"
-        gjf_file="/tmp/" + dir_name + ".gjf"
+    def write_input(self, atoms: Atoms, properties=None, system_changes=None):
+        print("input written")
+        general_params = getenv()['general']
+        gaussian_params = getenv()['gaussian']
+        self.parameters["mem"] = gaussian_params['memory'] \
+                if gaussian_params['memory'] != "auto" \
+                else str(math.floor((os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / (1024.**3)) - 5)) + "GB"
+        self.parameters["chk"] = gaussian_params['checkpoint_file'] if gaussian_params['checkpoint_file'] != "auto" else self.label + ".chk"
+        self.parameters["scf"]='noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc'
+        self.parameters["int"]='acc2e=12'
         
-        mk_gassuian_input="/tmp/" + dir_name + ".gaussian.sh"
-        mk_lsqc_input="/tmp/" + dir_name + ".lsqc.sh"
-        run_lsqc="/tmp/" + dir_name + ".run.sh"
-        cpu_count=os.cpu_count()
-        # Write the atom to a pdb
-        write(xyz_file, atoms)
+        write(self.label + '.gjf', atoms, properties=None,
+              format='gaussian-in', parallel=False, **self.parameters)
+        with open(self.label + ".gjf", "r") as file:
+            content = file.read()
+            content = content.replace("Gaussian input prepared by ASE", "gebf{{frag=read}}")
+            content = content.replace("\nkwargs", "")
+            content = "%nproc=56\n" + content
+            content = "%njobs=10\n" + content
+            with open(self.label + ".gjf", "w") as file:
+                file.write(content)
+#         dir_name=self.label
+#         project_dir=self.data_dir
+#         xyz_file="/tmp/" + dir_name + ".xyz"
+#         com_file="/tmp/" + dir_name + ".com"
+#         gjf_file="/tmp/" + dir_name + ".gjf"
         
-        try:
-            with open(xyz_file, 'r') as fin:
-                data = fin.read().splitlines(True)
-            with open(xyz_file, 'w') as fout:
-                fout.writelines(data[2:])
-        except IOError: 
-            print("Failed to read XYZ file to write input.")
-            raise ReadError()
+#         mk_gassuian_input="/tmp/" + dir_name + ".gaussian.sh"
+#         mk_lsqc_input="/tmp/" + dir_name + ".lsqc.sh"
+#         run_lsqc="/tmp/" + dir_name + ".run.sh"
+#         cpu_count=os.cpu_count()
+#         # Write the atom to a pdb
+#         write(xyz_file, atoms)
+        
+#         try:
+#             with open(xyz_file, 'r') as fin:
+#                 data = fin.read().splitlines(True)
+#             with open(xyz_file, 'w') as fout:
+#                 fout.writelines(data[2:])
+#         except IOError: 
+#             print("Failed to read XYZ file to write input.")
+#             raise ReadError()
 
-        # Converts the pdb to a gaussian input file
-        with open(mk_gassuian_input, "w") as script:
-            script.write(f"""#!/bin/bash
-module use /work2/01114/jfonner/frontera/modulefiles
-module load gaussian
-newzmat -ixyz -ocom {xyz_file} {com_file}"""
-            )
-            script.close()
-            os.system("chmod +x " + mk_gassuian_input)
-            os.system(mk_gassuian_input)
-            # Converts a gaussian input file to a lsqc input file
-            with open(com_file, "rt") as com_file_handler:
-                com_file_content = com_file_handler.read()
-                with open(gjf_file, "") as script:
+#         # Converts the pdb to a gaussian input file
+#         with open(mk_gassuian_input, "w") as script:
+#             script.write(f"""#!/bin/bash
+# module use /work2/01114/jfonner/frontera/modulefiles
+# module load gaussian
+# newzmat -ixyz -ocom {xyz_file} {com_file}"""
+#             )
+#             script.close()
+#             os.system("chmod +x " + mk_gassuian_input)
+#             os.system(mk_gassuian_input)
+#             # Converts a gaussian input file to a lsqc input file
+#             with open(com_file, "rt") as com_file_handler:
+#                 com_file_content = com_file_handler.read()
+#                 with open(gjf_file, "") as script:
                     
-                    script.write(f"""%chk={dir_name}.chk
-%nproc={cpu_count}
-%njobs=6
-%Gver=g16
-%mem=10gb
-# pm6
+#                     script.write(f"""%chk={dir_name}.chk
+# %nproc={cpu_count}
+# %njobs=6
+# %Gver=g16
+# %mem=10gb
+# # pm6
 
-gebf{{frag=read}}
+# gebf{{frag=read}}
 
-{com_file_content}
+# {com_file_content}
 
-""")
+# """)
 
-                    # Moves the input file and runs it to have the dataset within the project directory
-                    # xyz_file="/tmp/" + dir_name + ".xyz"
-                    with open(run_lsqc, "w") as script:
-                        script.write(f"""#!/bin/bash
-module use /work2/01114/jfonner/frontera/modulefiles
-module load gaussian
-export OMP_NUM_THREADS={cpu_count}
-cd {os.path.dirname(project_dir)}
-mkdir {dir_name}
-cp {xyz_file} {dir_name}
-cp {gjf_file} .
-mkdir -p {self.get_subfrag_dir()}
-""")    
+#                     # Moves the input file and runs it to have the dataset within the project directory
+#                     # xyz_file="/tmp/" + dir_name + ".xyz"
+#                     with open(run_lsqc, "w") as script:
+#                         script.write(f"""#!/bin/bash
+# module use /work2/01114/jfonner/frontera/modulefiles
+# module load gaussian
+# export OMP_NUM_THREADS={cpu_count}
+# cd {os.path.dirname(project_dir)}
+# mkdir {dir_name}
+# cp {xyz_file} {dir_name}
+# cp {gjf_file} .
+# mkdir -p {self.get_subfrag_dir()}
+# """)    
 
-                        os.system("chmod +x " + run_lsqc)
-                        os.system(run_lsqc)
+#                         os.system("chmod +x " + run_lsqc)
+#                         os.system(run_lsqc)
                         
-                        os.system("cd " + os.path.dirname(project_dir) + "; echo $PWD ;lsqc " + os.path.basename(gjf_file))
+#                         os.system("cd " + os.path.dirname(project_dir) + "; echo $PWD ;lsqc " + os.path.basename(gjf_file))
 
     def read_results(self):
         lso_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".labc"
