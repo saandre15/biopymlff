@@ -29,17 +29,11 @@ class AtomGraph():
     counter = 1
 
     electrons = {
-        'H': 0,
-        'C': 0,
-        'N': 2,
-        'O': 4,
-        'F': 6,
-        'Cl': 6,
-        'Br': 6,
-        'I': 6,
-        'Si': 0,
-        'P': 2,
-        'S': 4
+        'H': 1,
+        'C': 6,
+        'N': 7,
+        'O': 8,
+        'F': 9,
     }
 
     # @dispatch(Atoms)
