@@ -33,10 +33,10 @@ class General_Test(unittest.TestCase):
 
     def test_01_train(self):
         # Train the trainable calculators
+        print("Starting Training")
         source_time = 0
         target_time = 0
         start_time = time.time()
-        print("training")
         if isinstance(self.source, ML): self.source.train()
         end_time = time.time()
         source_time = end_time - start_time
@@ -51,9 +51,10 @@ class General_Test(unittest.TestCase):
         ax = fig.add_axes([0, 0, 1, 1])
         ax.bar(labels, vals)
         fig.savefig(os.getcwd() + "/benchmark/time/" + self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + ".train.png")
+        print("Ending Training")
 
     def test_02_predict(self):
-        print("prediction")
+        print("Starting Prediction")
         control_pe = []
         experimental_pe = []
         
@@ -61,20 +62,26 @@ class General_Test(unittest.TestCase):
         experimental_time=[]
 
         samples = []
-        self.mol.calc = MOPAC()
+        mol: Atoms = self.mol
+        mol.calc = MOPAC()
         dynamics = Langevin(atoms=self.mol, timestep=0.01, temperature_K=500, friction=0.01)
         collect_data = lambda: samples.append(atoms.copy())
         dynamics.attach(collect_data, interval=1)
         dynamics.run(steps=100)
         
         for sample in samples:
+            s: Atoms = sample
             time_start = time.time()
-            source_pe = self.source.get_potential_energy()
+            source_mol = s.copy()
+            source_mol.calc = self.source
+            source_pe = source_mol.get_potential_energy()
             time_end = time.time()
             control_time.append(time_end - time_start)
 
             time_start = time.time()
-            target_pe = self.target.get_potential_energy()
+            target_mol = s.copy()
+            target_mol.calc = self.target
+            target_pe = target_mol.get_potential_energy()
             time_end = time.time()
             experimental_time.append(time_end - time_start)
         
@@ -116,4 +123,6 @@ class General_Test(unittest.TestCase):
             + "_time_vs_"
             + self.target_method.replace(" ", "_").lower()
             + "_time.png")
+
+        print("Ending Prediction")
 
