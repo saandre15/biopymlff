@@ -202,7 +202,7 @@ class GEBF(FileIOCalculator):
         filename = "/tmp/" + uuid.uuid1().hex + ".frg"
         # print(atoms)
         try:
-            with open(filename, "a") as fragment_file:
+            with open(filename, "w") as fragment_file:
                 # print(atoms)
                 fragments_as_indexes = self.fragments_as_indexes(atoms)
                 print(fragments_as_indexes)
@@ -226,7 +226,7 @@ class GEBF(FileIOCalculator):
                     
     def write_input(self, atoms: Atoms, properties=None, system_changes=None):
         print("input written")
-        shutil.copyfile(self.frg_file, self.label + ".frg")
+        shutil.copyfile(self.get_fragment_file(atoms), self.label + ".frg")
         general_params = getenv()['general']
         gaussian_params = getenv()['gaussian']
         self.parameters["mem"] = gaussian_params['memory'] \
