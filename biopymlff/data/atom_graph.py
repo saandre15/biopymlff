@@ -144,6 +144,7 @@ class AtomGraph():
     def fragment_by_bond_as_atoms_list(self, symbolA: str, symbolB: str) -> list:
         self.reset()
         fragments = self.fragments_by_bond_as_indexes(symbolA, symbolB)
+        print("fragments " + str(fragments))
         graph_list = [node for node in self.graph.nodes]
         atoms_list = []
         print(fragments)
@@ -177,7 +178,7 @@ class AtomGraph():
         # While there is still atoms that are not explored
         while len(not_explored_atoms) > 0:
             # Select a random atom within the not explored
-            index = math.floor(random.random() * len(not_explored_atoms))
+            index = 0
             # Traverse and add the atom to the current fragment
             self.traverse(graph_list[not_explored_atoms[index]], traversal_fn)
             node_fragments = list(set(node_fragments))
