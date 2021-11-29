@@ -11,4 +11,4 @@ class GEBF_PM6_Test(General_Test):
 
     @classmethod
     def setUpClass(cls):
-        cls.init_variables(os.getcwd() + "/data/systems/4znn.pdb", "GEBF PM6", "GEBF DFT", GEBF_PM6(), GEBF_DFT())
+        cls.init_variables(os.getcwd() + "/data/systems/4znn.not_wat.pdb", "GEBF PM6", "GEBF DFT", GEBF_PM6(), GEBF_DFT())
