@@ -148,6 +148,8 @@ class AtomGraph():
         fragments = self.fragments_by_bond_as_indexes(symbolA, symbolB)
         print("fragments " + str(fragments))
         graph_list = [node for node in self.graph.nodes]
+        graph_list.sort(key=lambda node: node.getAtom().index)
+
         atoms_list = []
         for fragment in fragments:
             atom_list = []
