@@ -28,9 +28,6 @@ class AtomGraph():
     
     counter = 1
 
-    
-
-    # @dispatch(Atoms)
     def __init__(self, atoms: Atoms):
         self.electrons = {
             'H': 1,
