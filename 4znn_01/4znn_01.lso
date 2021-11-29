@@ -11,7 +11,7 @@
  Name: Shuhua Li, Jing Ma,  Institute: Nanjing University
  --------------------------------------------------
  Command: lsqc -step gensubs 4znn_01
- LSQC task begin from: Mon Nov 29 13:15:54 2021
+ LSQC task begin from: Mon Nov 29 13:18:34 2021
  huma3:/home/axs210186/.local/src/biopymlff/4znn_01 (Linux x86_64)
  4znn_01.lso was renamed to 4znn_01.lso_0
  Run in serial
@@ -28,10 +28,10 @@
  [6]. S. Hua, W. Hua, and S. Li,J. Phys. Chem. A 114, 8126 (2010).
  [7]. N. Jiang, R. Tan, J. Ma,J. Phys. Chem. B 115, 2801 (2011).
  --------------------------------------------------
- GEBF task begin from: Mon Nov 29 13:15:54 2021
+ GEBF task begin from: Mon Nov 29 13:18:34 2021
  Read parameters and geometry from gaussian file: 4znn_01.keys
 
-# GEBF-GETPARA task begin from: Mon Nov 29 13:15:54 2021
+# GEBF-GETPARA task begin from: Mon Nov 29 13:18:34 2021
 #parameters
  memory    = 26gb
  npsub     =       56
@@ -91,4 +91,4 @@
  envcha    =  T
 #end
 
-# GEBF-GETGEOM task begin from: Mon Nov 29 13:15:54 2021
+# GEBF-GETGEOM task begin from: Mon Nov 29 13:18:34 2021
