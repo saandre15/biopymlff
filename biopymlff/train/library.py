@@ -7,7 +7,8 @@ from ase.io import write
 
 from pysmiles import write_smiles
 
-from biopymlff.util.getenv import getenv
+from ..util.getenv import getenv
+from ..data.atom_graph import AtomGraph
 
 general_params = getenv()["general"]
 
@@ -29,8 +30,8 @@ class Library:
         """ 
 
         """        
-        mol_graph = AtomGraph()
-        smiles = write_smiles(molecule=mol_graph)
+        mol_graph = AtomGraph(atoms)
+        smiles = write_smiles(molecule=mol_graph.get_graph())
         self.lib_cache[smiles] = atoms
         if not os.path.exists(self.lib_path): os.mkdir(self.lib_path)
         filename = str(atoms.symbols()) + "_" + self.file_count + ".pdb"

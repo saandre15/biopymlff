@@ -53,6 +53,7 @@ class General_Test(unittest.TestCase):
         fig.savefig(os.getcwd() + "/benchmark/time/" + self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + ".train.png")
 
     def test_02_predict(self):
+        print("prediction")
         control_pe = []
         experimental_pe = []
         

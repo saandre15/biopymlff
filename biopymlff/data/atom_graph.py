@@ -297,4 +297,6 @@ class AtomGraph():
     def size(self):
         return self.graph.number_of_nodes()
 
+    def get_graph(self): return self.graph
+
 
