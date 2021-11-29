@@ -28,12 +28,11 @@ class AtomGraph():
     
     counter = 1
 
-    electrons = {
+    self.electrons = {
         'H': 1,
         'C': 6,
         'N': 7,
-        'O': 8,
-        'F': 9,
+        'O': 8
     }
 
     # @dispatch(Atoms)
@@ -266,7 +265,7 @@ class AtomGraph():
         # TODO
         # unpaired_electron_count = self.get_unpaired_electron_count()
         # return unpaired_electron_count + 1
-        return 1 if self.get_electron_count() % 2 == 1 else 2
+        return 2 if self.get_electron_count() % 2 == 1 else 1
 
     def get_charges(self):
         # TODO
