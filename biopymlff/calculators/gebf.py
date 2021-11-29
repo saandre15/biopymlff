@@ -217,12 +217,14 @@ class GEBF(FileIOCalculator):
                     indexes = fragments_as_indexes[index]
                     print(indexes)
                     spin_multiplicity = AtomGraph(atoms).get_spin_multiplicity()
-                    # charge = AtomGraph(atoms).get_charges()
-                    charge = "+1"
+                    charge = AtomGraph(atoms).get_charges()
+                    # charge = "+1"
                     temp_indexes = []
                     for index in indexes:
                         temp_indexes.append(index + 1)
                     # Index Spin Muliplicity Fragment Indexes Charge
+                    for i in len(indexes):
+                        indexes[i] = indexes[i] + 1
                     line = f"""{str(serial)} {str(spin_multiplicity)} ({','.join([str(val) for val in temp_indexes])}) {str(charge)}"""
                     fragment_file.write(line + "\n")
                     serial+=1

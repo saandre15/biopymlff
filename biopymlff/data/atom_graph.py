@@ -29,6 +29,7 @@ class AtomGraph():
     counter = 1
 
     def __init__(self, atoms: Atoms):
+        # Neutral State
         self.electrons = {
             'H': 1,
             'C': 6,
