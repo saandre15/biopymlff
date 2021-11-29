@@ -155,7 +155,7 @@ class AtomGraph():
                 print(index)
                 atom: Atom = graph_list[index].getAtom()
                 atom_list.append(atom)
-                print(str(index) + " " + atom)
+                print(str(index) + " " + str(atom))
             atoms: Atoms = Atoms(atom_list)
             atoms_list.append(atoms)
             print(atoms.get_positions())
