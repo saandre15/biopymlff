@@ -28,6 +28,20 @@ class AtomGraph():
     
     counter = 1
 
+    electrons = {
+        'H': 0,
+        'C': 0,
+        'N': 2,
+        'O': 4,
+        'F': 6,
+        'Cl': 6,
+        'Br': 6,
+        'I': 6,
+        'Si': 0,
+        'P': 2,
+        'S': 4
+    }
+
     # @dispatch(Atoms)
     def __init__(self, atoms: Atoms):
         self.atoms = atoms
