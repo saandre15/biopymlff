@@ -223,7 +223,7 @@ class GEBF(FileIOCalculator):
                     for index in indexes:
                         temp_indexes.append(index + 1)
                     # Index Spin Muliplicity Fragment Indexes Charge
-                    for i in len(indexes):
+                    for i in range(0, len(indexes)):
                         indexes[i] = indexes[i] + 1
                     line = f"""{str(serial)} {str(spin_multiplicity)} ({','.join([str(val) for val in temp_indexes])}) {str(charge)}"""
                     fragment_file.write(line + "\n")
