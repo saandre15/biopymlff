@@ -206,14 +206,16 @@ class GEBF(FileIOCalculator):
                 # print(atoms)
                 fragments_as_indexes = self.fragments_as_indexes(atoms)
                 fragments_as_atoms = self.fragments_as_atoms(atoms)
-                print("check if match with fragment file")
                 # TODO: Index not matching
                 print(str(fragments_as_indexes))
                 print(str(fragments_as_atoms))
                 serial = 1
                 for index in range(0, len(fragments_as_indexes)):
                     atoms = fragments_as_atoms[index]
+                    print("matches?")
+                    print(atoms)
                     indexes = fragments_as_indexes[index]
+                    print(indexes)
                     spin_multiplicity = AtomGraph(atoms).get_spin_multiplicity()
                     charge = AtomGraph(atoms).get_charges()
                     temp_indexes = []
