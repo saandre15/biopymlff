@@ -3,6 +3,7 @@ import uuid
 import math
 import shutil
 import subprocess
+import multiprocessing
 
 from ase.atoms import Atoms
 from ase.atom import Atom
@@ -273,7 +274,8 @@ class GEBF(FileIOCalculator):
             content = file.read()
             content = content.replace("Gaussian input prepared by ASE", "gebf{{frag=read}}")
             content = content.replace("\nkwargs", "")
-            content = "%nproc=56\n" + content
+            cpu_count = multiprocessing.cpu_count()
+            content = "%nproc=" + cpu_count + "\n" + content
             content = "%njobs=10\n" + content
             temp_content = ""
             lines = content.split("\n")
@@ -336,9 +338,9 @@ class GEBF(FileIOCalculator):
                         
 
     def read_results(self):
-        lso_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".labc"
+        labc_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".labc"
         gebf_filepath = os.getcwd() + "/" +  self.label + "/" + self.label + ".gebf"
         force_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".force"
-        self.read_energy(lso_filepath=lso_filepath, gebf_filepath=gebf_filepath)
+        self.read_energy(labc_filepath=labc_filepath, gebf_filepath=gebf_filepath)
         self.read_forces(force_filepath=force_filepath)
             
