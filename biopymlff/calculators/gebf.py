@@ -250,6 +250,36 @@ class GEBF(FileIOCalculator):
             content = "%njobs=10\n" + content
             with open(self.label + ".gjf", "w") as file:
                 file.write(content)
+                self.calculate(atoms=atoms, properties=properties, system_changes=system_changes)
+                with open(self.label + "/" + self.label + ".lso") as file:
+                    lines = file.readlines()
+                    reading_mode = False
+                    charge_correction = []
+                    for line in lines:
+                        if "----------" in line:
+                            reading_mode = True 
+                        if "============" in line:
+                            reading_mode = False
+                        vals = line.split()                        
+                        elec_count = vals[2]
+                        charge_count = vals[3]
+                        if elec_count % 2 == 1: 
+                            charge_correction.append(charge_count+1)
+                        else: 
+                            charge_correction.append(charge_count)
+                            
+                    with open(self.label + "/" + self.label + ".frg") as file:
+                        lines = file.readlines()
+                        overwrite = ""
+                        counter=0
+                        for line in lines:
+                            vals = line.split()
+                            overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + charge_correction[counter] + "\n"
+                            counter+=1
+
+                        shutil.copy(self.label + "/" + self.label + ".frg", ".")
+                        shutil.copy(self.label + "/" + self.label + ".gjf", ".")
+                         
 #         dir_name=self.label
 #         project_dir=self.data_dir
 #         xyz_file="/tmp/" + dir_name + ".xyz"
