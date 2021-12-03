@@ -211,7 +211,7 @@ class GEBF(FileIOCalculator):
     
     def subsystems(self):
         mypath=self.directory
-        files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+        files = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
         files = filter(lambda file: ".xyz" in file or ".sxyz" in file, files)
         subsystems = []
         for file in files:
@@ -341,7 +341,7 @@ class GEBF(FileIOCalculator):
         
         labc_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".labc")
         gebf_parent=os.path.join(os.getcwd(), self.label, self.label + "_subsys")
-        gebf_filepaths = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+        gebf_filepaths = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(gebf_parent, f))]
         gebf_filepaths = filter(lambda file: "gebf" in file or ".agebf" in file, files)
         force_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".force")
         self.read_energy(labc_filepath=labc_filepath, gebf_filepaths=gebf_filepaths)
