@@ -75,7 +75,7 @@ class GEBF(FileIOCalculator):
                                 if "NPA Charges" in line: 
                                     read_charge = True
                                     continue
-                                if "Cartesian Gradiant" in line:
+                                elif "Cartesian Gradiant" in line:
                                     read_charge = False
                                     break
                                 crgs = line.split()
@@ -272,7 +272,7 @@ class GEBF(FileIOCalculator):
               format='gaussian-in', parallel=False, **self.parameters)
         with open(self.label + ".gjf", "r") as file:
             content = file.read()
-            content = content.replace("Gaussian input prepared by ASE", "gebf{{frag=read}}")
+            content = content.replace("Gaussian input prepared by ASE", "gebf{{frag=read charge=NPA}}")
             content = content.replace("\nkwargs", "")
             cpu_count = multiprocessing.cpu_count()
             content = "%nproc=" + cpu_count + "\n" + content
@@ -339,7 +339,7 @@ class GEBF(FileIOCalculator):
 
     def read_results(self):
         labc_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".labc"
-        gebf_filepath = os.getcwd() + "/" +  self.label + "/" + self.label + ".gebf"
+        gebf_filepath = os.getcwd() + "/" +  self.label + "/" + self.label + ".agebf"
         force_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".force"
         self.read_energy(labc_filepath=labc_filepath, gebf_filepath=gebf_filepath)
         self.read_forces(force_filepath=force_filepath)
