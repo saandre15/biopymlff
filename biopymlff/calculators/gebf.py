@@ -64,7 +64,7 @@ class GEBF(FileIOCalculator):
                     subsys_atoms = self.subsystems()    
                     counter = 0
                     for path in gebf_filepaths:
-                        with open(gebf_filepaths) as file:
+                        with open(path) as file:
                             lines = file.readlines()
                             atoms: Atoms = subsys_atoms[counter]
                             read_charge = False
