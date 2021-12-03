@@ -276,9 +276,12 @@ class GEBF(FileIOCalculator):
                             vals = line.split()
                             overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + charge_correction[counter] + "\n"
                             counter+=1
+                        
+                        with open(self.label + "/" + self.label + ".frg", "w") as file:
+                            file.write(overwrite)
 
-                        shutil.copy(self.label + "/" + self.label + ".frg", ".")
-                        shutil.copy(self.label + "/" + self.label + ".gjf", ".")
+                            shutil.copy(self.label + "/" + self.label + ".frg", ".")
+                            shutil.copy(self.label + "/" + self.label + ".gjf", ".")
                          
 #         dir_name=self.label
 #         project_dir=self.data_dir
