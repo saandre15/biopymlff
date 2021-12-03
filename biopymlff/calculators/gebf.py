@@ -160,6 +160,40 @@ class GEBF(FileIOCalculator):
                 raise EnvironmentError("lsqc is not installed on the system.")
         FileIOCalculator.calculate(self, *args, **kwargs)
 
+    def calculate_repair(self, atoms: Atoms, properties=[], system_changes=all_changes): 
+        Calculator.calculate(self, atoms, properties, system_changes)
+        # self.write_input(self.atoms, properties, system_changes)
+        if self.command is None:
+            raise CalculatorSetupError(
+                'Please set ${} environment variable '
+                .format('ASE_' + self.name.upper() + '_COMMAND') +
+                'or supply the command keyword')
+        command = self.command
+        if 'PREFIX' in command:
+            command = command.replace('PREFIX', self.prefix)
+
+        try:
+            proc = subprocess.Popen(command, shell=True, cwd=self.directory)
+            print(proc.stdout.read()) # NOTE: Somehow makes the command above execute properly???
+        except OSError as err:
+            # Actually this may never happen with shell=True, since
+            # probably the shell launches successfully.  But we soon want
+            # to allow calling the subprocess directly, and then this
+            # distinction (failed to launch vs failed to run) is useful.
+            msg = 'Failed to execute "{}"'.format(command)
+            raise EnvironmentError(msg) from err
+
+        errorcode = proc.wait()
+
+        if errorcode:
+            path = os.path.abspath(self.directory)
+            msg = ('Calculator "{}" failed with command "{}" failed in '
+                   '{} with error code {}'.format(self.name, command,
+                                                  path, errorcode))
+            raise CalculationFailed(msg)
+
+        self.read_results()
+
     def get_gaussian(self, xc=None, basis=None):
         general_params = getenv()['general']
         gaussian_params = getenv()['gaussian']
@@ -242,9 +276,24 @@ class GEBF(FileIOCalculator):
             content = "%nproc=56\n" + content
             content = "%njobs=10\n" + content
             with open(self.label + ".gjf", "w") as file:
-                file.write(content)
+                file.write(content + "\n")
                 # NOTE: Figure out how to solve the lsqc issue on TACC
-                os.system("lsqc " + self.label + ".gjf")
+                print("lsqc should be called")
+#                 shell_script = None
+#                 with open(self.label + ".sh", "w") as file:
+#                     script_content=f"""#!/bin/bash
+# VAL=$(whoami)
+# echo $VAL
+# echo "test"
+# cd {os.getcwd()}
+# lsqc {self.label}.gjf 
+# """
+#                     file.write(script_content)
+#                     shell_script = file.name
+                
+                self.calculate_repair(atoms=atoms, properties=properties)
+                # subprocess.run(["cd " + os.getcwd() + ";", "lsqc " + self.label + ".gjf"])
+                os.system("cd " + os.getcwd() + ";" + "lsqc " + self.label + ".gjf")
                 with open(self.label + "/" + self.label + ".lso") as file:
                     lines = file.readlines()
                     reading_mode = False
