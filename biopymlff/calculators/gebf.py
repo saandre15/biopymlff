@@ -338,11 +338,10 @@ class GEBF(FileIOCalculator):
                         
 
     def read_results(self):
-        
         labc_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".labc")
         gebf_parent=os.path.join(os.getcwd(), self.label, self.label + "_subsys")
         gebf_filepaths = [f for f in os.listdir(gebf_parent) if os.path.isfile(os.path.join(gebf_parent, f))]
-        gebf_filepaths = filter(lambda file: "gebf" in file or ".agebf" in file, files)
+        gebf_filepaths = filter(lambda file: "gebf" in file or ".agebf" in file, gebf_filepaths)
         force_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".force")
         self.read_energy(labc_filepath=labc_filepath, gebf_filepaths=gebf_filepaths)
         self.read_forces(force_filepath=force_filepath)
