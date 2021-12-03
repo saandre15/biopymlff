@@ -263,6 +263,7 @@ class GEBF(FileIOCalculator):
                         vals = line.split()                        
                         elec_count = vals[2]
                         charge_count = vals[3]
+                        print("Electron Count " + str(elec_count))
                         if elec_count % 2 == 1: 
                             charge_correction.append(charge_count+1)
                         else: 

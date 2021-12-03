@@ -272,7 +272,8 @@ class AtomGraph():
         # TODO
         # unpaired_electron_count = self.get_unpaired_electron_count()
         # return unpaired_electron_count + 1
-        return 2 if self.get_electron_count() % 2 == 1 else 1
+        # return 2 if self.get_electron_count() % 2 == 1 else 1
+        return 1
 
     def get_charges(self):
         # TODO
