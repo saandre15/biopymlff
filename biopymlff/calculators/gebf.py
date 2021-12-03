@@ -317,9 +317,10 @@ class GEBF(FileIOCalculator):
                     
                     with open(self.label + "/" + self.label + ".frg", "w") as file:
                         file.write(overwrite)
+                        raise NotImplementedError("Break")
 
-                        shutil.copy(self.label + "/" + self.label + ".frg", ".")
-                        shutil.copy(self.label + "/" + self.label + ".gjf", ".")
+                        # shutil.copy(self.label + "/" + self.label + ".frg", ".")
+                        # shutil.copy(self.label + "/" + self.label + ".gjf", ".")
                         
 
     def read_results(self):
