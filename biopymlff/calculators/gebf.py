@@ -283,10 +283,6 @@ class GEBF(FileIOCalculator):
                 reading_mode = False
                 charge_correction = []
                 for line in lines:
-                    if "----------" in line:
-                        reading_mode = True 
-                    if "============" in line:
-                        reading_mode = False
                     if reading_mode == True:
                         vals = line.split() 
                         print(vals)                       
@@ -297,6 +293,11 @@ class GEBF(FileIOCalculator):
                             charge_correction.append(charge_count+1)
                         else: 
                             charge_correction.append(charge_count)
+                    if "----------" in line:
+                        reading_mode = True 
+                    if "============" in line:
+                        reading_mode = False
+                    
                         
                 with open(self.label + "/" + self.label + ".frg") as file:
                     lines = file.readlines()
