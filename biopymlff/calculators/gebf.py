@@ -37,7 +37,6 @@ class GEBF(FileIOCalculator):
         Takes ASE Gaussian Parameters As Well
         """
         super().__init__(restart=restart, ignore_bad_restart_file=ignore_bad_restart_file, label=label, atoms=atoms, directory=directory, kawgs=kwargs)
-        self.directory = os.getcwd() + "/data/" + label
         if not os.path.exists(self.directory): os.mkdir(self.directory)
         self.frg_file = self.get_fragment_file(atoms)
         shutil.move(self.frg_file, self.directory + "/" + label + ".frg")
@@ -282,53 +281,40 @@ class GEBF(FileIOCalculator):
                 file.write(content + "\n")
                 # NOTE: Figure out how to solve the lsqc issue on TACC
                 print("lsqc should be called")
-#                 shell_script = None
-#                 with open(self.label + ".sh", "w") as file:
-#                     script_content=f"""#!/bin/bash
-# VAL=$(whoami)
-# echo $VAL
-# echo "test"
-# cd {os.getcwd()}
-# lsqc {self.label}.gjf 
-# """
-#                     file.write(script_content)
-#                     shell_script = file.name
                 
-                self.calculate_repair(atoms=atoms, properties=properties)
-                # subprocess.run(["cd " + os.getcwd() + ";", "lsqc " + self.label + ".gjf"])
-                # os.system("cd " + os.getcwd() + ";" + "lsqc " + self.label + ".gjf")
-                with open(self.label + "/" + self.label + ".lso") as file:
-                    lines = file.readlines()
-                    reading_mode = False
-                    charge_correction = []
-                    for line in lines:
-                        if "----------" in line:
-                            reading_mode = True 
-                        if "============" in line:
-                            reading_mode = False
-                        vals = line.split()                        
-                        elec_count = vals[2]
-                        charge_count = vals[3]
-                        print("Electron Count " + str(elec_count))
-                        if elec_count % 2 == 1: 
-                            charge_correction.append(charge_count+1)
-                        else: 
-                            charge_correction.append(charge_count)
-                            
-                    with open(self.label + "/" + self.label + ".frg") as file:
-                        lines = file.readlines()
-                        overwrite = ""
-                        counter=0
-                        for line in lines:
-                            vals = line.split()
-                            overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + charge_correction[counter] + "\n"
-                            counter+=1
+            self.calculate_repair(atoms=atoms, properties=properties)
+            with open(self.label + "/" + self.label + ".lso") as file:
+                lines = file.readlines()
+                reading_mode = False
+                charge_correction = []
+                for line in lines:
+                    if "----------" in line:
+                        reading_mode = True 
+                    if "============" in line:
+                        reading_mode = False
+                    vals = line.split()                        
+                    elec_count = vals[2]
+                    charge_count = vals[3]
+                    print("Electron Count " + str(elec_count))
+                    if elec_count % 2 == 1: 
+                        charge_correction.append(charge_count+1)
+                    else: 
+                        charge_correction.append(charge_count)
                         
-                        with open(self.label + "/" + self.label + ".frg", "w") as file:
-                            file.write(overwrite)
+                with open(self.label + "/" + self.label + ".frg") as file:
+                    lines = file.readlines()
+                    overwrite = ""
+                    counter=0
+                    for line in lines:
+                        vals = line.split()
+                        overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + charge_correction[counter] + "\n"
+                        counter+=1
+                    
+                    with open(self.label + "/" + self.label + ".frg", "w") as file:
+                        file.write(overwrite)
 
-                            shutil.copy(self.label + "/" + self.label + ".frg", ".")
-                            shutil.copy(self.label + "/" + self.label + ".gjf", ".")
+                        shutil.copy(self.label + "/" + self.label + ".frg", ".")
+                        shutil.copy(self.label + "/" + self.label + ".gjf", ".")
                         
 
     def read_results(self):
