@@ -181,11 +181,8 @@ class GEBF(FileIOCalculator):
             # distinction (failed to launch vs failed to run) is useful.
             msg = 'Failed to execute "{}"'.format(command)
             raise EnvironmentError(msg) from err
-        stderr, stdout = proc.communicate()
+        # stderr, stdout = proc.communicate()
         errorcode = proc.wait()
-        
-        print(stderr)
-        print(stdout)
 
         if errorcode:
             path = os.path.abspath(self.directory)
@@ -285,6 +282,7 @@ class GEBF(FileIOCalculator):
             self.calculate_repair(atoms=atoms, properties=properties)
             with open(self.label + "/" + self.label + ".lso") as file:
                 lines = file.readlines()
+                print(lines)
                 reading_mode = False
                 charge_correction = []
                 for line in lines:
