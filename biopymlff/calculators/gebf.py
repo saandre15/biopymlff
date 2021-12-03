@@ -272,57 +272,60 @@ class GEBF(FileIOCalculator):
             content = content.replace("\nkwargs", "")
             content = "%nproc=56\n" + content
             content = "%njobs=10\n" + content
-            with open(self.label + ".gjf", "w") as file:
-                file.write(content + "\n")
-                # NOTE: Figure out how to solve the lsqc issue on TACC
-                print("lsqc should be called")
-                
-            self.calculate_repair(atoms=atoms, properties=properties)
-            with open(self.label + "/" + self.label + ".lso") as file:
-                lines = file.readlines()
-                prereading_mode = False
-                reading_mode = False
-                charge_correction = []
-                for line in lines:
-                    if "============" in line and reading_mode == True:
-                        print("this is called")
-                        prereading_mode = False
-                        reading_mode = False
-                        break
-                    elif reading_mode == True:
-                        vals = line.split() 
-                        print(vals)                       
-                        elec_count = vals[2]
-                        charge_count = vals[3]
-                        print("Electron Count " + str(elec_count))
-                        if int(elec_count) % 2 == 1: 
-                            charge_correction.append(int(charge_count)+1)
-                        else: 
-                            charge_correction.append(int(charge_count))
-                    elif "Frag NAtoms Elec Char Mult" in line:
-                        prereading_mode = True
-                    elif "----------" in line and prereading_mode == True:
-                        reading_mode = True 
-                    
-                    
-                        
-                with open(self.label + "/" + self.label + ".frg", "r") as file:
-                    lines = file.readlines()
-                    overwrite = ""
-                    counter=0
-                    for line in lines:
-                        vals = line.split()
-                        overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + " " + str(charge_correction[counter]) + "\n"
-                        counter+=1
-                    
-                with open(self.label + "/" + self.label + ".frg", "w") as file:
-                    print(overwrite)
-                    file.write(overwrite)
 
-                    shutil.copy(self.label + "/" + self.label + ".frg", self.directory)
-                    shutil.copy(self.label + "/" + self.label + ".gjf", self.directory)
-                    shutil.rmtree(self.label)
-                    raise NotImplementedError("BREAK")
+        with open(self.label + ".gjf", "w") as file:
+            file.write(content + "\n")
+            # NOTE: Figure out how to solve the lsqc issue on TACC
+            print("lsqc should be called")
+            
+        self.calculate_repair(atoms=atoms, properties=properties)
+        with open(self.label + "/" + self.label + ".lso") as file:
+            lines = file.readlines()
+            prereading_mode = False
+            reading_mode = False
+            charge_correction = []
+            for line in lines:
+                if "============" in line and reading_mode == True:
+                    print("this is called")
+                    prereading_mode = False
+                    reading_mode = False
+                    break
+                elif reading_mode == True:
+                    vals = line.split() 
+                    print(vals)                       
+                    elec_count = vals[2]
+                    charge_count = vals[3]
+                    print("Electron Count " + str(elec_count))
+                    if int(elec_count) % 2 == 1: 
+                        charge_correction.append(int(charge_count)+1)
+                    else: 
+                        charge_correction.append(int(charge_count))
+                elif "Frag NAtoms Elec Char Mult" in line:
+                    prereading_mode = True
+                elif "----------" in line and prereading_mode == True:
+                    reading_mode = True 
+                
+                
+                    
+        with open(self.label + "/" + self.label + ".frg", "r") as file:
+            lines = file.readlines()
+            overwrite = ""
+            counter=0
+            for line in lines:
+                vals = line.split()
+                overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + " " + str(charge_correction[counter]) + "\n"
+                counter+=1
+
+        os.remove(self.label + "/" + self.label + ".frg")
+        
+        with open(self.label + "/" + self.label + ".frg", "w") as file:
+            print(overwrite)
+            file.write(overwrite)
+
+            shutil.copy(self.label + "/" + self.label + ".frg", self.directory)
+            shutil.copy(self.label + "/" + self.label + ".gjf", self.directory)
+            shutil.rmtree(self.label)
+            raise NotImplementedError("BREAK")
                         
 
     def read_results(self):
