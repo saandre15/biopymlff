@@ -210,7 +210,7 @@ class GEBF(FileIOCalculator):
     
     def subsystems(self):
         mypath=self.directory
-        files = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
+        files = [os.getcwd() + "/" + self.label + "/" + self.label + "_subsys/" + f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
         files = filter(lambda file: ".xyz" in file or ".sxyz" in file, files)
         subsystems = []
         for file in files:
