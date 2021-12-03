@@ -313,7 +313,7 @@ class GEBF(FileIOCalculator):
             counter=0
             for line in lines:
                 vals = line.split()
-                overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + " " + str(charge_correction[counter]) + "\n"
+                overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + " " + str(charge_correction[counter]) if charge_correction[counter] < 1 else str("+ " + charge_correction[count]) + "\n"
                 counter+=1
 
         os.remove(self.label + "/" + self.label + ".frg")
