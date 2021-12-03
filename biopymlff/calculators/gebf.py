@@ -284,11 +284,12 @@ class GEBF(FileIOCalculator):
                 reading_mode = False
                 charge_correction = []
                 for line in lines:
-                    if "============" in line:
+                    if "============" in line and reading_mode == True:
+                        print("this is called")
                         prereading_mode = False
                         reading_mode = False
                         break
-                    if reading_mode == True:
+                    elif reading_mode == True:
                         vals = line.split() 
                         print(vals)                       
                         elec_count = vals[2]
@@ -298,9 +299,9 @@ class GEBF(FileIOCalculator):
                             charge_correction.append(int(charge_count)+1)
                         else: 
                             charge_correction.append(int(charge_count))
-                    if "Frag NAtoms Elec Char Mult" in line:
+                    elif "Frag NAtoms Elec Char Mult" in line:
                         prereading_mode = True
-                    if "----------" in line and prereading_mode == True:
+                    elif "----------" in line and prereading_mode == True:
                         reading_mode = True 
                     
                     
