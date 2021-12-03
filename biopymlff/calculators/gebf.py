@@ -316,6 +316,7 @@ class GEBF(FileIOCalculator):
                         counter+=1
                     
                 with open(self.label + "/" + self.label + ".frg", "w") as file:
+                    print(overwrite)
                     file.write(overwrite)
 
                     shutil.copy(self.label + "/" + self.label + ".frg", self.directory)
