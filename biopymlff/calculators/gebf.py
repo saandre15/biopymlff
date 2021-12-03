@@ -280,7 +280,6 @@ class GEBF(FileIOCalculator):
             self.calculate_repair(atoms=atoms, properties=properties)
             with open(self.label + "/" + self.label + ".lso") as file:
                 lines = file.readlines()
-                print(lines)
                 reading_mode = False
                 charge_correction = []
                 for line in lines:
@@ -288,14 +287,15 @@ class GEBF(FileIOCalculator):
                         reading_mode = True 
                     if "============" in line:
                         reading_mode = False
-                    vals = line.split()                        
-                    elec_count = vals[2]
-                    charge_count = vals[3]
-                    print("Electron Count " + str(elec_count))
-                    if elec_count % 2 == 1: 
-                        charge_correction.append(charge_count+1)
-                    else: 
-                        charge_correction.append(charge_count)
+                    if reading_mode == True:
+                        vals = line.split()                        
+                        elec_count = vals[2]
+                        charge_count = vals[3]
+                        print("Electron Count " + str(elec_count))
+                        if elec_count % 2 == 1: 
+                            charge_correction.append(charge_count+1)
+                        else: 
+                            charge_correction.append(charge_count)
                         
                 with open(self.label + "/" + self.label + ".frg") as file:
                     lines = file.readlines()
