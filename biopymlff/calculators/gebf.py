@@ -171,10 +171,10 @@ class GEBF(FileIOCalculator):
         command = self.command
         if 'PREFIX' in command:
             command = command.replace('PREFIX', self.prefix)
-
         try:
-            proc = subprocess.Popen(command, shell=True, cwd=self.directory)
-            print(proc.stdout.read()) # NOTE: Somehow makes the command above execute properly???
+            # NOTE: Not executing for what ever reason???
+            proc = subprocess.Popen(command, shell=True, cwd=self.directory, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            
         except OSError as err:
             # Actually this may never happen with shell=True, since
             # probably the shell launches successfully.  But we soon want
@@ -182,8 +182,11 @@ class GEBF(FileIOCalculator):
             # distinction (failed to launch vs failed to run) is useful.
             msg = 'Failed to execute "{}"'.format(command)
             raise EnvironmentError(msg) from err
-
+        stderr, stdout = proc.communicate()
         errorcode = proc.wait()
+        
+        print(stderr)
+        print(stdout)
 
         if errorcode:
             path = os.path.abspath(self.directory)
@@ -293,7 +296,7 @@ class GEBF(FileIOCalculator):
                 
                 self.calculate_repair(atoms=atoms, properties=properties)
                 # subprocess.run(["cd " + os.getcwd() + ";", "lsqc " + self.label + ".gjf"])
-                os.system("cd " + os.getcwd() + ";" + "lsqc " + self.label + ".gjf")
+                # os.system("cd " + os.getcwd() + ";" + "lsqc " + self.label + ".gjf")
                 with open(self.label + "/" + self.label + ".lso") as file:
                     lines = file.readlines()
                     reading_mode = False
