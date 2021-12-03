@@ -44,8 +44,6 @@ class GEBF(FileIOCalculator):
 
 
     def read_energy(self, labc_filepath='labc', gebf_filepaths: list=[]):
-        if len(gebf_filepaths) != len(xyz_filepaths):
-            raise ReadError("Cannot obtain potential energy where gebf file size doesn't match xyz file size.")
         try:
             with open(labc_filepath) as file:
                 lines = file.readlines()
