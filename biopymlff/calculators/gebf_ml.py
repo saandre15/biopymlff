@@ -40,7 +40,7 @@ class GEBF_ML(GEBF_PM6, ML):
 
     implemented_properties = ['energy', 'energies', 'forces', 'stresses']
 
-    def __init__(self, restart=None, ignore_bad_restart_file=Calculator._deprecated,
+    def __init__(self, descriptors: list, restart=None, ignore_bad_restart_file=Calculator._deprecated,
                  label=None, atoms=None, directory='.', ext_type=None, library: Library=None,
                  **kwargs):
         gap_params = getenv()["gap"]
@@ -51,20 +51,7 @@ class GEBF_ML(GEBF_PM6, ML):
             atoms=atoms, 
             directory=directory
         )
-        descriptor = SOAP(
-            r_cutoff=gap_params["soap_r_c"],
-            atom_sigma=gap_params["atom_sigma"],
-            zeta=gap_params["zeta"],
-            l_max=gap_params["l_max"],
-            n_max=gap_params["N_R_l"],
-            radial_scaling=-0.5,
-            cutoff_trans_width=1.0,
-            central_weight=1.0,
-            n_sparse=8000,
-            delta=0.2,
-            covariance_type="dot_product",
-            sparse_method="cur_points"
-        )
+        
         super(ML, self).__init__(descriptors=[descriptor], library=library)
 
         self.ext_type = ext_type
@@ -188,7 +175,8 @@ class GEBF_ML(GEBF_PM6, ML):
         max_force_error = self.get_max_error(ml_forces, qm_forces)
         to_train.append(atoms)
         
-        if len(to_train) > 5 or max_force_error > 0.036:
+        # if len(to_train) > 5 or max_force_error > 0.036:
+        if max_force_error > 0.036:
             # Choose values of forces error and then filter using CUR approximation
             self.train_model(self.models("dft"), symbols, [atoms], "dft")
             self.train_model(self.models("pm6"), symbols, [atoms], "pm6")

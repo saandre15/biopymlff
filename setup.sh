@@ -1,16 +1,8 @@
 #!/bin/bash
 
-virtualenv venv
+python3 -m venv venv
 source venv/bin/activate
-pip install tensorflow
-pip install deepmd-kit
-pip install ase
-pip install quippy-ase
-pip install mendeleev
-pip install toml
-pip install networkx
-pip install tk
-pip install multipledispatch
-pip install pysmiles
-pip install dscribe
-pip install pytraj
+# Read TOML File to get AMBERHOME
+
+pip install --user pipenv
+poetry installecho $e

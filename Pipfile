@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+tensorflow="*"
+deepmd-kit="*"
+ase="*"
+quippy-ase="*"
+mendeleev="*"
+toml="*"
+networkx="*"
+tk="*"
+multipledispatch="*"
+pysmiles="*"
+dscribe="*"
+
+
+[dev-packages]
+pytest = "*"

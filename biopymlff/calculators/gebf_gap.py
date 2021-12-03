@@ -49,10 +49,24 @@ class GEBF_GAP(GEBF_ML):
     _deprecated=object()
 
     def __init__(self, restart=None, ignore_bad_restart_file=_deprecated,
-                 label=None, atoms=None, directory='.', library=None,
+                 label=None, atoms=None, directory='.', library=None
                  **kwargs):
-
+        descriptor = SOAP(
+            r_cutoff=gap_params["soap_r_c"],
+            atom_sigma=gap_params["atom_sigma"],
+            zeta=gap_params["zeta"],
+            l_max=gap_params["l_max"],
+            n_max=gap_params["N_R_l"],
+            radial_scaling=-0.5,
+            cutoff_trans_width=1.0,
+            central_weight=1.0,
+            n_sparse=8000,
+            delta=0.2,
+            covariance_type="dot_product",
+            sparse_method="cur_points"
+        )
         super(GEBF_ML, self).__init__(
+            descriptors=[descriptor],
             restart=restart, 
             ignore_bad_restart_file=ignore_bad_restart_file, 
             label=label, 

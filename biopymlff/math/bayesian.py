@@ -1,10 +1,19 @@
 import numpy as np
 import math
+import os
+import random
 
 from matplotlib import pyplot
 
 from scipy import optimize
 
+from ase.io.proteindatabank import read_proteindatabank
+from ase.atoms import Atoms
+
+from ..descriptors.soap import SOAP
+from ..math.optimization import oblique_projection_matrix
+
+# TODO: Optimize this algorithm using FFT
 def get_alpha_beta(X=None, Y=None, alpha=None, beta=None, iter_nums=None):
     """ 
     Optimizes the alpha and beta 
@@ -12,13 +21,13 @@ def get_alpha_beta(X=None, Y=None, alpha=None, beta=None, iter_nums=None):
     M = 2
     N = len(X)
     J = np.zeros(shape=(iter_nums, 1))
-    fai = np.zeros(shape=(N, 4))
+    # fai = np.zeros(shape=(N, 4))
 
-    for i in range(0, N):
-        for j in range(0, 3):
-            fai[i][j] = X[i] ^ (j)
+    # for i in range(0, N):
+    #     for j in range(0, 3):
+    #         fai[i][j] = X[i] ^ (j)
 
-    X = fai
+    # X = fai
     value = np.linalg.eigvals( beta * X @ np.transpose(X))
     m = len(value)
 
@@ -36,10 +45,14 @@ def get_alpha_beta(X=None, Y=None, alpha=None, beta=None, iter_nums=None):
         
         # beta = 0.6 * 10 **26
 
-        A = beta * np.transpose(X) @ X + alpha
-    
-        
+        A = beta * X.T @ X + alpha * np.array([1])
+        # NOTE: Testing this numerical analysis technique
+        if np.linalg.det(A) == 0:
+            A = oblique_projection_matrix(A)
+        # print("inverse " + str(np.linalg.inv(A)))
+
         # Weight Value
+        print(np.linalg.pinv(A) @ np.transpose(X))
         mN = beta * np.linalg.pinv(A) @ np.transpose(X) @ Y
         
         alpha = gamma / (mN @ np.transpose(mN))
@@ -49,6 +62,7 @@ def get_alpha_beta(X=None, Y=None, alpha=None, beta=None, iter_nums=None):
 
         EmN = (1/2) * beta * val @ np.transpose(val) + ((1/2) * alpha  * mN @ np.transpose(mN))
 
+        print(np.linalg.det(A))
         J[i] = ( (1/2) * M * math.log(alpha) + (1/2) * math.log(beta) - EmN - (1/2) * math.log(np.linalg.det(A)) - (1/2) * N * math.log(2 * math.pi))
         
         print("alpha " + str(alpha))
@@ -71,64 +85,33 @@ def get_alpha_beta(X=None, Y=None, alpha=None, beta=None, iter_nums=None):
     beta_min = betas[maxi_at]
     j_min=J[maxi_at]
 
-
-    # def f(args: list):
-    #     alpha = args[0]
-    #     beta = args[1] 
-        
-    #     print("test")
-    #     A = beta * np.transpose(X) @ X + alpha
-        
-    #     # Weight Value
-    #     mN = beta * np.linalg.pinv(A) @ np.transpose(X) @ Y
-    #     val = Y - (X @ mN)
-    #     EmN = (1/2) * beta * val @ np.transpose(val) + ((1/2) * alpha  * mN @ np.transpose(mN))
-    #     print("ALPHA " + str(alpha))
-    #     print("BETA " + str(beta))
-    #     J = ( (1/2) * M * math.log(alpha) + (1/2) * math.log(beta) - EmN - (1/2) * np.log(np.linalg.det(A)) - (1/2) * N * math.log(2 * math.pi))
-    #     print("J " + str(J))
-        
-    #     return J
-
-
-    # val = optimize.minimize(lambda args: -f(args), (alpha_min, beta_min), method='L-BFGS-B', bounds=((1e-10, math.inf), (1e-10, math.inf)))
-    # print(val)
-
-
-    
-    fig = pyplot.figure()
-    ax = pyplot.axes(projection='3d')
-    ax.plot_wireframe(np.log(alphas), np.log(betas), J, color='green')
-    ax.set_title('log (a) vs log (B) vs log P(Y|a, B)')
-    pyplot.show()
-
+    # fig = pyplot.figure()
+    # ax = pyplot.axes(projection='3d')
+    # ax.plot_wireframe(np.log(alphas), np.log(betas), J, color='green')
+    # ax.set_title('log (a) vs log (B) vs log P(Y|a, B)')
+    # pyplot.show()
 
     return alpha_min, beta_min
 
 def get_sigma(X=None, Y=None):
     alpha, beta = get_alpha_beta(X, Y, 1, 1, 1000)
 
-    N = len(X)
-    fai = np.zeros(shape=(N, 4))
-
-    for i in range(0, N):
-        for j in range(0, 3):
-            fai[i][j] = X[i] ^ (j)
-
-    X = fai
-
     A = beta * np.transpose(X) @ X + alpha
     sigma = X[-1] @ np.linalg.pinv(A) @ np.transpose(X[-1])
-
     
     return sigma
 
 def get_m_n(X=None, Y=None):
     raise NotImplementedError("Get M N for baysian statistics is not implemented.")
     
-    
-x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-y = np.array([10, 20, 30, 40, 50, 60, 70 ,80, 90, 100])
+# NOTE: Algorithm begins to fail at around 50 atoms
+mol: Atoms = read_proteindatabank(os.getcwd() + "/data/systems/4znn.not_wat.pdb")
+# Potential Kernel for each atom
+# TODO: Not working because matrix is not invertible
+fingerprint = SOAP(l_max=6, n_max=3, atom_sigma=0.4, r_cutoff=3, radial_scaling=1, cutoff_trans_width=1, central_weight=1,
+    n_sparse=1, delta=1, covariance_type="dot_product", zeta=2.5, species=mol.get_chemical_symbols(), sparse_method="cur_points")
+x = fingerprint.to_tensor(mol)
+y = [random.randint(1, 30) for val in np.zeros(shape=(len(x), 1))]
 
-# get_alpha_beta(x, y, 1, 1, 1000)
-sigma = get_alpha_beta(x, y, 1, 1, 400)
+sigma = get_sigma(x, y)
+print("SIGMA " + str(sigma))

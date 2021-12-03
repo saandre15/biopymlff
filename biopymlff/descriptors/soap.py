@@ -1,5 +1,11 @@
 from dataclasses import dataclass
+
+from dscribe.descriptors.soap import SOAP as DSOAP
+
+from ase.atoms import Atoms
+
 from biopymlff.descriptors.descriptor import Descriptor
+
 
 @dataclass
 class SOAP(Descriptor):
@@ -18,6 +24,7 @@ class SOAP(Descriptor):
     covariance_type: str
     zeta: int 
     sparse_method: str    
+    species: list
     
     def __str__(self):
         return f"""soap
@@ -34,8 +41,12 @@ class SOAP(Descriptor):
             sparse_method={self.sparse_method}
         """
 
-    def to_tensor():
-        pass
+    def to_dscribe(self):
+        return DSOAP(rcut=self.r_cutoff, nmax=self.n_max, lmax=self.l_max, sigma=self.atom_sigma, rbf="gto", weighting=None, 
+            crossover=True, average='off', species=self.species, periodic=False, sparse=False, dtype='float64')
 
-    def to_derivative_tensor():
-        pass
+    def to_tensor(self, atoms: Atoms):
+        return self.to_dscribe().create(atoms)
+
+    def to_derivative_tensor(self, atoms: Atoms):
+        return self.to_dscribe().derivatives(atoms)

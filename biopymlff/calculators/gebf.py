@@ -207,7 +207,6 @@ class GEBF(FileIOCalculator):
                 fragments_as_indexes = self.fragments_as_indexes(atoms)
                 fragments_as_atoms = self.fragments_as_atoms(atoms)
                 # TODO: Index not matching
-                print()
                 serial = 1
                 for index in range(0, len(fragments_as_indexes)):
                     atoms = fragments_as_atoms[index]

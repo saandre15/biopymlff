@@ -18,7 +18,7 @@ class ML():
 
     """
     
-    def __init__(self, descriptors: Descriptor, library: Library):
+    def __init__(self, descriptors: list, library: Library):
         self.descriptors = descriptors
         self.models = {}
         if lib_path == None:

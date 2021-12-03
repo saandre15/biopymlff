@@ -1,10 +1,13 @@
 import numpy as np
+import os
+
+from ase.atoms import Atoms
+from ase.io.proteindatabank import read_proteindatabank
+
+from ..descriptors.soap import SOAP
 
 def svd_approximation(matrix, rank):
-    """
-	INPUT: matrix: user-rating matrix, rank: desired rank.
-	OUTPUT: returns U, sigma and V_t resulting from the svd decomposition of the matrix.
-	"""
+    
 	m = matrix.shape[0]
 	n = matrix.shape[1]
 	
@@ -82,7 +85,7 @@ def svd_approximation(matrix, rank):
 	
 	
 	return U, sigma, V_t
-
+    
 def cur_approximation(matrix, rank):
     """
 	INPUT: matrix: user-rating matrix, rank: desired rank.
@@ -102,9 +105,7 @@ def cur_approximation(matrix, rank):
     C = np.zeros((m, rank))
     R = np.zeros((rank, n))
 	
-    # Modify this porition
-    # Filter out the columns that don't fall within a treshhold
-    threshold = 10 ** -10
+
     matrix_sq = matrix**2
     
     remove = np.zeros(shape=(len(matrix_sq), 1))
@@ -113,25 +114,26 @@ def cur_approximation(matrix, rank):
     frob_col = np.sum(matrix_sq, axis=0)
     probs_col = frob_col/sum_sq				#probability of each column.
 	# Modify this porition
-
     count=0
     count1=0
     temp = 0
     idx = np.arange(n)						#array of column indexes.
     taken_c = []
     dup_c = []
+
+
 	
     while(count<rank):
-	    i = np.random.choice(idx, p = probs_col)	#choosing column index based on probability.
-	    count1 = count1+1
-	    if(i not in taken_c):
-		    C[:, count] = matrix[:, i]/np.sqrt(rank*probs_col[i])	#taking column after dividing it with root of rank*probability.
-		    count = count+1
-		    taken_c.append(i)
-		    dup_c.append(1)
-	    else:										#discarding the duplicate column and increasing its count of duplicates.
-		    temp = taken_c.index(i)
-		    dup_c[temp] = dup_c[temp]+1
+        i = np.random.choice(idx, p = probs_col)	#choosing column index based on probability.
+        count1 = count1+1
+        if(i not in taken_c):
+            C[:, count] = matrix[:, i]/np.sqrt(rank*probs_col[i])	#taking column after dividing it with root of rank*probability.
+            count = count+1
+            taken_c.append(i)
+            dup_c.append(1)
+        else:										#discarding the duplicate column and increasing its count of duplicates.
+            temp = taken_c.index(i)
+            dup_c[temp] = dup_c[temp]+1
 			
     C = np.multiply(C, np.sqrt(dup_c))				#multiply columns by root of number of duplicates.
 			
@@ -145,16 +147,16 @@ def cur_approximation(matrix, rank):
     dup_r = []
 	
     while(count<rank):
-	    i = np.random.choice(idx, p = probs_row)			#choosing row index based on probability.
-	    count1 = count1+1
-	    if(i not in taken_r):
-		    R[count, :] = matrix[i, :]/np.sqrt(rank*probs_row[i])		#taking row after dividing it with root of rank*probability.
-		    count = count+1
-		    taken_r.append(i)
-		    dup_r.append(1)
-	    else:
-		    temp = taken_r.index(i)							#discarding the duplicate row and increasing its count of duplicates.
-		    dup_r[temp] = dup_r[temp]+1
+        i = np.random.choice(idx, p = probs_row)			#choosing row index based on probability.
+        count1 = count1+1
+        if(i not in taken_r):
+            R[count, :] = matrix[i, :]/np.sqrt(rank*probs_row[i])		#taking row after dividing it with root of rank*probability.
+            count = count+1
+            taken_r.append(i)
+            dup_r.append(1)
+        else:
+            temp = taken_r.index(i)							#discarding the duplicate row and increasing its count of duplicates.
+            dup_r[temp] = dup_r[temp]+1
 		
     R = np.multiply(R.T, np.sqrt(dup_r))				#multiply rows by root of number of duplicates.
     R = R.T
@@ -177,7 +179,7 @@ def cur_approximation(matrix, rank):
 	
     return C, U, R
 
-def cur_approximation_modified():
+def cur_approximation_modified(matrix, rank):
     """
 	INPUT: matrix: user-rating matrix, rank: desired rank.
 	OUTPUT: returns C, U and R resulting from the CUR decomposition of the matrix.
@@ -193,16 +195,29 @@ def cur_approximation_modified():
         print("error: rank greater than matrix dimensions.\n")
         return;
 		
-    C = np.zeros((m, rank))
     R = np.zeros((rank, n))
 	
-    # Modify this portions
+    theshold = 10 ** -10
+
     matrix_sq = matrix**2
+
+    
+    eigenvalues = np.linalg.eig(matrix)[0]
+
+    counter = 0
+    for i in range(0, len(matrix_sq)):
+        for j in range(0, len(matrix_sq[0])):
+            eigenvalue = eigenvalues[j]
+            if eigenvalue < theshold: matrix_sq[i][j] = 0
+            
     sum_sq = np.sum(matrix_sq)
 	
     frob_col = np.sum(matrix_sq, axis=0)
+    print(frob_col)
+    
     probs_col = frob_col/sum_sq				#probability of each column.
-	
+    print(probs_col)
+    
     count=0
     count1=0
     temp = 0
@@ -210,17 +225,23 @@ def cur_approximation_modified():
     taken_c = []
     dup_c = []
 	
-    while(count<rank):
-	    i = np.random.choice(idx, p = probs_col)	#choosing column index based on probability.
-	    count1 = count1+1
-	    if(i not in taken_c):
-		    C[:, count] = matrix[:, i]/np.sqrt(rank*probs_col[i])	#taking column after dividing it with root of rank*probability.
-		    count = count+1
-		    taken_c.append(i)
-		    dup_c.append(1)
-	    else:										#discarding the duplicate column and increasing its count of duplicates.
-		    temp = taken_c.index(i)
-		    dup_c[temp] = dup_c[temp]+1
+    rank_col = len(probs_col[probs_col != 0])
+    C = np.zeros((m, rank_col))
+
+    while(count < rank_col):
+		# NOTE: The count will never be greater than the rank if the there are lenghts of the colomns that are not 0
+        # print(idx)
+        i = np.random.choice(idx, p = probs_col)	#choosing column index based on probability.
+        # print(i)
+        count1 = count1+1
+        if(i not in taken_c):
+            C[:, count] = matrix[:, i]/np.sqrt(rank*probs_col[i])	#taking column after dividing it with root of rank*probability.
+            count = count+1
+            taken_c.append(i)
+            dup_c.append(1)
+        else:										#discarding the duplicate column and increasing its count of duplicates.
+            temp = taken_c.index(i)
+            dup_c[temp] = dup_c[temp]+1
 			
     C = np.multiply(C, np.sqrt(dup_c))				#multiply columns by root of number of duplicates.
 			
@@ -263,5 +284,18 @@ def cur_approximation_modified():
 		    sigma[i,i] = 0
 	
     U = np.dot(Y_t.T, np.dot(np.dot(sigma,sigma), X.T))		#finding U.
-	
     return C, U, R
+
+def oblique_projection_matrix(matrix: np.ndarray):
+	dimension = matrix.shape
+	rank = np.linalg.matrix_rank(matrix)
+	U, S, V = svd_approximation(matrix, rank)
+	B = matrix+np.identity(dimension[0])- (U @ U.T)
+	return B
+
+mol = read_proteindatabank(os.getcwd() + "/data/systems/4znn.not_wat.pdb")
+# mol = Atoms(symbols='H2O')
+fingerprint = SOAP(l_max=6, n_max=3, atom_sigma=0.4, r_cutoff=3, radial_scaling=1, cutoff_trans_width=1, central_weight=1,
+    n_sparse=1, delta=1, covariance_type="dot_product", zeta=2.5, species=mol.get_chemical_symbols(), sparse_method="cur_points").to_tensor(mol)
+
+print(cur_approximation(fingerprint, np.linalg.matrix_rank(fingerprint)))
