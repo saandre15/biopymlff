@@ -320,6 +320,7 @@ class GEBF(FileIOCalculator):
 
                         shutil.copy(self.label + "/" + self.label + ".frg", self.directory)
                         shutil.copy(self.label + "/" + self.label + ".gjf", self.directory)
+                        os.remove(self.label)
                         
 
     def read_results(self):
