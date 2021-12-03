@@ -275,7 +275,7 @@ class GEBF(FileIOCalculator):
             content = content.replace("Gaussian input prepared by ASE", "gebf{{frag=read charge=NPA}}")
             content = content.replace("\nkwargs", "")
             cpu_count = multiprocessing.cpu_count()
-            content = "%nproc=" + cpu_count + "\n" + content
+            content = "%nproc=" + str(cpu_count) + "\n" + content
             content = "%njobs=10\n" + content
             temp_content = ""
             lines = content.split("\n")
