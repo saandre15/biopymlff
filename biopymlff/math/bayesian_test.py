@@ -4,6 +4,8 @@ import os
 from ase.atoms import Atoms 
 from ase.io.proteindatabank import read_proteindatabank
 
+from bayesian import get_alpha_beta, get_sigma
+
 class Bayesian_Test(unittest.TestCase):
     
     def setUp(self):
@@ -16,6 +18,11 @@ class Bayesian_Test(unittest.TestCase):
         self.x = self.fingerprint.to_tensor(self.mol)
         # Represents Potential Energy
         self.y = [random.randint(1, 30) for val in np.zeros(shape=(len(x), 1))]
+    
+    def test_alpha_beta(self):
+        alpha, beta = get_alpha_beta(self.x, self.y)
+        print("ALPHA " + alpha)
+        print("BETA " + beta)
 
     def test_sigma(self):
         sigma = get_sigma(self.x, self.y)
