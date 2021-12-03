@@ -72,7 +72,7 @@ class GEBF(FileIOCalculator):
                             read_charge = False
                             charges = []
                             for line in lines:
-                                if "NPA Charges" in line: 
+                                if "Mulliken Charges" in line: # NOTE: Temporary Solution. Need to figure out how to get NPA charges instead of muliken
                                     read_charge = True
                                     continue
                                 elif "Cartesian Gradiant" in line:
@@ -339,6 +339,9 @@ class GEBF(FileIOCalculator):
 
     def read_results(self):
         labc_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".labc"
+        mypath=os.getcwd() + "/" + self.label + "/" + self.label + "_subsys"
+        files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+        files = filter(lambda file: "gebf" in file or ".agebf" in file, files)
         gebf_filepath = os.getcwd() + "/" +  self.label + "/" + self.label + ".agebf"
         force_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".force"
         self.read_energy(labc_filepath=labc_filepath, gebf_filepath=gebf_filepath)
