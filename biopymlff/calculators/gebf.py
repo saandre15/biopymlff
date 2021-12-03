@@ -322,10 +322,10 @@ class GEBF(FileIOCalculator):
             print(overwrite)
             file.write(overwrite)
 
-            shutil.copy(self.label + "/" + self.label + ".frg", self.directory)
-            shutil.copy(self.label + "/" + self.label + ".gjf", self.directory)
-            # shutil.rmtree(self.label)
-            raise NotImplementedError("BREAK")
+        shutil.copy(self.label + "/" + self.label + ".frg", self.directory)
+        shutil.copy(self.label + "/" + self.label + ".gjf", self.directory)
+        # shutil.rmtree(self.label)
+        raise NotImplementedError("BREAK")
                         
 
     def read_results(self):
