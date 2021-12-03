@@ -38,7 +38,6 @@ class AtomGraph():
         }
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
-        print(self.graph.nodes)
 
     # @dispatch(str)
     # def __init__(self, file: str):
@@ -151,20 +150,16 @@ class AtomGraph():
     def fragment_by_bond_as_atoms_list(self, symbolA: str, symbolB: str) -> list:
         self.reset()
         fragments = self.fragments_by_bond_as_indexes(symbolA, symbolB)
-        print("fragments " + str(fragments))
         graph_list = self.get_graph_list_sorted()
 
         atoms_list = []
         for fragment in fragments:
             atom_list = []
             for index in fragment:
-                print(index)
                 atom: Atom = graph_list[index].getAtom()
                 atom_list.append(atom)
-                print(str(index) + " " + str(atom))
             atoms: Atoms = Atoms(atom_list)
             atoms_list.append(atoms)
-            print(atoms.get_positions())
         return atoms_list
                     
     # Returns a list of atoms
@@ -193,15 +188,12 @@ class AtomGraph():
             not_explored = []
             # Resets the current fragment
             fragment = []
-            print("Current Fragment Length " + str(len(node_fragments)))
-            print(not_explored_atoms)
             for index in not_explored_atoms:
                 has_appended = False
                 
                 for node in node_fragments:
                     # If the node in the graph list matches the node in the current fragment then add it to the explored atom
                     if graph_list[index].getAtom() == node.getAtom():
-                        print("atom append to fragment")
                         
                         fragment.append(index)
                         has_appended = True
@@ -286,7 +278,6 @@ class AtomGraph():
 
         def traversal_fn(a: AtomGraphNode, b: AtomGraphNode):
             unpaired_electron = self.electrons[a.getAtom().symbol]
-            print("ELECTRON " + str(unpaired_electron))
             total_electron.append(unpaired_electron)
             return True
 
