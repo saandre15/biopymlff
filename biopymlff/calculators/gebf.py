@@ -250,7 +250,7 @@ class GEBF(FileIOCalculator):
             content = "%njobs=10\n" + content
             with open(self.label + ".gjf", "w") as file:
                 file.write(content)
-                self.calculate(atoms=atoms, properties=properties, system_changes=system_changes)
+                os.system("lsqc " + self.label + ".gjf")
                 with open(self.label + "/" + self.label + ".lso") as file:
                     lines = file.readlines()
                     reading_mode = False
