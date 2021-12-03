@@ -65,6 +65,7 @@ class GEBF(FileIOCalculator):
                     counter = 0
                     for path in gebf_filepaths:
                         with open(path) as file:
+                            
                             lines = file.readlines()
                             atoms: Atoms = subsys_atoms[counter]
                             read_charge = False
@@ -338,8 +339,9 @@ class GEBF(FileIOCalculator):
     def read_results(self):
         labc_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".labc")
         gebf_parent=os.path.join(os.getcwd(), self.label, self.label + "_subsys")
-        gebf_filepaths = [f for f in os.listdir(gebf_parent) if os.path.isfile(os.path.join(gebf_parent, f))]
-        gebf_filepaths = filter(lambda file: "gebf" in file or ".agebf" in file, gebf_filepaths)
+        gebf_filepaths = [os.getcwd() + "/" + self.label + "/" + self.label + "_subsys/" + f for f in os.listdir(gebf_parent) if os.path.isfile(os.path.join(gebf_parent, f))]
+        print(gebf_filepaths)
+        gebf_filepaths = filter(lambda file: ".gebf" in file or ".agebf" in file, gebf_filepaths)
         force_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".force")
         self.read_energy(labc_filepath=labc_filepath, gebf_filepaths=gebf_filepaths)
         self.read_forces(force_filepath=force_filepath)
