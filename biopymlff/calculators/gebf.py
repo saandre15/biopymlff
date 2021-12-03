@@ -290,10 +290,10 @@ class GEBF(FileIOCalculator):
                         elec_count = vals[2]
                         charge_count = vals[3]
                         print("Electron Count " + str(elec_count))
-                        if elec_count % 2 == 1: 
-                            charge_correction.append(charge_count+1)
+                        if int(elec_count) % 2 == 1: 
+                            charge_correction.append(int(charge_count)+1)
                         else: 
-                            charge_correction.append(charge_count)
+                            charge_correction.append(int(charge_count))
                     if "Frag NAtoms Elec Char Mult" in line:
                         prereading_mode = True
                     if "----------" in line and prereading_mode == True:
@@ -302,7 +302,7 @@ class GEBF(FileIOCalculator):
                         reading_mode = False
                     
                         
-                with open(self.label + "/" + self.label + ".frg") as file:
+                with open(self.label + "/" + self.label + ".frg", "r") as file:
                     lines = file.readlines()
                     overwrite = ""
                     counter=0
