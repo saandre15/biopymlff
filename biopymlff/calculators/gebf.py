@@ -257,9 +257,12 @@ class GEBF(FileIOCalculator):
         shutil.copyfile(self.get_fragment_file(atoms), self.label + ".frg")
         general_params = getenv()['general']
         gaussian_params = getenv()['gaussian']
-        self.parameters["mem"] = gaussian_params['memory'] \
-                if gaussian_params['memory'] != "auto" \
-                else str(math.floor((os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / (1024.**3)) - 5)) + "GB"
+        
+        # TODO: Per subsystem memory not total memory
+        # self.parameters["mem"] = gaussian_params['memory'] \
+        #         if gaussian_params['memory'] != "auto" \
+        #         else str(math.floor((os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / (1024.**3)) - 5)) + "GB"
+        self.parameters["mem"] = "3GB"
         self.parameters["chk"] = gaussian_params['checkpoint_file'] if gaussian_params['checkpoint_file'] != "auto" else self.label + ".chk"
         self.parameters["scf"]='noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc'
         self.parameters["int"]='acc2e=12'
