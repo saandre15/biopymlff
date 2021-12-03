@@ -312,15 +312,14 @@ class GEBF(FileIOCalculator):
                     counter=0
                     for line in lines:
                         vals = line.split()
-                        overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + str(charge_correction[counter]) + "\n"
+                        overwrite+=vals[0] + " " + vals[1] + " " + vals[2] + " " + str(charge_correction[counter]) + "\n"
                         counter+=1
                     
                     with open(self.label + "/" + self.label + ".frg", "w") as file:
                         file.write(overwrite)
-                        raise NotImplementedError("Break")
 
-                        # shutil.copy(self.label + "/" + self.label + ".frg", ".")
-                        # shutil.copy(self.label + "/" + self.label + ".gjf", ".")
+                        shutil.copy(self.label + "/" + self.label + ".frg", self.directory)
+                        shutil.copy(self.label + "/" + self.label + ".gjf", self.directory)
                         
 
     def read_results(self):
