@@ -288,7 +288,8 @@ class GEBF(FileIOCalculator):
                     if "============" in line:
                         reading_mode = False
                     if reading_mode == True:
-                        vals = line.split()                        
+                        vals = line.split() 
+                        print(vals)                       
                         elec_count = vals[2]
                         charge_count = vals[3]
                         print("Electron Count " + str(elec_count))
