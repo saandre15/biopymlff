@@ -280,6 +280,7 @@ class GEBF(FileIOCalculator):
             self.calculate_repair(atoms=atoms, properties=properties)
             with open(self.label + "/" + self.label + ".lso") as file:
                 lines = file.readlines()
+                prereading_mode = False
                 reading_mode = False
                 charge_correction = []
                 for line in lines:
@@ -293,7 +294,9 @@ class GEBF(FileIOCalculator):
                             charge_correction.append(charge_count+1)
                         else: 
                             charge_correction.append(charge_count)
-                    if "----------" in line:
+                    if "Frag NAtoms Elec Char Mult" in line:
+                        prereading_mode = True
+                    if "----------" in line and prereading_mode == True:
                         reading_mode = True 
                     if "============" in line:
                         reading_mode = False
