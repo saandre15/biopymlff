@@ -275,6 +275,11 @@ class GEBF(FileIOCalculator):
             content = content.replace("\nkwargs", "")
             content = "%nproc=56\n" + content
             content = "%njobs=10\n" + content
+            temp_content = ""
+            lines = content.split("\n")
+            for line in lines:
+                if "TV" not in line: temp_content += line + "\n"
+            content = temp_content
 
         with open(self.label + ".gjf", "w") as file:
             file.write(content + "\n")
