@@ -91,7 +91,7 @@ class GEBF(FileIOCalculator):
             print("Unable to read lso file to find subsystem coefficents.")
             raise ReadError()
     
-    def read_forces(self, force_filepath: str=None):
+    def read_forces(self, force_filepath: str):
         try:
             with open(force_filepath) as file:
                 self.results['forces'] = []
@@ -338,12 +338,12 @@ class GEBF(FileIOCalculator):
                         
 
     def read_results(self):
-        labc_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".labc"
-        mypath=os.getcwd() + "/" + self.label + "/" + self.label + "_subsys"
-        files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-        files = filter(lambda file: "gebf" in file or ".agebf" in file, files)
-        gebf_filepath = os.getcwd() + "/" +  self.label + "/" + self.label + ".agebf"
-        force_filepath = os.getcwd() + "/" + self.label + "/" + self.label + ".force"
-        self.read_energy(labc_filepath=labc_filepath, gebf_filepath=gebf_filepath)
+        
+        labc_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".labc")
+        gebf_parent=os.path.join(os.getcwd(), self.label, self.label + "_subsys")
+        gebf_filepaths = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+        gebf_filepaths = filter(lambda file: "gebf" in file or ".agebf" in file, files)
+        force_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".force")
+        self.read_energy(labc_filepath=labc_filepath, gebf_filepaths=gebf_filepaths)
         self.read_forces(force_filepath=force_filepath)
             
