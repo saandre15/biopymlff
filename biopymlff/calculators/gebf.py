@@ -191,8 +191,6 @@ class GEBF(FileIOCalculator):
                                                   path, errorcode))
             raise CalculationFailed(msg)
 
-        self.read_results()
-
     def get_gaussian(self, xc=None, basis=None):
         general_params = getenv()['general']
         gaussian_params = getenv()['gaussian']
