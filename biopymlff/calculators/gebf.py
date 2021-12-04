@@ -210,9 +210,10 @@ class GEBF(FileIOCalculator):
         )
     
     def subsystems(self):
-        mypath=self.directory
+        mypath=os.path.join(self.directory, self.label, self.label + "_subsys")
         files = [os.getcwd() + "/" + self.label + "/" + self.label + "_subsys/" + f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
         files = filter(lambda file: ".xyz" in file or ".sxyz" in file, files)
+        print(files)
         subsystems = []
         for file in files:
             mol = read_xyz(file, 0)
@@ -301,11 +302,9 @@ class GEBF(FileIOCalculator):
                     reading_mode = False
                     break
                 elif reading_mode == True:
-                    vals = line.split() 
-                    print(vals)                       
+                    vals = line.split()                  
                     elec_count = vals[2]
                     charge_count = vals[3]
-                    print("Electron Count " + str(elec_count))
                     if int(elec_count) % 2 == 1: 
                         charge_correction.append(int(charge_count)+1)
                     else: 
@@ -329,7 +328,6 @@ class GEBF(FileIOCalculator):
         os.remove(self.label + "/" + self.label + ".frg")
         
         with open(self.label + "/" + self.label + ".frg", "w") as file:
-            print(overwrite)
             file.write(overwrite)
 
         shutil.copy(self.label + "/" + self.label + ".frg", self.directory)
