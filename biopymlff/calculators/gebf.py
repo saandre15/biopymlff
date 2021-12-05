@@ -215,11 +215,11 @@ class GEBF(FileIOCalculator):
         files = [os.getcwd() + "/" + self.label + "/" + self.label + "_subsys/" + f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
         files = filter(lambda file: ".xyz" in file or ".sxyz" in file, files)
         subsystems = []
-        for file in files:
-            print(file)
-            mol = list(read_xyz(file, 0))[0]
-            print(mol)
-            subsystems.append(mol)
+        for path in files:
+            with open(path) as file:
+                mol = list(read_xyz(file, 0))[0]
+                print(mol)
+                subsystems.append(mol)
         return subsystems
 
     def fragments_as_indexes(self, atoms: Atoms) -> list:
