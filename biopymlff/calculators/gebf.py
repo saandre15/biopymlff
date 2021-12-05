@@ -127,8 +127,8 @@ class GEBF(FileIOCalculator):
         gap_params = getenv()["gap"]
         cutoff_radius = gap_params["soap_r_c"]
         subsys_energy = init_subsys_energy
-        for a in atoms:
-            for b in atoms:
+        for a in subsys_atoms:
+            for b in subsys_atoms:
                 if a == b: continue
                 f_cutoff = 1 if cutoff_radius < radius else 0.5 * ( 1 - math.cos(math.pi * radius * (1 / cutoff_radius)) )
                 val = self.calculate_long_range_energy(a, b) * f_cutoff
