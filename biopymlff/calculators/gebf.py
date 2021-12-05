@@ -216,7 +216,7 @@ class GEBF(FileIOCalculator):
         files = filter(lambda file: ".xyz" in file or ".sxyz" in file, files)
         subsystems = []
         for file in files:
-            
+            print(file)
             mol = list(read_xyz(file, 0))[0]
             print(mol)
             subsystems.append(mol)
