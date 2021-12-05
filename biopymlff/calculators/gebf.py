@@ -62,7 +62,7 @@ class GEBF(FileIOCalculator):
 
                 try:
                     subsys_atoms = self.subsystems()  
-                    print(subsys_atoms)  
+                    print("SUBSYSTEMS " + str(subsys_atoms))  
                     counter = 0
                     for path in gebf_filepaths:
                         with open(path) as file:
