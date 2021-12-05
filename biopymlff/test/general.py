@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 
 from ..train.ml import ML
 from ..calculators.gebf_pm6 import GEBF_PM6
+from ..calculators.gebf import GEBF
 
 class General_Test(unittest.TestCase):
 
@@ -63,9 +64,11 @@ class General_Test(unittest.TestCase):
         experimental_time=[]
 
         samples = []
-        mol: Atoms = self.mol.copy()
+        # mol: Atoms = self.mol.copy()
+        mol: Atoms = Atoms(symbols='H2O')
         print("Atom Size " + str(len(mol)))
-        mol.calc = GEBF_PM6(label="4znn_01")
+        # mol.calc = GEBF_PM6(label="4znn_01")
+        mol.calc = GEBF().get_gaussian(xc="pm6") # NOTE: Testing why calculator above is not working
         print(mol.get_potential_energy())
         dynamics = Langevin(atoms=mol, timestep=0.01, temperature_K=500, friction=1e-3)
         collect_data = lambda: samples.append(mol.copy())
