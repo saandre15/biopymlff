@@ -97,13 +97,16 @@ class GEBF(FileIOCalculator):
         try:
             with open(force_filepath) as file:
                 self.results['forces'] = []
-                forces = file.readlines()
-                f = forces.split()
-                f_x = f[0]
-                f_y = f[1]
-                f_z = f[2]
-                f = (f_x, f_y, f_z)
-                self.results['forces'].append(f)
+                lines = file.readlines()
+                for line in lines:
+                    f = forces.split()
+                    f_x = f[0]
+                    f_y = f[1]
+                    f_z = f[2]
+                    f = (f_x, f_y, f_z)
+                    if self.results['forces'] == None: self.results['forces'] = []
+                    self.results['forces'].append(f)
+                
         except IOError:
             print("Unable to read force file. Make sure the force_filepath is correct.")
             raise ReadError()
