@@ -217,6 +217,7 @@ class GEBF(FileIOCalculator):
             print("FILE "+ file)
         subsystems = []
         for file in files:
+            print("test")
             mol = read_xyz(file, 0)
             print(mol)
             subsystems.append(mol)
