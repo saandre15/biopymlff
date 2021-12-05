@@ -140,8 +140,8 @@ class GEBF(FileIOCalculator):
         charge_energy = 0
         van_der_val_energy = 0
         charge_energy += (a.charge * b.charge) / self.get_radius(a, b)
-        van_der_val_energy += (self.get_lorentz_berthetot_coefficent(a, b) ^ 12 / self.get_radius(a, b) ^ 12) \
-            - (self.get_lorentz_berthetot_coefficent(a, b) ^ 12 / self.get_radius(a, b) ^ 6)
+        van_der_val_energy += (self.get_lorentz_berthetot_coefficent(a, b) ** 12 / self.get_radius(a, b) ** 12) \
+            - (self.get_lorentz_berthetot_coefficent(a, b) ** 6 / self.get_radius(a, b) ** 6)
         return charge_energy + van_der_val_energy
 
     def get_radius(self, a: Atom, b: Atom):
