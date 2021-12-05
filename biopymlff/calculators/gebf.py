@@ -145,7 +145,7 @@ class GEBF(FileIOCalculator):
         return charge_energy + van_der_val_energy
 
     def get_radius(self, a: Atom, b: Atom):
-        return math.sqrt((a.x - b.x) ^ 2 + (a.y - b.y) ^ 2 + (a.z + b.z) ^ 2)
+        return math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z + b.z) ** 2)
 
     def get_lorentz_berthetot_coefficent(self, a: Atom, b: Atom):
         # TODO figure out how to read the param file and perform coeffiecne tcalculation
