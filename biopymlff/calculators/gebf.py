@@ -130,6 +130,7 @@ class GEBF(FileIOCalculator):
         for a in subsys_atoms:
             for b in subsys_atoms:
                 if a == b: continue
+                radius = self.get_radius(a, b)
                 f_cutoff = 1 if cutoff_radius < radius else 0.5 * ( 1 - math.cos(math.pi * radius * (1 / cutoff_radius)) )
                 val = self.calculate_long_range_energy(a, b) * f_cutoff
                 subsys_energy+=val
