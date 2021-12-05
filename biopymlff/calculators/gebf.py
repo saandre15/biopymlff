@@ -219,7 +219,8 @@ class GEBF(FileIOCalculator):
             with open(path) as file:
                 mol = list(read_xyz(file, 0))[0]
                 subsystems.append(mol)
-        return Atoms(subsystems)
+        print(subsystems)
+        return subsystems
 
     def fragments_as_indexes(self, atoms: Atoms) -> list:
         G = AtomGraph(atoms)
