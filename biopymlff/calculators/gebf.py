@@ -73,16 +73,16 @@ class GEBF(FileIOCalculator):
                             read_charge = False
                             charges = []
                             for line in lines:
-                                if read_charge: 
-                                    crgs = line.split()
-                                    for charge in crgs:
-                                        charges.append(float(charge))
                                 if "Mulliken Charges" in line: # NOTE: Temporary Solution. Need to figure out how to get NPA charges instead of muliken
                                     read_charge = True
                                     continue
                                 elif "Cartesian Gradiant" in line:
                                     read_charge = False
                                     break
+                                if read_charge == True: 
+                                    crgs = line.split()
+                                    for charge in crgs:
+                                        charges.append(float(charge))
                             counter+=1
                             atoms.set_initial_charges(charges)
                     self.calculate_potential_energy(coefficents, subsys_atoms, atoms)
