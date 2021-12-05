@@ -65,9 +65,9 @@ class GEBF(FileIOCalculator):
                     subsys_atoms = self.subsystems()  
                     print("SUBSYSTEMS " + str(subsys_atoms))  
                     counter = 0
+                    gebf_filepaths=sorted(gebf_filepaths)
                     for path in gebf_filepaths:
                         with open(path) as file:
-                            # Verify that the path matches??
                             lines = file.readlines()
                             atoms: Atoms = subsys_atoms[counter]
                             read_charge = False
@@ -81,7 +81,7 @@ class GEBF(FileIOCalculator):
                                     break
                                 crgs = line.split()
                                 for charge in crgs:
-                                    charges.append(charge)
+                                    charges.append(float(charge))
                             counter+=1
                             atoms.set_initial_charges(charges)
                     self.calculate_potential_energy(coefficents, subsys_atoms, atoms)
