@@ -13,4 +13,4 @@ class Optimization_Test(unittest.TestCase):
         print(cur_approximation(fingerprint, np.linalg.matrix_rank(fingerprint)))
 
     def test_cur_matrix_approximation(self):
-        
+        pass
