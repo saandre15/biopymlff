@@ -67,7 +67,7 @@ class GEBF(FileIOCalculator):
                     counter = 0
                     for path in gebf_filepaths:
                         with open(path) as file:
-                            
+                            # Verify that the path matches??
                             lines = file.readlines()
                             atoms: Atoms = subsys_atoms[counter]
                             read_charge = False
@@ -214,11 +214,12 @@ class GEBF(FileIOCalculator):
         mypath=os.path.join(self.directory, self.label, self.label + "_subsys")
         files = [os.getcwd() + "/" + self.label + "/" + self.label + "_subsys/" + f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
         files = filter(lambda file: ".xyz" in file or ".sxyz" in file, files)
+        files = sorted(files)
         subsystems = []
         for path in files:
             with open(path) as file:
+                print(path)
                 mol = Atoms(list(read_xyz(file, 0)))
-                print(mol)
                 subsystems.append(mol)
         return subsystems
 
