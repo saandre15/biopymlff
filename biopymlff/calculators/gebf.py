@@ -62,8 +62,7 @@ class GEBF(FileIOCalculator):
                         coefficents.append(coef)
 
                 try:
-                    subsys_atoms = self.subsystems()  
-                    print("SUBSYSTEMS " + str(subsys_atoms))  
+                    subsys_atoms = self.subsystems() 
                     counter = 0
                     gebf_filepaths=sorted(gebf_filepaths)
                     for path in gebf_filepaths:
@@ -86,7 +85,7 @@ class GEBF(FileIOCalculator):
                                         charges.append(float(charge))
                             counter+=1
                             atoms.set_initial_charges(charges)
-                    self.calculate_potential_energy(coefficents, subsys_atoms, atoms)
+                    self.calculate_potential_energy(coefficents, subsys_atoms, self.atoms)
                 except IOError:
                     print("Unable to read gebf file for subsystem potential energy calculation.")
                     raise ReadError()
