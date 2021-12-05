@@ -86,7 +86,8 @@ class GEBF(FileIOCalculator):
                             counter+=1
                             atoms.set_initial_charges(charges)
                     energy = self.calculate_potential_energy(coefficents, subsys_atoms, self.atoms)
-                    self.results["energy"]=float(energy)
+                    # self.results["energy"]=float(energy)
+                    self.results["energy"] = 1 # Testing with int instead of float
                 except IOError:
                     print("Unable to read gebf file for subsystem potential energy calculation.")
                     raise ReadError()
