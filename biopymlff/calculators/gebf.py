@@ -15,6 +15,7 @@ from ase.calculators.gaussian import Gaussian
 from ase.calculators.amber import Amber
 
 from ase.io.xyz import read_xyz
+from ase.io.proteindatabank import read_proteindatabank
 from ase.io import write
 
 from shutil import which
@@ -217,7 +218,7 @@ class GEBF(FileIOCalculator):
         for file in files:
             print("test")
             mol = read_xyz(file, 0)
-            print(list(mol))
+            print(str(list(mol)))
             subsystems.append(mol)
         return subsystems
 
