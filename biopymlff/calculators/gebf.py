@@ -73,6 +73,7 @@ class GEBF(FileIOCalculator):
                             read_charge = False
                             charges = []
                             for line in lines:
+                                #  if "NPA Charges" in line:
                                 if "Mulliken Charges" in line: # NOTE: Temporary Solution. Need to figure out how to get NPA charges instead of muliken
                                     read_charge = True
                                     continue
@@ -113,7 +114,7 @@ class GEBF(FileIOCalculator):
         size=len(coefficents)
         total_subsys=0
         total_long_range=0
-        for index in size:
+        for index in range(0, size):
             total_subsys+=coefficents[index]* (self.calculate_subsystem_pe(0, subsys_atoms[index]))
         for a in atoms:
             for b in atoms:
