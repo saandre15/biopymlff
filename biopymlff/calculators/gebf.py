@@ -100,9 +100,9 @@ class GEBF(FileIOCalculator):
                 lines = file.readlines()
                 for line in lines:
                     f = line.split()
-                    f_x = float(f[0])
-                    f_y = float(f[1])
-                    f_z = float(f[2])
+                    f_x = float(f[0].replace("D", "e"))
+                    f_y = float(f[1].replace("D", "e"))
+                    f_z = float(f[2].replace("D", "e"))
                     f = (f_x, f_y, f_z)
                     if self.results['forces'] == None: self.results['forces'] = []
                     self.results['forces'].append(f)
