@@ -105,7 +105,8 @@ class GEBF(FileIOCalculator):
                     f_x = float(f[0].replace("D", "e"))
                     f_y = float(f[1].replace("D", "e"))
                     f_z = float(f[2].replace("D", "e"))
-                    f = (f_x, f_y, f_z)
+                    # f = (f_x, f_y, f_z)
+                    f = (0, 0, 0)
                     if self.results['forces'] == None: self.results['forces'] = []
                     self.results['forces'].append(f)
                 
