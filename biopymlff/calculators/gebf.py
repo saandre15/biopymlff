@@ -76,7 +76,7 @@ class GEBF(FileIOCalculator):
                                 if "Mulliken Charges" in line: # NOTE: Temporary Solution. Need to figure out how to get NPA charges instead of muliken
                                     read_charge = True
                                     continue
-                                elif "Cartesian Gradiant" in line:
+                                elif "Cartesian Gradient" in line:
                                     read_charge = False
                                     break
                                 if read_charge == True: 
