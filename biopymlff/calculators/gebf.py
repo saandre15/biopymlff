@@ -115,7 +115,7 @@ class GEBF(FileIOCalculator):
         total_long_range=0
         for index in range(0, size):
             total_subsys+=coefficents[index]* (self.calculate_subsystem_pe(0, subsys_atoms[index]))
-        print(self.atoms)
+        print("ATOMS " + atoms)
         for a in atoms:
             for b in atoms:
                 atomA: Atom = a
