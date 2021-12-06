@@ -13,7 +13,6 @@ from ase.geometry.analysis import Analysis
 from ase.calculators.calculator import FileIOCalculator, CalculatorError, ReadError, CalculationFailed, Calculator, all_changes
 from ase.calculators.gaussian import Gaussian
 from ase.calculators.amber import Amber
-from ase.md.langevin import Langevin
 
 from ase.io.xyz import read_xyz
 from ase.io.proteindatabank import read_proteindatabank

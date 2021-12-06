@@ -12,6 +12,7 @@ For more information checkout the [documentation](localhost).
 * gaussian
 * mopac
 * psi4
+* [stoml](https://github.com/freshautomations/stoml)
 
 **Internal**
 * See setup.py 
@@ -21,7 +22,6 @@ For more information checkout the [documentation](localhost).
 git clone https://github.com/saandre15/biopymlff
 cd biopymlff
 ./setup.py
-source venv/bin/activiate
 ```
 
 ## ML Model Snapshot Downloads
