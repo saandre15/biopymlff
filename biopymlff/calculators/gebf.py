@@ -319,8 +319,6 @@ class GEBF(FileIOCalculator):
 
         with open(self.label + ".gjf", "w") as file:
             file.write(content + "\n")
-            # NOTE: Figure out how to solve the lsqc issue on TACC
-            print("lsqc should be called")
             
         self.calculate_repair(atoms=atoms, properties=properties)
         with open(self.label + "/" + self.label + ".lso") as file:

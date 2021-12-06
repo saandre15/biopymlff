@@ -6,12 +6,14 @@ import time
 from sklearn.metrics import mean_squared_error, r2_score
 
 from ase.io.proteindatabank import read_proteindatabank
+from ase.io import write
 from ase.atoms import Atoms
 from ase.calculators.calculator import Calculator
 from ase.calculators.mopac import MOPAC
 from ase.calculators.emt import EMT
 
 from ase.md.langevin import Langevin
+
 
 import matplotlib.pyplot as plt
 
@@ -67,12 +69,12 @@ class General_Test(unittest.TestCase):
         mol: Atoms = self.mol.copy()
         print("Atom Size " + str(len(mol)))
         mol.calc = GEBF_PM6(label="4znn_01")
-        # mol.calc = EMT() # NOTE: Testing why calculator above is not working
-        print(mol.get_potential_energy())
         dynamics = Langevin(atoms=mol, timestep=0.01, temperature_K=500, friction=1e-3)
         collect_data = lambda: samples.append(mol.copy())
         dynamics.attach(collect_data, interval=1)
         dynamics.run(steps=100)
+
+        write(os.getcwd() + "/data/traj/" + "4znn_01", collect_data)
         
         for sample in samples:
             s: Atoms = sample

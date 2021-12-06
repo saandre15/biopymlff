@@ -14,5 +14,5 @@ proteins_path = os.path.join(path, "proteins")
 class GEBF_PM6_Test(General_Test):
         
     def setUp(self):
-        self.init_variables(os.path.join(proteins_path, "4znn.pdb"), "GEBF PM6", "GEBF DFT", GEBF_PM6(), GEBF_PM6())
+        self.init_variables(os.path.join(proteins_path, "4znn.pdb"), "GEBF PM6", "GEBF DFT", GEBF_PM6(), GEBF_DFT())
         super().setUp()
