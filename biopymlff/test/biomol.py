@@ -1,4 +1,4 @@
-from general import General_Test
+from ..test.general import General_Test
 
 from ase.md.langevin import Langevin
 
