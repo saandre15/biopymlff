@@ -29,7 +29,7 @@ class GEBF(FileIOCalculator):
     Generalized Energy Based Fragmentation
     """
     
-    implemented_properties = ['energy', 'forces']
+    implemented_properties = ['energy', 'forces', 'free_energy', 'energies']
     command = 'LSQC PREFIX.gjf'
 
     def __init__(self, restart=None,
@@ -87,6 +87,11 @@ class GEBF(FileIOCalculator):
                             atoms.set_initial_charges(charges)
                     energy = self.calculate_potential_energy(coefficents, subsys_atoms, self.atoms)
                     self.results["energy"]=float(energy)
+                    self.results["free_energy"]=float(energy)
+                    self.results["energies"] = []
+                    for atom in self.atoms:
+                        self.results["energies"].append(self.calculate_interatomic_pe(coefficents, subsys_atoms, self.atoms, atom))
+                    # NOTE: If method above does not work. Then adding stress
                 except IOError:
                     print("Unable to read gebf file for subsystem potential energy calculation.")
                     raise ReadError()
@@ -118,8 +123,6 @@ class GEBF(FileIOCalculator):
         total_subsys=0
         total_long_range=0
         for index in range(0, size):
-            print("COEFFICENTS " + str(coefficents[index]))
-            print("SUBSYSTEM PE " + str(self.calculate_subsystem_pe(0, subsys_atoms[index])))
             total_subsys+=float(coefficents[index])* float(self.calculate_subsystem_pe(0, subsys_atoms[index]))
         for a in atoms:
             for b in atoms:
@@ -137,9 +140,34 @@ class GEBF(FileIOCalculator):
                 if a == b: continue
                 radius = self.get_radius(a, b)
                 f_cutoff = 1 if cutoff_radius < radius else 0.5 * ( 1 - math.cos(math.pi * radius * (1 / cutoff_radius)) )
-                val = self.calculate_long_range_energy(a, b) * f_cutoff
+                long_range_energy = self.calculate_long_range_energy(a, b)
+                val = (long_range_energy * f_cutoff) - long_range_energy
                 subsys_energy+=val
         return subsys_energy
+
+    def calculate_interatomic_pe(self, coefficients: list, subsys_atoms: list, atoms: Atoms, target: Atom):
+        if len(coefficents) != len(subsys_atoms): raise IndexError("Cannot calculate the interatomic potential energy where the coefficent size does not match the subsystem size.")
+        total_subsys = 0
+        total_long_range = 0
+        cutoff_radius = gap_params["soap_r_c"]
+        for index in range(0, len(coefficients)):
+            coef = coefficients[index]
+            subsys = subsys_atoms[index]
+            subsys_energy = 0
+            for atom in subsys:
+                if atom == target: continue
+                radius = self.get_radius(a, b)
+                f_cutoff = 1 if cutoff_radius < radius else 0.5 * ( 1 - math.cos(math.pi * radius * (1 / cutoff_radius)) )
+                long_range_energy = self.calculate_long_range_energy(a, b)
+                val = (long_range_energy * f_cutoff) - long_range_energy
+                subsys_energy += val
+            total_subsys+=coefficients[index] * subsys_energy
+        
+        for atom in atoms:
+            if atom == target: continue 
+            total_long_range += self.calculate_long_range_energy(a, b)
+
+        return total_subsys + total_long_range  
                        
     def calculate_long_range_energy(self, a: Atom, b: Atom):
         charge_energy = 0
@@ -251,7 +279,7 @@ class GEBF(FileIOCalculator):
         except IOError: print("Unable to create a fragment file in GEBF.")
                     
     def write_input(self, atoms: Atoms, properties=None, system_changes=None):
-        shutil.copyfile(self.get_fragment_file(atoms), self.label + ".frg")
+        shutil.copyfile(self.get_fragment_file(atoms), self.label + ".frg") # TODO: Fix missing self.label
         general_params = getenv()['general']
         gaussian_params = getenv()['gaussian']
         
