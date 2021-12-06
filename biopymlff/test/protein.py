@@ -15,7 +15,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 import numpy as np
 
-from biomol import Biomol_Test
+from ..test.biomol import Biomol_Test
 from ..util.getenv import getenv
 from ..util.convert import ase_atoms_to_pytraj_atoms
 
