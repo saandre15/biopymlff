@@ -7,6 +7,8 @@ from ..test.protein import Protein_Test
 from ..calculators.gebf_dft import GEBF_DFT
 from ..calculators.gebf_pm6 import GEBF_PM6
 
+proteins_path = os.path.join(path, "proteins")
+
 class GEBF_PM6_Test(Protein_Test):
         
     def setUp(self):
