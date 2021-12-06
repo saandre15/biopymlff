@@ -7,7 +7,7 @@ from ase.atoms import Atoms
 from ase.calculators.calculator import Calculator
 from ase.md.langevin import Langevin
 
-from pytraj.analysis import dihedral_analysis
+# from pytraj.analysis import dihedral_analysis
 
 import matplotlib.pyplot as plt
 
