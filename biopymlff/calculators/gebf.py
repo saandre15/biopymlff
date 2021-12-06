@@ -112,7 +112,7 @@ class GEBF(FileIOCalculator):
                 lines = file.readlines()
                 count = len(lines)
                 index = 0
-                if self.results['forces'] == None: self.results['forces'] = np.empty(shape=(count, 3))
+                self.results['forces'] = np.empty(shape=(count, 3))
                 for line in lines:
                     f = line.split()
                     f_x = float(f[0].replace("D", "e"))
