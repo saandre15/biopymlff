@@ -162,7 +162,7 @@ class GEBF(FileIOCalculator):
                 long_range_energy = self.calculate_long_range_energy(atom, target)
                 val = (long_range_energy * f_cutoff) - long_range_energy
                 subsys_energy += val
-            total_subsys+=coefficients[index] * subsys_energy
+            total_subsys+=float(coefficients[index]) * float(subsys_energy)
         
         for atom in atoms:
             if atom == target: continue 
