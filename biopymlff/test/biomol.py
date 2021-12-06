@@ -1,11 +1,14 @@
 from general import General_Test
 
+from ase.md.langevin import Langevin
+
 class Biomol_Test(General_Test):
     
-    @classmethod
-    def setUpClass(cls):
-        cls.source_traj = []
-        cls.target_traj = []
+    def setUp(self):
+        if self.source_traj != None and self.target_traj != None: return
+        super().setUp()
+        self.source_traj = []
+        self.target_traj = []
 
         source_traj = []
         target_traj = []
@@ -23,7 +26,7 @@ class Biomol_Test(General_Test):
         dynamics.attach(collect_data, interval=1)
         dynamics.run(steps=100)
 
-        super().setUpClass(cls)
+        super(General_Test, self).setUp()
 
     def get_source_frames(dt: float, frame_count: int):
         # Perform ASE->PyTraj Atom Conversion

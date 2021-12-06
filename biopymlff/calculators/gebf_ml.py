@@ -29,6 +29,7 @@ from biopymlff.descriptors.soap import SOAP
 from biopymlff.calculators.gebf_pm6 import GEBF_PM6
 from biopymlff.math.bayesian import get_sigma
 from biopymlff.util.getenv import getenv
+from biopymlff.util.gaussian import get_gaussian
 
 class GEBF_ML(GEBF_PM6, ML):
     """ 
@@ -167,7 +168,7 @@ class GEBF_ML(GEBF_PM6, ML):
         gaussian_params = getenv()["gaussian"]
         symbols = list(set(atoms.get_chemical_symbols()))
         
-        atoms.calc = self.get_gaussian(method=gaussian_params["dft_method"], basis=gaussian_params["dft_basis"])
+        atoms.calc = get_gaussian(label=self.label, method=gaussian_params["dft_method"], basis=gaussian_params["dft_basis"])
         
         pe = atoms.get_potential_energy()
         qm_forces = atoms.get_forces()

@@ -19,19 +19,17 @@ from ..calculators.gebf import GEBF
 
 class General_Test(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        if cls.mol == None or cls.source_method == None or cls.target_method == None or cls.source == None or cls.target == None:
+    def setUp(self):
+        if self.mol == None or self.source_method == None or self.target_method == None or self.source == None or self.target == None:
             raise NotImplementedError("Variables are not initalized")
-
-    @classmethod
-    def init_variables(cls, atom_filename: str, source_method: str, target_method: str, source: Calculator, target: Calculator):
-        cls.mol = read_proteindatabank(atom_filename)
         
-        cls.source_method = source_method
-        cls.target_method = target_method
-        cls.source = source
-        cls.target = target
+    def init_variables(self, atom_filename: str, source_method: str, target_method: str, source: Calculator, target: Calculator):
+        self.mol = read_proteindatabank(atom_filename)
+        
+        self.source_method = source_method
+        self.target_method = target_method
+        self.source = source
+        self.target = target
 
     def test_01_train(self):
         # Train the trainable calculators
@@ -64,11 +62,10 @@ class General_Test(unittest.TestCase):
         experimental_time=[]
 
         samples = []
-        # mol: Atoms = self.mol.copy()
-        mol: Atoms = Atoms(symbols='H2O')
+        mol: Atoms = self.mol.copy()
         print("Atom Size " + str(len(mol)))
-        # mol.calc = GEBF_PM6(label="4znn_01")
-        mol.calc = GEBF().get_gaussian(xc="pm6") # NOTE: Testing why calculator above is not working
+        mol.calc = GEBF_PM6(label="4znn_01")
+        # mol.calc = GEBF().get_gaussian(xc="pm6") # NOTE: Testing why calculator above is not working
         print(mol.get_potential_energy())
         dynamics = Langevin(atoms=mol, timestep=0.01, temperature_K=500, friction=1e-3)
         collect_data = lambda: samples.append(mol.copy())

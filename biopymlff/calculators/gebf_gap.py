@@ -27,8 +27,8 @@ from quippy.potential import Potential
 from quippy.descriptors import Descriptor
 
 from biopymlff.calculators.gebf_ml import GEBF_ML
-
 from biopymlff.util.getenv import getenv
+from biopymlff.util.gaussian import get_gaussian
 
 
 class GEBF_GAP(GEBF_ML):
@@ -85,9 +85,9 @@ class GEBF_GAP(GEBF_ML):
         for a in traj:
             atoms: Atoms = a
             if type == "pm6":
-                atoms.calc = self.get_gaussian(gaussian_params['pm6_method'])            
+                atoms.calc = get_gaussian(self.label, gaussian_params['pm6_method'])      
             elif type == "dft":
-                atoms.calc = self.get_gaussian(gaussian_params['dft_method'], gaussian_params['dft_basis'])
+                atoms.calc = get_gaussian(self.label, gaussian_params['dft_method'], gaussian_params['dft_basis'])
 
         write(xyz_file, traj)
 

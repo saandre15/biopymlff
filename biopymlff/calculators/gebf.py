@@ -13,6 +13,7 @@ from ase.geometry.analysis import Analysis
 from ase.calculators.calculator import FileIOCalculator, CalculatorError, ReadError, CalculationFailed, Calculator, all_changes
 from ase.calculators.gaussian import Gaussian
 from ase.calculators.amber import Amber
+from ase.md.langevin import Langevin
 
 from ase.io.xyz import read_xyz
 from ase.io.proteindatabank import read_proteindatabank
@@ -86,8 +87,7 @@ class GEBF(FileIOCalculator):
                             counter+=1
                             atoms.set_initial_charges(charges)
                     energy = self.calculate_potential_energy(coefficents, subsys_atoms, self.atoms)
-                    # self.results["energy"]=float(energy)
-                    self.results["energy"] = 1 # Testing with int instead of float
+                    self.results["energy"]=float(energy)
                 except IOError:
                     print("Unable to read gebf file for subsystem potential energy calculation.")
                     raise ReadError()
@@ -105,8 +105,7 @@ class GEBF(FileIOCalculator):
                     f_x = float(f[0].replace("D", "e"))
                     f_y = float(f[1].replace("D", "e"))
                     f_z = float(f[2].replace("D", "e"))
-                    # f = (f_x, f_y, f_z)
-                    f = (0, 0, 0)
+                    f = (f_x, f_y, f_z)
                     if self.results['forces'] == None: self.results['forces'] = []
                     self.results['forces'].append(f)
                 
@@ -203,23 +202,6 @@ class GEBF(FileIOCalculator):
                    '{} with error code {}'.format(self.name, command,
                                                   path, errorcode))
             raise CalculationFailed(msg)
-
-    def get_gaussian(self, xc=None, basis=None):
-        general_params = getenv()['general']
-        gaussian_params = getenv()['gaussian']
-        return Gaussian(
-            label=self.label,
-            directory=general_params['scratch_dir'] + "/gaussian/" + self.label + "_" + uuid.uuid1().hex,
-            mem=gaussian_params['mem'] \
-                if gaussian_params['mem'] != "auto" \
-                else str((os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / (1024.**3)) - 5) + "GB",
-            chk=gaussian_params['checkpoint_file'] if gaussian_params['checkpoint_file'] else self.label + ".chk",
-            save=None,
-            xc=method,
-            basis=basis,
-            scf='(noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc)',
-            int='acc2e=12'
-        )
     
     def subsystems(self):
         mypath=os.path.join(self.directory, self.label, self.label + "_subsys")

@@ -27,6 +27,7 @@ class Protein_Test(Biomol_Test):
         pass
 
     def test_02_dihedral_anaylsis(self):
+        pass
         
         source_traj = []
         target_traj = []
@@ -55,7 +56,7 @@ class Protein_Test(Biomol_Test):
     
 
     def test_03_end_to_end(self):
-        
+        pass
         G = AtomGraph(self.mol)
         start_atom, end_atom = G.furthest_atoms()
         start_index = G.find(start_atom)
