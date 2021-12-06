@@ -92,7 +92,7 @@ class GEBF(FileIOCalculator):
                     energy = self.calculate_potential_energy(coefficents, subsys_atoms, self.atoms)
                     self.results["energy"]=float(energy)
                     self.results["free_energy"]=float(energy)
-                    self.results["energies"] = np.empty(shape=(1, len(self.atoms)))
+                    self.results["energies"] = np.empty(shape=(len(self.atoms), 1))
                     index = 0
                     for atom in self.atoms:
                         self.results["energies"][index] = self.calculate_interatomic_pe(coefficents, subsys_atoms, self.atoms, atom)
