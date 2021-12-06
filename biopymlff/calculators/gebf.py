@@ -157,16 +157,16 @@ class GEBF(FileIOCalculator):
             subsys_energy = 0
             for atom in subsys:
                 if atom == target: continue
-                radius = self.get_radius(a, b)
+                radius = self.get_radius(atom, target)
                 f_cutoff = 1 if cutoff_radius < radius else 0.5 * ( 1 - math.cos(math.pi * radius * (1 / cutoff_radius)) )
-                long_range_energy = self.calculate_long_range_energy(a, b)
+                long_range_energy = self.calculate_long_range_energy(atom, target)
                 val = (long_range_energy * f_cutoff) - long_range_energy
                 subsys_energy += val
             total_subsys+=coefficients[index] * subsys_energy
         
         for atom in atoms:
             if atom == target: continue 
-            total_long_range += self.calculate_long_range_energy(a, b)
+            total_long_range += self.calculate_long_range_energy(atom, target)
 
         return total_subsys + total_long_range  
                        
