@@ -146,7 +146,7 @@ class GEBF(FileIOCalculator):
         return subsys_energy
 
     def calculate_interatomic_pe(self, coefficients: list, subsys_atoms: list, atoms: Atoms, target: Atom):
-        if len(coefficents) != len(subsys_atoms): raise IndexError("Cannot calculate the interatomic potential energy where the coefficent size does not match the subsystem size.")
+        if len(coefficients) != len(subsys_atoms): raise IndexError("Cannot calculate the interatomic potential energy where the coefficents length size does not match the subsystem length size.")
         gap_params = getenv()["gap"]
         total_subsys = 0
         total_long_range = 0
