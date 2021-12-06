@@ -2,8 +2,8 @@ import os
 
 from ase.calculators.calculator import Calculator
 
-from protein import Protein_Test
-from lipid import Lipid_Test
+from ..test.protein import Protein_Test
+from ..test.lipid import Lipid_Test
 
 def suite(source_method: str, target_method: str, source: Calculator, target: Calculator):
 
