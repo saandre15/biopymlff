@@ -12,6 +12,6 @@
 
 
 export OMP_NUM_THREADS=56
-load_gaussain
+load_gaussian
 cd $WORK/biopymlff
 pipenv run python3 -m unittest biopymlff/calculators/gebf_pm6_test.py
