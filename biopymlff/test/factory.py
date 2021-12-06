@@ -36,4 +36,4 @@ def suite(source_method: str, target_method: str, source: Calculator, target: Ca
             super().setUp()
 
     
-    return [Protein_Test_01, Protein_Test_02, Protein_Test_03, Lipid_Test_01]
+    return Protein_Test_01, Protein_Test_02, Protein_Test_03, Lipid_Test_01
