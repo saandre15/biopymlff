@@ -67,7 +67,7 @@ class General_Test(unittest.TestCase):
         mol: Atoms = self.mol.copy()
         print("Atom Size " + str(len(mol)))
         mol.calc = GEBF_PM6(label="4znn_01")
-        # mol.calc = EMT() # NOTE: Testing why calculator above is not working
+        mol.calc = EMT() # NOTE: Testing why calculator above is not working
         print(mol.get_potential_energy())
         dynamics = Langevin(atoms=mol, timestep=0.01, temperature_K=500, friction=1e-3)
         collect_data = lambda: samples.append(mol.copy())

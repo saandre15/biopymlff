@@ -5,6 +5,8 @@ import shutil
 import subprocess
 import multiprocessing
 
+import numpy as np
+
 from ase.atoms import Atoms
 from ase.atom import Atom
 
@@ -13,6 +15,8 @@ from ase.geometry.analysis import Analysis
 from ase.calculators.calculator import FileIOCalculator, CalculatorError, ReadError, CalculationFailed, Calculator, all_changes
 from ase.calculators.gaussian import Gaussian
 from ase.calculators.amber import Amber
+
+from ase.md.langevin import Langevin
 
 from ase.io.xyz import read_xyz
 from ase.io.proteindatabank import read_proteindatabank
@@ -88,9 +92,11 @@ class GEBF(FileIOCalculator):
                     energy = self.calculate_potential_energy(coefficents, subsys_atoms, self.atoms)
                     self.results["energy"]=float(energy)
                     self.results["free_energy"]=float(energy)
-                    self.results["energies"] = []
+                    self.results["energies"] = np.empty(shape=(1, len(self.atoms)))
+                    index = 0
                     for atom in self.atoms:
-                        self.results["energies"].append(self.calculate_interatomic_pe(coefficents, subsys_atoms, self.atoms, atom))
+                        self.results["energies"][index] = self.calculate_interatomic_pe(coefficents, subsys_atoms, self.atoms, atom)
+                        index+=1
                     # NOTE: If method above does not work. Then adding stress
                 except IOError:
                     print("Unable to read gebf file for subsystem potential energy calculation.")
@@ -104,14 +110,17 @@ class GEBF(FileIOCalculator):
             with open(force_filepath) as file:
                 self.results['forces'] = []
                 lines = file.readlines()
+                count = len(lines)
+                index = 0
+                if self.results['forces'] == None: self.results['forces'] = np.empty(shape=(3, count))
                 for line in lines:
                     f = line.split()
                     f_x = float(f[0].replace("D", "e"))
                     f_y = float(f[1].replace("D", "e"))
                     f_z = float(f[2].replace("D", "e"))
-                    f = (f_x, f_y, f_z)
-                    if self.results['forces'] == None: self.results['forces'] = []
-                    self.results['forces'].append(f)
+                    f = np.array(f_x, f_y, f_z)
+                    self.results['forces'][index] = f
+                    index+=1
                 
         except IOError:
             print("Unable to read force file. Make sure the force_filepath is correct.")
