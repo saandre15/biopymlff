@@ -21,6 +21,7 @@ from matplotlib.figure import Figure
 import numpy as np
 
 from biopymlff.data.atom_graph_node import AtomGraphNode
+from biopymlff.data.atom_graph_edge_type import AtomGraphEdgeType
 
 
 class AtomGraph():
@@ -38,55 +39,52 @@ class AtomGraph():
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
 
-    # @dispatch(str)
-    # def __init__(self, file: str):
-    #     atom: Atoms = None
-    #     bond_list = None
-    #     if ".mol" in file or ".mol2" in file:
-    #         try:
-    #             with open(file) as file:
-    #                 lines = file.readlines()
-    #                 atom_mode = False
-    #                 bonding_mode = False
+    @dispatch(str)
+    def __init__(self, file: str):
+        atom: Atoms = None
+        bond_list = None
+        if ".mol" in file or ".mol2" in file:
+            try:
+                with open(file) as file:
+                    lines = file.readlines()
+                    atom_mode = False
+                    bonding_mode = False
                     
-    #                 atom_list = []
-    #                 bond_list = []
+                    atom_list = []
+                    bond_list = []
 
-    #                 for line in lines:
-    #                     if "@<TRIPOS>ATOM" in line: atom_mode = True; bonding_mode = False ; continue
-    #                     if "@<TRIPOS>BOND" in line: bonding_mode =  True; atom_mode = False ; continue
-    #                     if atom_mode:
-    #                         vals = line.split()
-    #                         symbol = vals[5].split(".")[0]
-    #                         print(symbol)
-    #                         x = float(vals[2])
-    #                         y = float(vals[3])
-    #                         z = float(vals[4])
-    #                         charge = float(vals[8])
-    #                         atom  = Atom(symbol=symbol, position=(x, y, z), charge=charge)
-    #                         atom_list.append(atom)
-    #                     if bonding_mode:
-    #                         vals = line.split()
-    #                         idx = int(vals[1]) - 1
-    #                         idy = int(vals[2]) - 1
-    #                         bond_type = vals[3]
-    #                         if bond_type == "am": bond_type = 4
-    #                         if bond_type == "ar": bond_type = 5
-    #                         if bond_type == "du": bond_type = 6
-    #                         if bond_type == "un": bond_type = 7
-    #                         if bond_type == "nc": bond_type = 8
-    #                         bond_type = int(bond_type)
-    #                         bond_list.append((idx, idy, bond_type))
+                    for line in lines:
+                        if "@<TRIPOS>ATOM" in line: atom_mode = True; bonding_mode = False ; continue
+                        if "@<TRIPOS>BOND" in line: bonding_mode =  True; atom_mode = False ; continue
+                        if atom_mode:
+                            vals = line.split()
+                            symbol = vals[5].split(".")[0]
+                            print(symbol)
+                            x = float(vals[2])
+                            y = float(vals[3])
+                            z = float(vals[4])
+                            charge = float(vals[8])
+                            atom  = Atom(symbol=symbol, position=(x, y, z), charge=charge)
+                            atom_list.append(atom)
+                        if bonding_mode:
+                            vals = line.split()
+                            idx = int(vals[1]) - 1
+                            idy = int(vals[2]) - 1
+                            bond_type = vals[3]
+                            if bond_type == "am": bond_type = 4
+                            if bond_type == "ar": bond_type = 5
+                            if bond_type == "du": bond_type = 6
+                            if bond_type == "un": bond_type = 7
+                            if bond_type == "nc": bond_type = 8
+                            bond_type = int(bond_type)
+                            bond_list.append((idx, idy, bond_type))
                     
-    #                 atom = Atoms(atom_list)
+                    atom = Atoms(atom_list)
 
-    #         except IOError: print("Failed to read " + file)
-    #     else: raise IOError("Make sure the extension type is parsable ")
+            except IOError: print("Failed to read " + file)
+        else: raise IOError("Make sure the extension type is parsable ")
 
-    #     print(atom)
-    #     print(bond_list)
-
-    #     self.__init__(atom, bond_list)
+        self.__init__(atom, bond_list)
 
     def reset(self):
 
@@ -146,9 +144,9 @@ class AtomGraph():
         graph_list.sort(key=lambda node: node.getAtom().index)
         return graph_list
 
-    def fragment_by_bond_as_atoms_list(self, symbolA: str, symbolB: str) -> list:
+    def fragment_by_bond_as_atoms_list(self, symbolA: str, symbolB: str, bond_types: list) -> list:
         self.reset()
-        fragments = self.fragments_by_bond_as_indexes(symbolA, symbolB)
+        fragments = self.fragments_by_bond_as_indexes(symbolA, symbolB, bond_types)
         graph_list = self.get_graph_list_sorted()
 
         atoms_list = []
@@ -162,7 +160,7 @@ class AtomGraph():
         return atoms_list
                     
     # Returns a list of atoms
-    def fragments_by_bond_as_indexes(self, symbolA: str, symbolB: str) -> list:
+    def fragments_by_bond_as_indexes(self, symbolA: str, symbolB: str, bond_types: list) -> list:
         self.reset()
         all_atoms = [atom for atom in self.atoms]
         graph_list = self.get_graph_list_sorted()
@@ -171,11 +169,13 @@ class AtomGraph():
         fragments = []
         system_size = len(not_explored_atoms)
 
-        def traversal_fn(cur: AtomGraphNode, next: AtomGraphNode):
+        def traversal_fn(cur: AtomGraphNode, next: AtomGraphNode, edge: AtomGraphEdgeType):
             curSymbol = cur.getAtom().symbol
             nextSymbol = next.getAtom().symbol
             node_fragments.append(cur)
-            return not ((curSymbol == symbolA and nextSymbol == symbolB) or (curSymbol == symbolB and nextSymbol == symbolA))
+            for bond in bond_types:
+                if bond == edge: return not (((curSymbol == symbolA and nextSymbol == symbolB) or (curSymbol == symbolB and nextSymbol == symbolA)))
+            return False
 
         # While there is still atoms that are not explored
         while len(not_explored_atoms) > 0:
@@ -246,16 +246,16 @@ class AtomGraph():
         return G
 
     # fn: given our current and next atom should we continue?
-    def traverse(self, cur: AtomGraphNode, fn: Callable[[AtomGraphNode, AtomGraphNode], bool]):
+    def traverse(self, cur: AtomGraphNode, fn: Callable[[AtomGraphNode, AtomGraphNode, AtomGraphEdgeType], bool]):
         # print("Cur " + cur.getAtom().symbol)
         # print("Cur Coord " + str(cur.getAtom().position))
         atoms = self.graph.neighbors(cur)
         cur.setVisited(True)
         for _next in atoms:
-            # print("Next " + _next.getAtom().symbol)
-            # print("Next Coord" + str(_next.getAtom().position))
             # We are adding the current node multiple times
-            should_continue = fn(cur, _next) and (not _next.isVisited())
+            edge_type_weight = self.graph.get_edge_data(cur, _next)["weight"]
+            edge = AtomGraphEdgeType(edge_type_weight)
+            should_continue = fn(cur, _next, edge) and (not _next.isVisited())
             if should_continue: 
                 self.traverse(_next, fn)
 
@@ -275,7 +275,7 @@ class AtomGraph():
         total_electron = []
         graph_list = [node for node in self.graph.nodes]
 
-        def traversal_fn(a: AtomGraphNode, b: AtomGraphNode):
+        def traversal_fn(a: AtomGraphNode, b: AtomGraphNode, edge: AtomGraphEdgeType):
             unpaired_electron = self.electrons[a.getAtom().symbol]
             total_electron.append(unpaired_electron)
             return True

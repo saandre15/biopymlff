@@ -26,6 +26,7 @@ from shutil import which
 
 from ..data.atom_graph import AtomGraph
 from ..util.getenv import getenv
+from ..data.atom_graph_edge_type import AtomGraphEdgeType
 
 
 class GEBF(FileIOCalculator):
@@ -255,12 +256,12 @@ class GEBF(FileIOCalculator):
 
     def fragments_as_indexes(self, atoms: Atoms) -> list:
         G = AtomGraph(atoms)
-        fragments = G.fragments_by_bond_as_indexes('C', 'C')
+        fragments = G.fragments_by_bond_as_indexes('C', 'C', [AtomGraphEdgeType.SINGLE])
         return fragments
     
     def fragments_as_atoms(self, atoms: Atoms) -> list:
         G = AtomGraph(atoms)
-        fragments = G.fragment_by_bond_as_atoms_list('C', 'C')
+        fragments = G.fragment_by_bond_as_atoms_list('C', 'C', [AtomGraphEdgeType.SINGLE])
         return fragments
         
     def get_fragment_file(self, atoms: Atoms) -> str:
