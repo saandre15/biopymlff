@@ -39,52 +39,51 @@ class AtomGraph():
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
 
-    @dispatch(str)
-    def __init__(self, file: str):
-        atom: Atoms = None
-        bond_list = None
-        if ".mol" in file or ".mol2" in file:
-            try:
-                with open(file) as file:
-                    lines = file.readlines()
-                    atom_mode = False
-                    bonding_mode = False
+    # def __init__(self, file: str):
+    #     atom: Atoms = None
+    #     bond_list = None
+    #     if ".mol" in file or ".mol2" in file:
+    #         try:
+    #             with open(file) as file:
+    #                 lines = file.readlines()
+    #                 atom_mode = False
+    #                 bonding_mode = False
                     
-                    atom_list = []
-                    bond_list = []
+    #                 atom_list = []
+    #                 bond_list = []
 
-                    for line in lines:
-                        if "@<TRIPOS>ATOM" in line: atom_mode = True; bonding_mode = False ; continue
-                        if "@<TRIPOS>BOND" in line: bonding_mode =  True; atom_mode = False ; continue
-                        if atom_mode:
-                            vals = line.split()
-                            symbol = vals[5].split(".")[0]
-                            print(symbol)
-                            x = float(vals[2])
-                            y = float(vals[3])
-                            z = float(vals[4])
-                            charge = float(vals[8])
-                            atom  = Atom(symbol=symbol, position=(x, y, z), charge=charge)
-                            atom_list.append(atom)
-                        if bonding_mode:
-                            vals = line.split()
-                            idx = int(vals[1]) - 1
-                            idy = int(vals[2]) - 1
-                            bond_type = vals[3]
-                            if bond_type == "am": bond_type = 4
-                            if bond_type == "ar": bond_type = 5
-                            if bond_type == "du": bond_type = 6
-                            if bond_type == "un": bond_type = 7
-                            if bond_type == "nc": bond_type = 8
-                            bond_type = int(bond_type)
-                            bond_list.append((idx, idy, bond_type))
+    #                 for line in lines:
+    #                     if "@<TRIPOS>ATOM" in line: atom_mode = True; bonding_mode = False ; continue
+    #                     if "@<TRIPOS>BOND" in line: bonding_mode =  True; atom_mode = False ; continue
+    #                     if atom_mode:
+    #                         vals = line.split()
+    #                         symbol = vals[5].split(".")[0]
+    #                         print(symbol)
+    #                         x = float(vals[2])
+    #                         y = float(vals[3])
+    #                         z = float(vals[4])
+    #                         charge = float(vals[8])
+    #                         atom  = Atom(symbol=symbol, position=(x, y, z), charge=charge)
+    #                         atom_list.append(atom)
+    #                     if bonding_mode:
+    #                         vals = line.split()
+    #                         idx = int(vals[1]) - 1
+    #                         idy = int(vals[2]) - 1
+    #                         bond_type = vals[3]
+    #                         if bond_type == "am": bond_type = 4
+    #                         if bond_type == "ar": bond_type = 5
+    #                         if bond_type == "du": bond_type = 6
+    #                         if bond_type == "un": bond_type = 7
+    #                         if bond_type == "nc": bond_type = 8
+    #                         bond_type = int(bond_type)
+    #                         bond_list.append((idx, idy, bond_type))
                     
-                    atom = Atoms(atom_list)
+    #                 atom = Atoms(atom_list)
 
-            except IOError: print("Failed to read " + file)
-        else: raise IOError("Make sure the extension type is parsable ")
+    #         except IOError: print("Failed to read " + file)
+    #     else: raise IOError("Make sure the extension type is parsable ")
 
-        self.__init__(atom, bond_list)
+    #     self.__init__(atom, bond_list)
 
     def reset(self):
 

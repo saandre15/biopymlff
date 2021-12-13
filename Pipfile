@@ -15,6 +15,7 @@ tk="*"
 multipledispatch="*"
 pysmiles="*"
 dscribe="*"
+openbabel="*"
 
 
 [dev-packages]
