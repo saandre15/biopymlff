@@ -6,6 +6,8 @@ import math
 from ase.atoms import Atoms
 from ase.atom import Atom
 
+from ase.io import write
+
 from ase.geometry.analysis import Analysis
 
 import networkx as nx
@@ -15,8 +17,6 @@ from typing import Callable
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-
-# matplotlib.use('TkAgg')
 
 import numpy as np
 
@@ -209,10 +209,19 @@ class AtomGraph():
             
         return fragments
 
+    def get_bond_type(self, idx: int, idy: int) -> AtomGraphEdgeType: 
+        graph_list = self.get_graph_list_sorted()
+        path_wo_ext =os.path.join("tmp", str(random.randint(1000000, 9999999))) 
+        write(path_wo_ext + ".pdb", self.atoms)
+        os.system("obabel -ipdb " + path_wo_ext + ".pdb > " + path_wo_ext + ".mol2")
+        with open(path_wo_ext + ".mol2"):
+            pass # Parse this and 
+
     def to_graph(self, atoms: Atoms) -> nx.Graph:
         """bonds = list of (idx, idy, type: AtomGraphEdgeType)"""
         analysis = Analysis(atoms)
         graph_list = [AtomGraphNode(atom) for atom in atoms]
+        graph_list = self.get_graph_list_sorted()
         bond_list = []
         unique_atoms = list(set(atoms.get_chemical_symbols()))
         for atomI in unique_atoms:
@@ -229,10 +238,9 @@ class AtomGraph():
         for bond in bond_list:
             start = bond[0]
             end = bond[1]
-            bond_type = -1
-            try:
-                bond_type = bond[2]
-            except IndexError: bond_type = 7
+
+            bond_type = self.get_bond_type(start, end)
+
             a = graph_list[start]
             b = graph_list[end]
             if not G.__contains__(a):

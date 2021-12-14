@@ -12,7 +12,8 @@ For more information checkout the [documentation](localhost).
 * gaussian
 * mopac
 * psi4
-* [stoml](https://github.com/freshautomations/stoml)
+* openbabel
+* stoml
 
 **Internal**
 * See setup.py 
