@@ -133,9 +133,9 @@ class AtomGraph():
             nextSymbol = next.getAtom().symbol
             node_fragments.append(cur)
             for bond in bond_types:
-                # if bond == edge: return not (((curSymbol == symbolA and nextSymbol == symbolB) or (curSymbol == symbolB and nextSymbol == symbolA)))
-                return not (((curSymbol == symbolA and nextSymbol == symbolB) or (curSymbol == symbolB and nextSymbol == symbolA)))
-            return False
+                if bond == edge: return not (((curSymbol == symbolA and nextSymbol == symbolB) or (curSymbol == symbolB and nextSymbol == symbolA)))
+                # return not (((curSymbol == symbolA and nextSymbol == symbolB) or (curSymbol == symbolB and nextSymbol == symbolA)))
+            return True
 
         # While there is still atoms that are not explored
         while len(not_explored_atoms) > 0:
