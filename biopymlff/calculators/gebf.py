@@ -255,8 +255,8 @@ class GEBF(FileIOCalculator):
         return subsystems
 
     def fragments_as_indexes(self, atoms: Atoms) -> list:
-        G = AtomGraph(atoms)
         print("testing")
+        G = AtomGraph(atoms)
         fragments = G.fragments_by_bond_as_indexes('C', 'C', [AtomGraphEdgeType.SINGLE])
         return fragments
     
