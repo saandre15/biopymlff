@@ -211,7 +211,6 @@ class AtomGraph():
         return fragments
 
     def get_bond_type(self, idx: int, idy: int) -> AtomGraphEdgeType: 
-        graph_list = self.get_graph_list_sorted()
         path_wo_ext =os.path.join("tmp", str(random.randint(1000000, 9999999))) 
         write(path_wo_ext + ".pdb", self.atoms)
         os.system("obabel -ipdb " + path_wo_ext + ".pdb > " + path_wo_ext + ".mol2")
