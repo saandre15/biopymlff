@@ -9,6 +9,6 @@ from biopymlff.calculators.gebf_pm6 import GEBF_PM6
 
 
 mol = read_proteindatabank(os.getcwd() + "/data/systems/proteins/4znn.pdb")
-mol.calc = GEBF_PM6(label="4znn_01")
+mol.calc = GEBF_DFT(label="4znn_01")
 
 print(mol.get_potential_energy())
