@@ -271,9 +271,9 @@ class GEBF(FileIOCalculator):
         try:
             with open(filename, "w") as fragment_file:
                 fragments_as_indexes = self.fragments_as_indexes(atoms)
+                print(fragments_as_indexes)
                 fragments_as_atoms = self.fragments_as_atoms(atoms)
                 # TODO: Index not matching
-                print("this is called")
                 serial = 1
                 for index in range(0, len(fragments_as_indexes)):
                     atoms = fragments_as_atoms[index]
