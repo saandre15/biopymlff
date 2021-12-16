@@ -168,9 +168,10 @@ class AtomGraph():
         node_fragments = []
         fragments = []
         system_size = len(not_explored_atoms)
+        print("testing")
 
         def traversal_fn(cur: AtomGraphNode, next: AtomGraphNode, edge: AtomGraphEdgeType):
-            print("TRAVERSAL")
+            
             curSymbol = cur.getAtom().symbol
             nextSymbol = next.getAtom().symbol
             node_fragments.append(cur)
