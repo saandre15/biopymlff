@@ -231,6 +231,8 @@ class AtomGraph():
         if len(atoms.get_positions()) == 1:
             G.add_node(graph_list[0])
         
+        print("BOND_LIST " + str(bond_list))
+
         for bond in bond_list:
             start = bond[0]
             end = bond[1]
