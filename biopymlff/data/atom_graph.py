@@ -161,6 +161,7 @@ class AtomGraph():
                     
     # Returns a list of atoms
     def fragments_by_bond_as_indexes(self, symbolA: str, symbolB: str, bond_types: list) -> list:
+        print("testing")
         self.reset()
         all_atoms = [atom for atom in self.atoms]
         graph_list = self.get_graph_list_sorted()
@@ -168,7 +169,6 @@ class AtomGraph():
         node_fragments = []
         fragments = []
         system_size = len(not_explored_atoms)
-        print("testing")
 
         def traversal_fn(cur: AtomGraphNode, next: AtomGraphNode, edge: AtomGraphEdgeType):
             
