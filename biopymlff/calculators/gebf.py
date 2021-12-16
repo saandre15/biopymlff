@@ -345,9 +345,7 @@ class GEBF(FileIOCalculator):
                     prereading_mode = True
                 elif "----------" in line and prereading_mode == True:
                     reading_mode = True 
-                
-                
-                    
+
         with open(self.label + "/" + self.label + ".frg", "r") as file:
             lines = file.readlines()
             overwrite = ""

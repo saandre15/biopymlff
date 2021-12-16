@@ -7,10 +7,7 @@ from ase.md.langevin import Langevin
 from biopymlff.calculators.gebf_dft import GEBF_DFT
 
 
-# mol = read_proteindatabank(os.getcwd() + "/data/systems/proteins/4znn.pdb")
-# mol.calc = GEBF_DFT(label="4znn_01")
-
-# print(mol.get_potential_energy())
-
 mol = read_proteindatabank(os.getcwd() + "/data/systems/proteins/4znn.pdb")
-write(os.getcwd() + "/data/systems/proteins/4znn.mol2", mol)
+mol.calc = GEBF_PM6(label="4znn_01")
+
+print(mol.get_potential_energy())
