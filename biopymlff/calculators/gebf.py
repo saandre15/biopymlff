@@ -265,7 +265,7 @@ class GEBF(FileIOCalculator):
         return fragments
         
     def get_fragment_file(self, atoms: Atoms) -> str:
-        filename = os.path.join("tmp", uuid.uuid1().hex + ".frg")
+        filename = os.path.join("/", "tmp", uuid.uuid1().hex + ".frg")
         print(filename)
         try:
             with open(filename, "w") as fragment_file:
