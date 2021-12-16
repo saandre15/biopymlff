@@ -267,6 +267,7 @@ class GEBF(FileIOCalculator):
     def get_fragment_file(self, atoms: Atoms) -> str:
         filename = os.path.join("/", "tmp", uuid.uuid1().hex + ".frg")
         print(filename)
+        os.remove(filename)
         try:
             with open(filename, "w") as fragment_file:
                 
