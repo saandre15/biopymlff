@@ -187,7 +187,6 @@ class AtomGraph():
                     if atom_mode:
                         vals = line.split()
                         symbol = vals[5].split(".")[0]
-                        print(symbol)
                         x = float(vals[2])
                         y = float(vals[3])
                         z = float(vals[4])
@@ -211,10 +210,6 @@ class AtomGraph():
                         self.bonds.append((idx, idy, bond_type))
         
         for bond in self.bonds:
-            print(idx)
-            print(bond[0])
-            print(idy)
-            print(bond[1])
             if idx == bond[0] and idy == bond[1]: return AtomGraphEdgeType(bond[2])
         
         raise Exception("Atom Bond Edge Type Not Found")
@@ -250,6 +245,7 @@ class AtomGraph():
             if not G.__contains__(b):
                 self.counter+=1
                 G.add_node(b)
+            print("BOND_TYPE " + str(bond_type))
             G.add_edge(a, b, weight=int(bond_type), bond_type=bond_type)
         return G
 
