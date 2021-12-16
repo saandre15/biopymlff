@@ -39,8 +39,8 @@ class AtomGraph():
             'O': 8
         }
         self.atoms = atoms
-        self.graph = self.to_graph(atoms)
         self.bonds = []
+        self.graph = self.to_graph(atoms)
 
 
     def reset(self):
