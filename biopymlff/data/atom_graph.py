@@ -38,6 +38,7 @@ class AtomGraph():
         }
         self.atoms = atoms
         self.graph = self.to_graph(atoms)
+        self.bonds = []
 
     # def __init__(self, file: str):
     #     atom: Atoms = None
@@ -214,8 +215,47 @@ class AtomGraph():
         path_wo_ext =os.path.join("tmp", str(random.randint(1000000, 9999999))) 
         write(path_wo_ext + ".pdb", self.atoms)
         os.system("obabel -ipdb " + path_wo_ext + ".pdb > " + path_wo_ext + ".mol2")
-        with open(path_wo_ext + ".mol2"):
-            pass # Parse this and 
+        if len(self.bonds) == 0: # Cache the results
+            with open(path_wo_ext + ".mol2") as file:
+                lines = file.readlines()
+                atom_mode = False
+                bonding_mode = False
+                
+                atom_list = []
+
+                for line in lines:
+                    if "@<TRIPOS>ATOM" in line: atom_mode = True; bonding_mode = False ; continue
+                    if "@<TRIPOS>BOND" in line: bonding_mode =  True; atom_mode = False ; continue
+                    if atom_mode:
+                        vals = line.split()
+                        symbol = vals[5].split(".")[0]
+                        print(symbol)
+                        x = float(vals[2])
+                        y = float(vals[3])
+                        z = float(vals[4])
+                        charge = float(vals[8])
+                        atom  = Atom(symbol=symbol, position=(x, y, z), charge=charge)
+                        atom_list.append(atom)
+                    if bonding_mode:
+                        vals = line.split()
+                        idx = int(vals[1]) - 1
+                        idy = int(vals[2]) - 1
+                        bond_type = vals[3]
+                        if bond_type == "1": bond_type = 1
+                        elif bond_type == "2": bond_type = 2
+                        elif bond_type == "3": bond_type = 3
+                        elif bond_type == "am": bond_type = 4
+                        elif bond_type == "ar": bond_type = 5
+                        elif bond_type == "du": bond_type = 6
+                        elif bond_type == "un": bond_type = 7
+                        elif bond_type == "nc": bond_type = 8
+                        bond_type = int(bond_type)
+                        self.bonds.append((idx, idy, bond_type))
+        
+        for bond in self.bonds:
+            if idx == bond[0] and idy == bond[1]: return AtomGraphEdgeType(bond[2])
+        
+        raise Exception("Atom Bond Edge Type Not Found")
 
     def to_graph(self, atoms: Atoms) -> nx.Graph:
         """bonds = list of (idx, idy, type: AtomGraphEdgeType)"""
@@ -249,7 +289,7 @@ class AtomGraph():
             if not G.__contains__(b):
                 self.counter+=1
                 G.add_node(b)
-            G.add_edge(a, b, weight=1, bond_type=bond_type)
+            G.add_edge(a, b, weight=int(bond_type), bond_type=bond_type)
         return G
 
     # fn: given our current and next atom should we continue?
