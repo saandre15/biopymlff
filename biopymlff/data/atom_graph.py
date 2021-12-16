@@ -261,7 +261,6 @@ class AtomGraph():
         """bonds = list of (idx, idy, type: AtomGraphEdgeType)"""
         analysis = Analysis(atoms)
         graph_list = [AtomGraphNode(atom) for atom in atoms]
-        graph_list = self.get_graph_list_sorted()
         bond_list = []
         unique_atoms = list(set(atoms.get_chemical_symbols()))
         for atomI in unique_atoms:
