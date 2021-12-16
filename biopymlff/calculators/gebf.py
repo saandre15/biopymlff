@@ -270,8 +270,8 @@ class GEBF(FileIOCalculator):
         if os.path.exists(filename): os.remove(filename)
         try:
             with open(filename, "w") as fragment_file:
-                print("testing")
                 fragments_as_indexes = self.fragments_as_indexes(atoms)
+                print(fragments_as_indexes)
                 fragments_as_atoms = self.fragments_as_atoms(atoms)
                 # TODO: Index not matching
                 serial = 1
