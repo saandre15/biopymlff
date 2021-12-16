@@ -172,7 +172,7 @@ class AtomGraph():
     def get_bond_type(self, idx: int, idy: int) -> AtomGraphEdgeType: 
         path_wo_ext =os.path.join("/", "tmp", str(uuid.uuid1().hex)) 
         write(path_wo_ext + ".pdb", self.atoms)
-        os.system("obabel -ipdb " + path_wo_ext + ".pdb > " + path_wo_ext + ".mol2")
+        os.system("obabel -ipdb " + path_wo_ext + ".pdb -omol2 > " + path_wo_ext + ".mol2")
         if len(self.bonds) == 0: # Cache the results
             with open(path_wo_ext + ".mol2") as file:
                 lines = file.readlines()
