@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import IntEnum
 
-class AtomGraphEdgeType(Enum):
+class AtomGraphEdgeType(IntEnum):
     SINGLE=1
     DOUBLE=2
     TRIPLE=3
