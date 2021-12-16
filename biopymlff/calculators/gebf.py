@@ -290,6 +290,8 @@ class GEBF(FileIOCalculator):
         except IOError: print("Unable to create a fragment file in GEBF.")
                     
     def write_input(self, atoms: Atoms, properties=None, system_changes=None):
+        print(atoms)
+        print(self.get_fragment_file(atoms))
         shutil.copyfile(self.get_fragment_file(atoms), self.label + ".frg") # TODO: Fix missing self.label
         general_params = getenv()['general']
         gaussian_params = getenv()['gaussian']
