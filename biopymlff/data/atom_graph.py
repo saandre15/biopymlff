@@ -211,6 +211,10 @@ class AtomGraph():
                         self.bonds.append((idx, idy, bond_type))
         
         for bond in self.bonds:
+            print(idx)
+            print(bond[0])
+            print(idy)
+            print(bond[1])
             if idx == bond[0] and idy == bond[1]: return AtomGraphEdgeType(bond[2])
         
         raise Exception("Atom Bond Edge Type Not Found")
