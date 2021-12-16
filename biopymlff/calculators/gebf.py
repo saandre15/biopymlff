@@ -256,6 +256,7 @@ class GEBF(FileIOCalculator):
 
     def fragments_as_indexes(self, atoms: Atoms) -> list:
         G = AtomGraph(atoms)
+        print("testing")
         fragments = G.fragments_by_bond_as_indexes('C', 'C', [AtomGraphEdgeType.SINGLE])
         return fragments
     
@@ -271,7 +272,6 @@ class GEBF(FileIOCalculator):
         try:
             with open(filename, "w") as fragment_file:
                 fragments_as_indexes = self.fragments_as_indexes(atoms)
-                print(fragments_as_indexes)
                 fragments_as_atoms = self.fragments_as_atoms(atoms)
                 # TODO: Index not matching
                 serial = 1
