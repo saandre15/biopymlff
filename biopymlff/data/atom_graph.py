@@ -37,7 +37,9 @@ class AtomGraph():
             'O': 8
         }
         self.atoms = atoms
+        print("testing_01")
         self.graph = self.to_graph(atoms)
+        print("testing_02")
         self.bonds = []
 
     # def __init__(self, file: str):
