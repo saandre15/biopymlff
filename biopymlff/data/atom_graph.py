@@ -210,6 +210,10 @@ class AtomGraph():
                         self.bonds.append((idx, idy, bond_type))
         
         for bond in self.bonds:
+            print(idx)
+            print(bond[0])
+            print(idy)
+            print(bond[1])
             if idx == bond[0] and idy == bond[1]: return AtomGraphEdgeType(bond[2])
         
         raise Exception("Atom Bond Edge Type Not Found")
@@ -230,8 +234,6 @@ class AtomGraph():
         
         if len(atoms.get_positions()) == 1:
             G.add_node(graph_list[0])
-        
-        print("BOND_LIST " + str(bond_list))
 
         for bond in bond_list:
             start = bond[0]
