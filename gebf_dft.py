@@ -5,6 +5,7 @@ from ase.io import write
 from ase.md.langevin import Langevin
 
 from biopymlff.calculators.gebf_dft import GEBF_DFT
+from biopymlff.calculators.gebf_pm6 import GEBF_PM6
 
 
 mol = read_proteindatabank(os.getcwd() + "/data/systems/proteins/4znn.pdb")
