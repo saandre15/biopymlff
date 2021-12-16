@@ -37,9 +37,7 @@ class AtomGraph():
             'O': 8
         }
         self.atoms = atoms
-        print("testing_01")
         self.graph = self.to_graph(atoms)
-        print("testing_02")
         self.bonds = []
 
     # def __init__(self, file: str):
@@ -281,7 +279,9 @@ class AtomGraph():
             start = bond[0]
             end = bond[1]
 
+            print("testing_01")
             bond_type = self.get_bond_type(start, end)
+            print("testing_02")
 
             a = graph_list[start]
             b = graph_list[end]
