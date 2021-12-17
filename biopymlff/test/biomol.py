@@ -28,9 +28,15 @@ class Biomol_Test(General_Test):
 
         super(General_Test, self).setUp()
 
-    def get_source_frames(dt: float, frame_count: int):
+    def get_source_frames_as_ase(self, frame_count: int, dt: float=0.01):
         # Perform ASE->PyTraj Atom Conversion
         pass
 
-    def get_target_frames(dt: float, frame_count: int):
+    def get_target_frames_as_ase(self, frame_count: int, dt: float=0.01):
+        pass
+
+    def get_target_frames_as_pytraj(self, frame_count: int, dt: float=0.01):
+        pass
+
+    def get_source_frames_as_pytraj(self, frame_count: int, dt: float=0.01):
         pass

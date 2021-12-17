@@ -59,8 +59,11 @@ class Library:
         """ 
         Randomly extract previously added atoms based off subsystem size
         """
+        subsystems = []
+        # TODO: Loop through all of the atoms and get lsqc to fragment and create the subsystems. 
+        # Purposely allow it to fail and read the subsystems and then add it to any array until the dataset size requirement is met.
 
-        raise Exception("Library not large enough")
+        raise Exception("Library size is not large enough. Add more atoms to the library before calling this method.")
 
     
 

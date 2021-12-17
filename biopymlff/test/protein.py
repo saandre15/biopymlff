@@ -24,14 +24,11 @@ from ..train.ml import ML
 
 
 class Protein_Test(Biomol_Test):
-    
-    def __init__(self, ):
-        super.__init__()
         
 
     def test_01_absolute_deviation(self): # Run this on GEBF-DP, ANI-1x and ff14SB and merge all the graph to replicate Fig. 7 on GEBF_ML papers
-        source_traj = []
-        target_traj = []
+        source_traj = self.get_source_frames()
+        target_traj = self.get_target_frames()
         conformer_indexes = [] # TODO: Figure out how to randomly sample base off a seed
 
         fig = plt.figure()
@@ -80,12 +77,10 @@ class Protein_Test(Biomol_Test):
             plt.title(key)
             plt.plot(source, label=self.source_method)
             plt.plot(target, label=self.target_method)
-            os.path.join(os.getcwd(), 
+            plt.savefig(os.path.join(os.getcwd(), 
                 "benchmark", 
                 "accuracy", 
-                self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + "dihedral_analysis.png")
-
-    
+                self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + "dihedral_analysis.png"))
 
     def test_03_end_to_end(self):
         G = AtomGraph(self.mol)
@@ -103,51 +98,59 @@ class Protein_Test(Biomol_Test):
         plt.xlabel("t(ns)")
         plt.ylabel("distance(A)")
         
-        plt.save
+        plt.savefig(os.path.join(os.getcwd(), "benchmark", "accuracy", 
+            self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + "end_to_end.png"))
         
     
     def test_04_rsme_energy_and_force(self):
-        # TODO: Figure out how to train mulitple iterations with different dataset seize
 
         if not isinstance(self.source, ML): return; # Skips this test if the calculator is not trainable
 
-
         train_size = [1000, 2000, 3000, 4000, 5000] # Dataset train size
+        rsme_E = []
+        rsme_F = []
 
         for size in train_size:
             lib = ProteinLibrary()
-            datasets = lib.extract_atoms(size) # Randomly select atoms that output 
+            datasets = lib.extract_atoms(size) # Randomly select atoms that output subsystem of size N
             
             self.source.reset()
             for dataset in datasets:
-                self.source.train()
+                self.source.train(dataset)
             
-        
+            traj = []
+            pes = []
+            forces = []
+            
+            for atom in traj:
+                pes.append(atom.get_potential_energy())
+                for forces in atom.get_forces():
+                    force_scalars = forces
+                    forces.append(atom.get_forces()) # NOTE: Convert to scalars
 
-        # As ASE Atoms
-        source_traj = []
-        target_traj = []
-        
-        source_count = len(source_traj)
-        target_count = len(target_traj)
-        
-        source_pe = [val.get_potential_energy() for val in source_traj]
-        target_pe = [val.get_potential_energy() for val in target_traj]
-        
-        source_forces = [np.ndarray.item(val.get_forces()) for val in source_traj]
-        target_forces = [np.ndarray.item(val.get_forces()) for val in target_traj]
-        
-        rsme_E = mean_squared_error(target_pe, source_pe)
-        rsme_forces = mean_squared_error() # convert forces to scalars
+            # Continue using RMSE E and F
 
-        fig = plt.figure()
-        plt.title("RSME")
-        plt.plot(source, label=self.source_method)
-        plt.plot(target, label=self.target_method)
-        os.path.join(os.getcwd(), 
+        fig = plt.figure() # Energy RSME vs Subsystem Dataset Size Bar Graphs
+        plt.title("Energy RSME vs Subsystem Dataset Size")
+        ax = fig.add_axes([0, 0, 1, 1])
+        X = np.arange(len(train_size))
+        ax.bar(X + 0.00, train_size, rsme_E, color='b', width=0.25)
+        plt.savefig(os.path.join(os.getcwd(), 
             "benchmark", 
             "accuracy", 
-            self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + ".png")
+            self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + ".energy_rmse_vs_train_dataset_size.png"))
+
+        fig = plt.figure() # Force RSME vs Subsystem Dataset Size Bar Graphs
+        plt.title("Force RSME vs Subsystem Dataset Size")
+        ax = fig.add_axes([0, 0, 1, 1])
+        X = np.arange(len(train_size))
+        ax.bar(X + 0.00, train_size, rsme_F, color='b', width=0.25)
+        plt.savefig(os.path.join(os.getcwd(), 
+            "benchmark",
+            "accuracy",
+            self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + "forces_rmse_vs_train_dataset_size.png"))
+
+        
         
 
         
