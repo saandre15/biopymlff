@@ -55,6 +55,13 @@ class Library:
         mol: Atoms = self.lib_cache[smiles]
         return mol == atoms
 
+    def extract_atoms(dataset_size: int) -> list: # NOTE: These are by subsystems size not fragment size
+        """ 
+        Randomly extract previously added atoms based off subsystem size
+        """
+
+        raise Exception("Library not large enough")
+
     
 
 class ProteinLibrary(Library):

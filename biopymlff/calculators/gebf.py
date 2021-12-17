@@ -55,6 +55,7 @@ class GEBF(FileIOCalculator):
                 lines = file.readlines()
                 read_coefficient = False
                 coefficents = []
+                print("test " + 1)
                 for line in lines:
                     if "coef:" in line:
                         read_coefficient = True
@@ -267,10 +268,10 @@ class GEBF(FileIOCalculator):
         
     def get_fragment_file(self, atoms: Atoms) -> str:
         filename = os.path.join("/", "tmp", uuid.uuid1().hex + ".frg")
-        print(filename)
         if os.path.exists(filename): os.remove(filename)
         try:
             with open(filename, "w") as fragment_file:
+                print("apple" + str(1))
                 fragments_as_indexes = self.fragments_as_indexes(atoms)
                 fragments_as_atoms = self.fragments_as_atoms(atoms)
                 # TODO: Index not matching
@@ -280,7 +281,6 @@ class GEBF(FileIOCalculator):
                     indexes = fragments_as_indexes[index]
                     spin_multiplicity = AtomGraph(atoms).get_spin_multiplicity()
                     charge = AtomGraph(atoms).get_charges()
-                    # charge = "+1"
                     temp_indexes = []
                     for index in indexes:
                         temp_indexes.append(index + 1)
