@@ -49,13 +49,12 @@ class GEBF(FileIOCalculator):
         shutil.move(self.frg_file, self.directory + "/" + label + ".frg")
 
 
-    def read_energy(self, labc_filepath='labc', gebf_filepaths: list=[]):
+    def read_energy(self, labc_filepath='.labc', gebf_filepaths: list=[], charge_filepath: str='.cha'):
         try:
             with open(labc_filepath) as file:
                 lines = file.readlines()
                 read_coefficient = False
                 coefficents = []
-                print("test " + 1)
                 for line in lines:
                     if "coef:" in line:
                         read_coefficient = True
@@ -71,7 +70,7 @@ class GEBF(FileIOCalculator):
                     subsys_atoms = self.subsystems() 
                     counter = 0
                     gebf_filepaths=sorted(gebf_filepaths)
-                    for path in gebf_filepaths:
+                    for path in gebf_filepaths: # Sets subsystem charges
                         with open(path) as file:
                             lines = file.readlines()
                             atoms: Atoms = subsys_atoms[counter]
@@ -91,6 +90,14 @@ class GEBF(FileIOCalculator):
                                         charges.append(float(charge))
                             counter+=1
                             atoms.set_initial_charges(charges)
+                    with open(charge_filepath) as file:
+                        lines = file.readlines(charge_filepath)
+                        charges = []
+                        for line in line:
+                            vals = line.split(" ")
+                            charge_val = vals[2]
+                            charges.append(charge_val)
+                        self.atoms.set_initial_charges(charges)
                     energy = self.calculate_potential_energy(coefficents, subsys_atoms, self.atoms)
                     self.results["energy"]=float(energy)
                     self.results["free_energy"]=float(energy)
@@ -101,7 +108,7 @@ class GEBF(FileIOCalculator):
                         index+=1
                     # NOTE: If method above does not work. Then adding stress
                 except IOError:
-                    print("Unable to read gebf file for subsystem potential energy calculation.")
+                    print("Unable to read gebf file for subsystem potential energy calculation or charge file for system charge.")
                     raise ReadError()
         except IOError:
             print("Unable to read lso file to find subsystem coefficents.")
@@ -185,10 +192,11 @@ class GEBF(FileIOCalculator):
         charge_energy = 0
         van_der_val_energy = 0
         charge_energy += (a.charge * b.charge) / self.get_radius(a, b)
+        van_der_val_energy += 0
         # van_der_val_energy += (self.get_lorentz_berthetot_coefficent(a, b) ** 12 / self.get_radius(a, b) ** 12) \
         #     - (self.get_lorentz_berthetot_coefficent(a, b) ** 6 / self.get_radius(a, b) ** 6)
         # return charge_energy + van_der_val_energy
-        return charge_energy
+        return charge_energy + van_der_val_energy
 
     def get_radius(self, a: Atom, b: Atom):
         return math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z + b.z) ** 2)
@@ -320,7 +328,7 @@ class GEBF(FileIOCalculator):
             temp_content = ""
             lines = content.split("\n")
             for line in lines:
-                if "TV" not in line: temp_content += line + "\n"
+                if "TV" not in line: temp_content += line + "\n" # Removes periodic boundary condition
             content = temp_content
 
         with open(self.label + ".gjf", "w") as file:
@@ -377,6 +385,7 @@ class GEBF(FileIOCalculator):
         print(gebf_filepaths)
         gebf_filepaths = filter(lambda file: ".gebf" in file or ".agebf" in file, gebf_filepaths)
         force_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".force")
-        self.read_energy(labc_filepath=labc_filepath, gebf_filepaths=gebf_filepaths)
+        charge_filepath = os.path.join(os.getcwd(), self.label, self.label, self.label + ".cha")
+        self.read_energy(labc_filepath=labc_filepath, gebf_filepaths=gebf_filepaths, charge_filepath=charge_filepath)
         self.read_forces(force_filepath=force_filepath)
             

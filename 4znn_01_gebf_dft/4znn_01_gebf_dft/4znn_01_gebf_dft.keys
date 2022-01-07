@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+#main
+ main_nproc=56
+ main_mem='3gb'
+ main_chk='4znn_01_gebf_dft.chk'
+ main_int='acc2e=12'
+ main_method='wb97xd'
+ main_basis='6-31g'
+ main_!=true
+ main_ase=true
+ main_formatted=true
+ main_method=true
+ main_and=true
+ main_basis=true
+ main_charge=0
+ main_multiplicity=1
+#end
+#gebf
+ gebf_njobs=10
+ gebf_{frag='read'
+ gebf_charge='npa'
+ gebf_dis=3.0
+ gebf_gver=g16
+#end

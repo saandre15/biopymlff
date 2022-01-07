@@ -1,2 +1,0 @@
-class LSQC():
-    pass

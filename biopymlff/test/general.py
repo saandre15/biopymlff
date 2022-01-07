@@ -14,12 +14,14 @@ from ase.calculators.emt import EMT
 
 from ase.md.langevin import Langevin
 
-
 import matplotlib.pyplot as plt
+
+import numpy as np
 
 from ..train.ml import ML
 from ..calculators.gebf_pm6 import GEBF_PM6
 from ..calculators.gebf import GEBF
+from ..cluster.slurm import run_parallel
 
 class General_Test(unittest.TestCase):
 
@@ -37,7 +39,6 @@ class General_Test(unittest.TestCase):
 
     def test_01_train(self):
         # Train the trainable calculators
-        print("Starting Training")
         source_time = 0
         target_time = 0
         start_time = time.time()
@@ -55,10 +56,8 @@ class General_Test(unittest.TestCase):
         ax = fig.add_axes([0, 0, 1, 1])
         ax.bar(labels, vals)
         fig.savefig(os.getcwd() + "/benchmark/time/" + self.source_method.replace(" ", "_").lower() + "_vs_" + self.target_method.replace(" ", "_").lower() + ".train.png")
-        print("Ending Training")
 
     def test_02_predict(self):
-        print("Starting Prediction")
         control_pe = []
         experimental_pe = []
         
@@ -68,19 +67,23 @@ class General_Test(unittest.TestCase):
         samples = []
         mol: Atoms = self.mol.copy()
         print("Atom Size " + str(len(mol)))
-        mol.calc = GEBF_PM6(label="4znn_01")
-        dynamics = Langevin(atoms=mol, timestep=0.01, temperature_K=500, friction=1e-3)
+        mol.calc = GEBF_PM6(label="".join(mol.get_chemical_symbols()))
+        dynamics = Langevin(atoms=mol, timestep=0.01, temperature_K=500, friction=1e-3, rng=np.random.default_rng(1000))
         collect_data = lambda: samples.append(mol.copy())
         dynamics.attach(collect_data, interval=1)
         dynamics.run(steps=100)
 
-        write(os.getcwd() + "/data/traj/" + "4znn_01", collect_data)
+        write(os.getcwd() + "/data/traj/" + "".join(mol.get_chemical_symbols()), collect_data)
         
+        # jobs = []
+        samples = samples[0:len(samples) if len(samples) <= 50 else 50]
+
         for sample in samples:
             s: Atoms = sample
             time_start = time.time()
             source_mol = s.copy()
             source_mol.calc = self.source
+            
             source_pe = source_mol.get_potential_energy()
             time_end = time.time()
             control_time.append(time_end - time_start)
@@ -96,9 +99,18 @@ class General_Test(unittest.TestCase):
         rsme = mean_squared_error(control_pe, experimental_pe)
         r2 = r2_score(control_pe, experimental_pe)
 
+        np.save(
+            os.path.join(os.getcwd(), "benchmark", "accuracy", self.source_method + ".predict_pe.npy"), 
+            np.array(control_pe)) # Save our control data file for future use
+        np.save(
+            os.path.join(os.getcwd(), "benchmark", "accuracy", self.target_method + "predict_pe.npy"),
+            np.array(experimental_pe))# Save our experimental data file for future use
+        # NOTE: Merge GPU and CPU results from different paritions
+
         fig = plt.figure()
         bbox = fig.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
         width, height = bbox.width*fig.dpi, bbox.height*fig.dpi
+            
         plt.plot(control_pe, experimental_pe)
         plt.title(self.source_method 
             + " Potential Energy vs " 
@@ -131,5 +143,4 @@ class General_Test(unittest.TestCase):
             + self.target_method.replace(" ", "_").lower()
             + "_time.png")
 
-        print("Ending Prediction")
 
