@@ -91,11 +91,17 @@ class GEBF(FileIOCalculator):
                             counter+=1
                             atoms.set_initial_charges(charges)
                     with open(charge_filepath) as file:
-                        lines = file.readlines(charge_filepath)
+                        lines = file.readlines()
                         charges = []
-                        for line in line:
+                        for line in lines:
                             vals = line.split(" ")
-                            charge_val = vals[2]
+                            print(vals)
+                            col = []
+                            for val in vals:
+                                if val != '':
+                                    col.append(val)
+                            print(val)
+                            charge_val = float(col[2])
                             charges.append(charge_val)
                         self.atoms.set_initial_charges(charges)
                     energy = self.calculate_potential_energy(coefficents, subsys_atoms, self.atoms)
@@ -315,12 +321,14 @@ class GEBF(FileIOCalculator):
         self.parameters["chk"] = gaussian_params['checkpoint_file'] if gaussian_params['checkpoint_file'] != "auto" else self.label + ".chk"
         self.parameters["scf"]='noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc'
         self.parameters["int"]='acc2e=12'
+        self.parameters["pop"] = gaussian_params['pop'] # NOTE: Testing natural population analysis for PM6 and DFT
         
         write(self.label + '.gjf', atoms, properties=None,
               format='gaussian-in', parallel=False, **self.parameters)
         with open(self.label + ".gjf", "r") as file:
             content = file.read()
-            content = content.replace("Gaussian input prepared by ASE", "gebf{{frag=read charge=NPA}}")
+            title = "gebf " + "{" + " frag=read charge=" + gaussian_params['pop'] + " }"
+            content = content.replace("Gaussian input prepared by ASE", title)
             content = content.replace("\nkwargs", "")
             cpu_count = multiprocessing.cpu_count()
             content = "%nproc=" + str(cpu_count) + "\n" + content

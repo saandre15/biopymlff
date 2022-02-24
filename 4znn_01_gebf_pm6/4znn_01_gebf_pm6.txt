@@ -9,8 +9,8 @@
  [5]. S. Li, W. Li, and J. Ma, Acc. Chem. Res. 47, 2712 (2014).
  [6]. W. Li, C. Chen, D. Zhao, and S. Li, Int. J. Quantum Chem., 115, 641 (2015).
 --------------------------------------------------
- Begin time: Wed Jan  5 15:20:13 2022
- Directory: sa748948@c208-022.frontera.tacc.utexas.edu:/work2/08249/sa748948/frontera/biopymlff/4znn_01_gebf_pm6 (Linux)
+ Begin time: Wed Jan 12 16:06:18 2022
+ Directory: sa748948@c204-029.frontera.tacc.utexas.edu:/work2/08249/sa748948/frontera/biopymlff/4znn_01_gebf_pm6 (Linux)
  Python version: 3.7.0
  Read parameters from .keys file: 4znn_01_gebf_pm6.keys
  Read geometry from .xyz file: 4znn_01_gebf_pm6.xyz
@@ -23,5 +23,5 @@ SCF converged failure was detected in subsystem No. 10 and solved.
 Total 15 subsystems are successfully calculated! 
  Dipole Moment (field-independent basis, Debye):
     X=    203.0278    Y=      4.4552    Z=   1179.8813  Tot=   1197.2301
- End time: Wed Jan  5 15:23:20 2022
- Real time: 0:03:07.789067
+ End time: Wed Jan 12 16:09:18 2022
+ Real time: 0:03:00.008407

@@ -14,4 +14,6 @@ from biopymlff.calculators.pm6_gpu import PM6_GPU
 mol = read_proteindatabank(os.getcwd() + "/data/systems/proteins/4znn.pdb")
 mol.calc = DFT_GPU(label="4znn_01_dft_gpu")
 
-print(mol.get_potential_energy())
+
+print("POTENTIAL " + str(mol.get_potential_energy()))
+print("CHARGES " + str(mol.get_charges()))

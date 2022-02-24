@@ -28,7 +28,7 @@
  hbr       =     2.90
  hba       =   120.00
  charge    = npa
- frag      = auto
+ frag      = read
  gver      = g16
  gkey      = nosymm
  opt       =  F

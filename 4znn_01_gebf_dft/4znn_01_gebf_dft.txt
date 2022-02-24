@@ -9,8 +9,8 @@
  [5]. S. Li, W. Li, and J. Ma, Acc. Chem. Res. 47, 2712 (2014).
  [6]. W. Li, C. Chen, D. Zhao, and S. Li, Int. J. Quantum Chem., 115, 641 (2015).
 --------------------------------------------------
- Begin time: Wed Jan  5 16:23:08 2022
- Directory: sa748948@c202-005.frontera.tacc.utexas.edu:/work2/08249/sa748948/frontera/biopymlff/4znn_01_gebf_dft (Linux)
+ Begin time: Wed Jan 12 16:31:19 2022
+ Directory: sa748948@c205-019.frontera.tacc.utexas.edu:/work2/08249/sa748948/frontera/biopymlff/4znn_01_gebf_dft (Linux)
  Python version: 3.7.0
  Read parameters from .keys file: 4znn_01_gebf_dft.keys
  Read geometry from .xyz file: 4znn_01_gebf_dft.xyz
@@ -18,5 +18,5 @@ Total 8 subsystems are successfully calculated!
 Total 15 subsystems are successfully calculated! 
  Dipole Moment (field-independent basis, Debye):
     X=    -25.6309    Y=      4.8189    Z=      1.1261  Tot=     26.1042
- End time: Wed Jan  5 16:40:56 2022
- Real time: 0:17:48.007109
+ End time: Wed Jan 12 16:49:15 2022
+ Real time: 0:17:55.987257

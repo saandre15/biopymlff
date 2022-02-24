@@ -5,8 +5,9 @@
 %int=acc2e=12
 #P pm6
 scf(noincfock,novaracc,fermi,maxcycle=3000,ndamp=64,xqc)
+pop(NPA)
 
-gebf{{frag=read charge=NPA}}
+gebf { frag=read charge=NPA }
 
 0 1
 N                -6.8150000000       -0.6680000000        1.6070000000

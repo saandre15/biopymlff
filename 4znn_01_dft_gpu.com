@@ -1,9 +1,7 @@
-%cpu=0-31
-%gpucpu=0-3=0-3
-%mem=10GB
-%chk=auto
-%save
-#P int=acc2e=12 wb97xd/6-31g ! ASE formatted method and basis
+%nproc=56
+%mem=50GB
+%chk=auto.chk
+#P int=acc2e=12 pop=NPA charge wb97xd/6-31g ! ASE formatted method and basis
 
 Gaussian input prepared by ASE
 

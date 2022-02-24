@@ -9,18 +9,8 @@
  [5]. S. Li, W. Li, and J. Ma, Acc. Chem. Res. 47, 2712 (2014).
  [6]. W. Li, C. Chen, D. Zhao, and S. Li, Int. J. Quantum Chem., 115, 641 (2015).
 --------------------------------------------------
- Begin time: Fri Jan  7 11:59:03 2022
- Directory: sa748948@c208-012.frontera.tacc.utexas.edu:/work2/08249/sa748948/frontera/biopymlff/NCCONCCOCCCNCCOCCCNCCOCCNCCNNCCONCCOCCCNCCOCOCNCCOCOCNCCOCCCNCCOCO (Linux)
+ Begin time: Wed Jan 12 18:27:07 2022
+ Directory: sa748948@c208-026.frontera.tacc.utexas.edu:/work2/08249/sa748948/frontera/biopymlff/NCCONCCOCCCNCCOCCCNCCOCCNCCNNCCONCCOCCCNCCOCOCNCCOCOCNCCOCCCNCCOCO (Linux)
  Python version: 3.7.0
  Read parameters from .keys file: NCCONCCOCCCNCCOCCCNCCOCCNCCNNCCONCCOCCCNCCOCOCNCCOCOCNCCOCCCNCCOCO.keys
  Read geometry from .xyz file: NCCONCCOCCCNCCOCCCNCCOCCNCCNNCCONCCOCCCNCCOCOCNCCOCOCNCCOCCCNCCOCO.xyz
-SCF converged failure was detected in subsystem No. 3 and solved. 
-SCF converged failure was detected in subsystem No. 8 and solved. 
-Total 8 subsystems are successfully calculated! 
-SCF converged failure was detected in subsystem No. 8 and solved. 
-SCF converged failure was detected in subsystem No. 10 and solved. 
-Total 15 subsystems are successfully calculated! 
- Dipole Moment (field-independent basis, Debye):
-    X=    203.0269    Y=      4.4550    Z=   1179.8806  Tot=   1197.2293
- End time: Fri Jan  7 12:02:02 2022
- Real time: 0:02:58.302558

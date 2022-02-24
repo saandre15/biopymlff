@@ -13,7 +13,7 @@
 #end
 #gebf
  gebf_njobs=10
- gebf_{frag='read'
+ gebf_frag='read'
  gebf_charge='npa'
  gebf_dis=3.0
  gebf_gver=g16

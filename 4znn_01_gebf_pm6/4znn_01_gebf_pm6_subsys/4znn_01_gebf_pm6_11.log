@@ -2,8 +2,8 @@
  Input=4znn_01_gebf_pm6_11.gjf
  Output=4znn_01_gebf_pm6_11.log
  Initial command:
- /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l1.exe "/scratch1/08249/sa748948/lsqc/36120880/Gau-192425.inp" -scrdir="/scratch1/08249/sa748948/lsqc/36120880/"
- Entering Link 1 = /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l1.exe PID=    192426.
+ /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l1.exe "/scratch1/08249/sa748948/lsqc/24846154/Gau-6445.inp" -scrdir="/scratch1/08249/sa748948/lsqc/24846154/"
+ Entering Link 1 = /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l1.exe PID=      6446.
   
  Copyright (c) 1988-2019, Gaussian, Inc.  All Rights Reserved.
   
@@ -76,7 +76,7 @@
  
  ******************************************
  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
-                 5-Jan-2022 
+                12-Jan-2022 
  ******************************************
  %chk=4znn_01_gebf_pm6_11.chk
  %nproc=56
@@ -92,7 +92,7 @@
  5/5=2,35=1,38=5,87=12/2;
  6/7=2,8=2,9=2,10=2,28=1,87=12/1;
  99/5=1,9=1/99;
- Leave Link    1 at Wed Jan  5 15:22:10 2022, MaxMem=   402653184 cpu:               2.6 elap:               0.8
+ Leave Link    1 at Wed Jan 12 16:08:08 2022, MaxMem=   402653184 cpu:               3.0 elap:               0.8
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l101.exe)
  --------------
  Atom number=14
@@ -215,7 +215,7 @@
  XXXZ=          43410.7484 YYYX=           -182.4509 YYYZ=           -449.8372 ZZZX=         361471.8563
  ZZZY=         -70769.4840 XXYY=           -488.5363 XXZZ=         121499.6073 YYZZ=          -8026.7662
  XXYZ=          -3287.6028 YYXZ=          -1620.4364 ZZXY=         -14479.7637
- Leave Link  101 at Wed Jan  5 15:22:12 2022, MaxMem=   402653184 cpu:               7.8 elap:               1.7
+ Leave Link  101 at Wed Jan 12 16:08:10 2022, MaxMem=   402653184 cpu:               7.3 elap:               1.7
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -274,7 +274,7 @@
  Deg. of freedom    36
  Full point group                 C1      NOp   1
  Rotational constants (GHZ):           1.7737116           1.0698576           0.8145243
- Leave Link  202 at Wed Jan  5 15:22:13 2022, MaxMem=   402653184 cpu:               3.1 elap:               0.7
+ Leave Link  202 at Wed Jan 12 16:08:10 2022, MaxMem=   402653184 cpu:               3.6 elap:               0.7
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l301.exe)
  Standard basis: VSTO-6G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
@@ -297,7 +297,7 @@
  MM   energy of the charges =         0.0000000000 a.u.
  Nuclei-charges interaction =         5.3702638940 a.u.
  Nuclear repulsion after external point charges =      269.4361582097 Hartrees.
- Leave Link  301 at Wed Jan  5 15:22:14 2022, MaxMem=   402653184 cpu:               5.4 elap:               1.2
+ Leave Link  301 at Wed Jan 12 16:08:12 2022, MaxMem=   402653184 cpu:               6.2 elap:               1.4
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l302.exe)
  Do NDO integrals.
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
@@ -305,14 +305,14 @@
  One-electron integrals computed using PRISM.
  NBasis=    44 RedAO= F EigKep=  0.00D+00  NBF=    44
  NBsUse=    44 1.00D-04 EigRej=  0.00D+00 NBFU=    44
- Leave Link  302 at Wed Jan  5 15:22:19 2022, MaxMem=   402653184 cpu:              24.6 elap:               4.4
+ Leave Link  302 at Wed Jan 12 16:08:16 2022, MaxMem=   402653184 cpu:              25.8 elap:               4.5
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Wed Jan  5 15:22:20 2022, MaxMem=   402653184 cpu:               4.2 elap:               1.0
+ Leave Link  303 at Wed Jan 12 16:08:17 2022, MaxMem=   402653184 cpu:               4.1 elap:               0.9
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l401.exe)
  Simple Huckel Guess.
  JPrj=0 DoOrth=F DoCkMO=F.
- Leave Link  401 at Wed Jan  5 15:22:21 2022, MaxMem=   402653184 cpu:               9.3 elap:               1.7
+ Leave Link  401 at Wed Jan 12 16:08:19 2022, MaxMem=   402653184 cpu:               9.1 elap:               1.9
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l502.exe)
  Keep J ints in memory in canonical form, NReq=865179.
  FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
@@ -802,7 +802,7 @@
  SCF Done:  E(RPM6) =  -1.17489361195     A.U. after   31 cycles
             NFock= 30  Conv=0.91D-08     -V/T= 0.9880
  KE=-9.789627893481D+01 PE=-3.882451290324D+02 EE= 2.155303561456D+02
- Leave Link  502 at Wed Jan  5 15:22:53 2022, MaxMem=   402653184 cpu:             202.3 elap:              31.2
+ Leave Link  502 at Wed Jan 12 16:08:52 2022, MaxMem=   402653184 cpu:             192.7 elap:              32.5
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
@@ -900,11 +900,11 @@
  Dipole moment (field-independent basis, Debye):
     X=             32.5738    Y=              5.8467    Z=            145.8269  Tot=            149.5350
  N-N= 2.694361582097D+02 E-N=-3.882451290451D+02  KE=-9.789627893481D+01
- Leave Link  601 at Wed Jan  5 15:22:54 2022, MaxMem=   402653184 cpu:               2.0 elap:               0.7
+ Leave Link  601 at Wed Jan 12 16:08:52 2022, MaxMem=   402653184 cpu:               2.5 elap:               0.7
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l9999.exe)
 
  Test job not archived.
- 1\1\GINC-C208-022\SP\RPM6\ZDO\C6H4N2O2(2+)\SA748948\05-Jan-2022\0\\#p 
+ 1\1\GINC-C204-029\SP\RPM6\ZDO\C6H4N2O2(2+)\SA748948\12-Jan-2022\0\\#p 
  int=acc2e=12 pm6 charge nosymm\\Atom number=14\\2,1\C,0,4.271,0.817,11
  .296\O,0,4.359,2.033,11.367\N,0,3.492,0.104,12.073\C,0,2.585,0.677,13.
  085\C,0,3.006,0.047,14.361\O,0,2.958,-1.169,14.515\N,0,3.481,0.887,15.
@@ -915,27 +915,10 @@
  ole=1.1099443,0.4550589,6.2446384\PG=C01 [X(C6H4N2O2)]\\@
 
 
- IF I AM NOT FOR MYSELF, WHO WILL BE?
- BUT IF I AM ONLY FOR MYSELF, WHAT AM I?
- THOUGH A SEEKER SINCE MY BIRTH,
- HERE IS ALL I'VE LEARNED ON EARTH,
- THIS IS THE GIST OF WHAT I KNOW:
- GIVE ADVICE AND BUY A FOE.
-
- PRESSED FOR RULES AND VERITIES,
- ALL I RECOLLECT ARE THESE:
- FEED A COLD TO STARVE A FEVER,
- ARGUE WITH NO TRUE-BELIEVER.
- THINK-TOO-LONG IS NEVER-ACT,
- SCRATCH A MYTH AND FIND A FACT.
-
- STITCH IN TIME SAVES TWENTY STITCHES,
- GIVE THE RICH TO PLEASE THEM, RICHES.
- GIVE TO LOVE YOU HEARTH AND HALL,
- BUT DO NOT GIVE ADVICE AT ALL.
-
-                                  -- HILLEL
- Job cpu time:       0 days  0 hours  4 minutes 24.4 seconds.
- Elapsed time:       0 days  0 hours  0 minutes 44.2 seconds.
+ HERE WE GO......
+ SLIDING DOWN THE RAZOR BLADE OF LIFE......
+                                 TOM LEHRER
+ Job cpu time:       0 days  0 hours  4 minutes 17.9 seconds.
+ Elapsed time:       0 days  0 hours  0 minutes 45.8 seconds.
  File lengths (MBytes):  RWF=      6 Int=      0 D2E=      0 Chk=      2 Scr=      1
- Normal termination of Gaussian 16 at Wed Jan  5 15:22:54 2022.
+ Normal termination of Gaussian 16 at Wed Jan 12 16:08:53 2022.

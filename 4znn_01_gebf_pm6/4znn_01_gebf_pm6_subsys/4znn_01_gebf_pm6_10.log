@@ -2,8 +2,8 @@
  Input=4znn_01_gebf_pm6_10.gjf
  Output=4znn_01_gebf_pm6_10.log
  Initial command:
- /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l1.exe "/tmp/Gau-197908.inp" -scrdir="/tmp/"
- Entering Link 1 = /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l1.exe PID=    197909.
+ /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l1.exe "/tmp/Gau-11939.inp" -scrdir="/tmp/"
+ Entering Link 1 = /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l1.exe PID=     11940.
   
  Copyright (c) 1988-2019, Gaussian, Inc.  All Rights Reserved.
   
@@ -76,7 +76,7 @@
  
  ******************************************
  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
-                 5-Jan-2022 
+                12-Jan-2022 
  ******************************************
  %chk=4znn_01_gebf_pm6_10.chk
  %nproc=56
@@ -93,7 +93,7 @@
  5/5=100002,7=128,8=3,13=1,18=-1,22=13,35=1,38=1,87=12,93=64/2,8;
  6/7=2,8=2,9=2,10=2,28=1,87=12/1;
  99/5=1,9=1/99;
- Leave Link    1 at Wed Jan  5 15:23:18 2022, MaxMem=   402653184 cpu:               2.4 elap:               0.0
+ Leave Link    1 at Wed Jan 12 16:09:15 2022, MaxMem=   402653184 cpu:               2.2 elap:               0.0
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l101.exe)
  --------------
  Atom number=14
@@ -216,7 +216,7 @@
  XXXZ=          40522.2429 YYYX=           -247.0158 YYYZ=           -664.2511 ZZZX=         309947.8769
  ZZZY=         -68812.8138 XXYY=           -614.1730 XXZZ=         111020.0885 YYZZ=          -8879.5321
  XXYZ=          -3909.9674 YYXZ=          -2129.3576 ZZXY=         -15776.1281
- Leave Link  101 at Wed Jan  5 15:23:18 2022, MaxMem=   402653184 cpu:               5.9 elap:               0.1
+ Leave Link  101 at Wed Jan 12 16:09:16 2022, MaxMem=   402653184 cpu:               8.6 elap:               0.2
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -275,7 +275,7 @@
  Deg. of freedom    36
  Full point group                 C1      NOp   1
  Rotational constants (GHZ):           2.0099888           0.9854869           0.8075106
- Leave Link  202 at Wed Jan  5 15:23:18 2022, MaxMem=   402653184 cpu:               1.2 elap:               0.0
+ Leave Link  202 at Wed Jan 12 16:09:16 2022, MaxMem=   402653184 cpu:               1.2 elap:               0.0
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l301.exe)
  Standard basis: VSTO-6G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
@@ -298,7 +298,7 @@
  MM   energy of the charges =         0.0000000000 a.u.
  Nuclei-charges interaction =        10.8975802652 a.u.
  Nuclear repulsion after external point charges =      275.6656726128 Hartrees.
- Leave Link  301 at Wed Jan  5 15:23:18 2022, MaxMem=   402653184 cpu:               3.0 elap:               0.1
+ Leave Link  301 at Wed Jan 12 16:09:16 2022, MaxMem=   402653184 cpu:               3.5 elap:               0.1
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l302.exe)
  Do NDO integrals.
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
@@ -306,14 +306,14 @@
  One-electron integrals computed using PRISM.
  NBasis=    44 RedAO= F EigKep=  0.00D+00  NBF=    44
  NBsUse=    44 1.00D-04 EigRej=  0.00D+00 NBFU=    44
- Leave Link  302 at Wed Jan  5 15:23:18 2022, MaxMem=   402653184 cpu:               5.6 elap:               0.1
+ Leave Link  302 at Wed Jan 12 16:09:16 2022, MaxMem=   402653184 cpu:               5.4 elap:               0.1
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Wed Jan  5 15:23:18 2022, MaxMem=   402653184 cpu:               1.7 elap:               0.1
+ Leave Link  303 at Wed Jan 12 16:09:16 2022, MaxMem=   402653184 cpu:               1.4 elap:               0.0
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l401.exe)
  Simple Huckel Guess.
  JPrj=0 DoOrth=F DoCkMO=F.
- Leave Link  401 at Wed Jan  5 15:23:18 2022, MaxMem=   402653184 cpu:               3.1 elap:               0.1
+ Leave Link  401 at Wed Jan 12 16:09:16 2022, MaxMem=   402653184 cpu:               1.9 elap:               0.1
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l502.exe)
  Keep J ints in memory in canonical form, NReq=865179.
  FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
@@ -2458,7 +2458,7 @@
  SCF Done:  E(RPM6) = -0.590322781579     A.U. after  129 cycles
             NFock=128  Conv=0.27D-03     -V/T= 0.9940
  KE=-9.768026664457D+01 PE=-3.943004270510D+02 EE= 2.157246983012D+02
- Leave Link  502 at Wed Jan  5 15:23:19 2022, MaxMem=   402653184 cpu:              13.8 elap:               0.3
+ Leave Link  502 at Wed Jan 12 16:09:16 2022, MaxMem=   402653184 cpu:              10.0 elap:               0.2
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l508.exe)
  Keep J ints in memory in canonical form, NReq=865579.
  FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
@@ -2595,7 +2595,7 @@
  SCF Done:  E(RPM6) = -0.594900713913     a.u. after    8 cycles
             Convg  =    0.1899D-07                    73 Fock formations.
               S**2 =  0.0000                  -V/T =  0.9939
- Leave Link  508 at Wed Jan  5 15:23:19 2022, MaxMem=   402653184 cpu:              10.8 elap:               0.3
+ Leave Link  508 at Wed Jan 12 16:09:17 2022, MaxMem=   402653184 cpu:              15.2 elap:               0.4
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
@@ -2693,11 +2693,11 @@
  Dipole moment (field-independent basis, Debye):
     X=              8.9412    Y=             -2.9963    Z=             66.9660  Tot=             67.6267
  N-N= 2.756656726128D+02 E-N=-3.944314874494D+02  KE=-9.764334191572D+01
- Leave Link  601 at Wed Jan  5 15:23:19 2022, MaxMem=   402653184 cpu:               1.3 elap:               0.0
+ Leave Link  601 at Wed Jan 12 16:09:17 2022, MaxMem=   402653184 cpu:               1.3 elap:               0.0
  (Enter /work/01114/jfonner/frontera/gaussian/16rC.01/g16/l9999.exe)
 
  Test job not archived.
- 1\1\GINC-C208-022\SP\RPM6\ZDO\C6H4N2O2(2+)\SA748948\05-Jan-2022\0\\#p 
+ 1\1\GINC-C204-029\SP\RPM6\ZDO\C6H4N2O2(2+)\SA748948\12-Jan-2022\0\\#p 
  int=acc2e=12 pm6 charge nosymm int=acc2e=12 scf=(noincfock,novaracc,fe
  rmi,maxcycle=128,ndamp=64,xqc)\\Atom number=14\\2,1\C,0,-1.636,0.175,4
  .6\O,0,-1.744,1.356,4.862\N,0,-1.095,-0.7,5.415\C,0,-0.572,-0.311,6.66
@@ -2709,40 +2709,9 @@
  .4394698,0.3537877,1.7401946\PG=C01 [X(C6H4N2O2)]\\@
 
 
- THOUGH I SPEAK WITH THE TONGUES OF MEN AND OF ANGELS, 
- AND HAVE NOT LOVE,
- I AM BECOME AS SOUNDING BRASS, A TINKLING CYMBAL.
- AND THOUGH I HAVE THE GIFT OF PROPHECY,
- AND UNDERSTAND ALL MYSTERIES, AND ALL KNOWLEDGE.
- AND THOUGH I HAVE ALL FAITH, SO THAT I COULD REMOVE MOUNTAINS,
- AND HAVE NOT LOVE, I AM NOTHING.
- AND THOUGH I BESTOW ALL MY GOODS TO FEED THE POOR,
- AND THOUGH I GIVE MY BODY TO BE BURNED,
- AND HAVE NOT LOVE IT PROFITETH ME NOTHING.
- LOVE SUFFERETH LONG, AND IS KIND,
- LOVE ENVIETH NOT,
- LOVE VAUNTETH NOT ITSELF, IS NOT PUFFED UP,
- DOTH NOT BEHAVE ITSELF UNSEEMLY, SEEKETH NOT HER OWN,
- IS NOT EASILY PROVOKED, THINKETH NO EVIL,
- REJOICETH NOT IN INIQUITY, BUT REJOICETH IN THE TRUTH,
- BEARETH ALL THINGS, BELIEVETH ALL THINGS,
- HOPETH ALL THINGS, ENDURETH ALL THINGS.
- LOVE NEVER FAILETH, BUT WHETHER THERE BE PROPHECIES, THEY SHALL FAIL, 
- WHETHER THERE BE TONGUES, THEY SHALL CEASE,
- WHETHER THERE BE KNOWLEDGE, IT SHALL VANISH AWAY.
- FOR WE KNOW IN PART, AND WE PROPHESY IN PART.
- BUT WHEN THAT WHICH IS PERFECT IS COME, THEN THAT WHICH IS IN PART 
- SHALL BE DONE AWAY. 
- WHEN I WAS A CHILD, I SPAKE AS A CHILD, I UNDERSTOOD AS A CHILD, 
- I THOUGHT AS A CHILD.
- BUT WHEN I BECAME A MAN, I PUT AWAY CHILDISH THINGS.
- FOR NOW WE SEE THROUGH A GLASS, DARKLY, BUT THEN FACE TO FACE.
- NOW I KNOW IN PART. BUT THEN SHALL I KNOW EVEN AS ALSO I AM KNOWN.
- AND NOW ABIDETH FAITH, HOPE AND LOVE, THESE THREE.
- BUT THE GREATEST OF THESE IS LOVE.
-
-                     I CORINTHIANS 13
- Job cpu time:       0 days  0 hours  0 minutes 51.1 seconds.
+ You never know when you're making a memory.
+                        -- Rickie Lee Jones
+ Job cpu time:       0 days  0 hours  0 minutes 52.5 seconds.
  Elapsed time:       0 days  0 hours  0 minutes  1.3 seconds.
  File lengths (MBytes):  RWF=      6 Int=      0 D2E=      0 Chk=      2 Scr=      1
- Normal termination of Gaussian 16 at Wed Jan  5 15:23:19 2022.
+ Normal termination of Gaussian 16 at Wed Jan 12 16:09:17 2022.
